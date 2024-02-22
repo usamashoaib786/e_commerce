@@ -1,6 +1,6 @@
+import 'package:commerce/Utils/resources/res/app_theme.dart';
+import 'package:commerce/Utils/widgets/others/app_text.dart';
 import 'package:flutter/material.dart';
-import 'package:hrm_project/Utils/resources/res/app_theme.dart';
-import 'package:hrm_project/Utils/widgets/others/app_text.dart';
 import 'package:sizer/sizer.dart';
 
 alertDialogError({context, message}) {

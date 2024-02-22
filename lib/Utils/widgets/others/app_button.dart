@@ -1,8 +1,8 @@
 
+import 'package:commerce/Utils/resources/res/app_theme.dart';
+import 'package:commerce/Utils/widgets/others/app_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:hrm_project/Utils/resources/res/app_theme.dart';
-import 'package:hrm_project/Utils/widgets/others/app_text.dart';
 
 class AppButton {
   static Widget appButton(String text,

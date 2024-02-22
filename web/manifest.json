@@ -1,6 +1,6 @@
 {
-    "name": "commerce",
-    "short_name": "commerce",
+    "name": "tt_offer",
+    "short_name": "tt_offer",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
-import 'package:h_r_m/Utils/resources/res/app_theme.dart';
-import 'package:h_r_m/Utils/widgets/others/app_text.dart';
+import 'package:tt_offer/Utils/resources/res/app_theme.dart';
+import 'package:tt_offer/Utils/widgets/others/app_text.dart';
 
 class AppButton {
   static Widget appButton(String text,

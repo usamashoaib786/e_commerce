@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:h_r_m/Utils/resources/res/app_theme.dart';
-import 'package:h_r_m/Utils/widgets/others/app_text.dart';
-import 'package:h_r_m/config/keys/pref_keys.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tt_offer/Utils/resources/res/app_theme.dart';
+import 'package:tt_offer/Utils/widgets/others/app_text.dart';
+import 'package:tt_offer/config/keys/pref_keys.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);

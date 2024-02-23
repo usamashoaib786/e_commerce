@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:h_r_m/Utils/utils.dart';
-import 'package:h_r_m/View/Auth/sign_in_screen.dart';
+import 'package:tt_offer/Utils/resources/res/app_theme.dart';
+import 'package:tt_offer/Utils/utils.dart';
+import 'package:tt_offer/on_boarding_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -15,7 +16,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
 
     Future.delayed(const Duration(seconds: 2), () {
-      pushReplacement(context, SignInScreen());
+      pushReplacement(context, OnBoardScreen());
 
       // getUserCredentials(context);
     });
@@ -37,6 +38,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppTheme.appColor,
       body: Container(
         decoration: BoxDecoration(),
         height: MediaQuery.of(context).size.height,
@@ -44,7 +46,7 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Align(
           alignment: Alignment.center,
           child: SizedBox(
-            height: 500,
+            height: 150,
             width: MediaQuery.of(context).size.width,
             child: Center(
               child: Image.asset(

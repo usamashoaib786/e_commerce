@@ -1,11 +1,11 @@
 
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:h_r_m/Constants/app_logger.dart';
-import 'package:h_r_m/config/app_urls.dart';
-import 'package:h_r_m/config/keys/headers.dart';
-import 'package:h_r_m/config/keys/pref_keys.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tt_offer/Constants/app_logger.dart';
+import 'package:tt_offer/config/app_urls.dart';
+import 'package:tt_offer/config/keys/headers.dart';
+import 'package:tt_offer/config/keys/pref_keys.dart';
 // import 'package:req_fun/req_fun.dart';
 
 class AppDioInterceptor extends Interceptor {

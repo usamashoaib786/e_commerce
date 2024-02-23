@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:h_r_m/Utils/resources/res/app_theme.dart';
+import 'package:tt_offer/Utils/resources/res/app_theme.dart';
 
 class CustomAppFormField extends StatefulWidget {
   final double? height;
@@ -28,6 +28,7 @@ class CustomAppFormField extends StatefulWidget {
   final Color? cursorColor;
   final TextStyle? hintStyle;
   final style;
+  final radius;
   final errorStyle;
   final errorBorder;
   final focusedErrorBorder;
@@ -58,6 +59,7 @@ class CustomAppFormField extends StatefulWidget {
     this.fontsize,
     this.hintStyle,
     this.errorText,
+    this.radius,
     this.style,
     this.errorStyle,
     this.errorBorder,
@@ -78,7 +80,8 @@ class _CustomAppFormFieldState extends State<CustomAppFormField> {
       decoration: BoxDecoration(
           border: Border.all(color: Color(0xff464646)),
           color: AppTheme.white,
-          borderRadius: BorderRadius.circular(15)),
+          borderRadius: BorderRadius.circular(
+              widget.radius == null ? 10 : widget.radius)),
       child: TextField(
         controller: widget.controller,
         cursorColor: AppTheme.white,
@@ -93,8 +96,8 @@ class _CustomAppFormFieldState extends State<CustomAppFormField> {
             border: InputBorder.none,
             contentPadding: const EdgeInsets.all(15),
             hintText: widget.texthint,
-            hintStyle: const TextStyle(
-                color: Color.fromARGB(255, 181, 169, 169),
+            hintStyle:  TextStyle(
+                color: AppTheme.textColor,
                 fontSize: 16,
                 fontWeight: FontWeight.w400),
             isDense: true),

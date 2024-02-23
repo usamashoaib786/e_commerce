@@ -1,8 +1,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:h_r_m/splash_screen.dart';
 import 'package:sizer/sizer.dart';
+import 'package:tt_offer/splash_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

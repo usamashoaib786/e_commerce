@@ -1,33 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:tt_offer/Utils/widgets/others/app_text.dart';
 
-class CustomAppBar {
-  static PreferredSizeWidget appBar(
-      {String titleText = "",
-      Color? shadowColor,
-      Color? backgroundColor,
-      TextStyle? titleTextStyle,
-      double? leadingWidth,
-      double? titleSpacing,
-      double? elevation,
-      Widget? leading,
-      List<Widget>? actions,
-      PreferredSizeWidget? bottom,
-      ShapeBorder? shape,
-      bool? centerTitle}) {
+class CustomAppBar1 extends StatelessWidget implements PreferredSizeWidget {
+  final double preferredHeight = 50.0;
+  final context;
+  final title;
+  // Callback function
+
+  const CustomAppBar1({this.context, this.title});
+  @override
+  Widget build(BuildContext context) {
     return AppBar(
-      toolbarHeight: 50,
-      title: Text(titleText),
-      shadowColor: shadowColor,
-      leading: leading,
-      leadingWidth: leadingWidth,
-      titleTextStyle: titleTextStyle,
-      titleSpacing: titleSpacing,
-      actions: actions,
-      bottom: bottom,
-      backgroundColor: backgroundColor,
-      elevation: elevation,
-      shape: shape,
-      centerTitle: centerTitle,
+      backgroundColor: Colors.white,
+      elevation: 0,
+      leading: GestureDetector(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: const Icon(
+            Icons.arrow_back_ios,
+            size: 24,
+            color: Color(0xff292D32),
+          )),
+      title: AppText.appText("$title",
+          fontSize: 16,
+          fontWeight: FontWeight.w400,
+          textColor: const Color(0xff1B2028)),
+      centerTitle: true,
     );
   }
+
+  @override
+  Size get preferredSize => Size.fromHeight(preferredHeight);
 }

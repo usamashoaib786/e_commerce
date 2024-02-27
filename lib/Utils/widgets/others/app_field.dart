@@ -75,7 +75,7 @@ class _CustomAppFormFieldState extends State<CustomAppFormField> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 60,
+      height: 48,
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
           border: Border.all(color: Color(0xff464646)),
@@ -94,7 +94,7 @@ class _CustomAppFormFieldState extends State<CustomAppFormField> {
               minWidth: 50,
             ),
             border: InputBorder.none,
-            contentPadding: const EdgeInsets.all(15),
+            contentPadding: const EdgeInsets.all(10),
             hintText: widget.texthint,
             hintStyle:  TextStyle(
                 color: AppTheme.textColor,

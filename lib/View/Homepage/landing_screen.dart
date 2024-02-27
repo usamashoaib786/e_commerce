@@ -2,9 +2,15 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:tt_offer/Utils/resources/res/app_theme.dart';
+import 'package:tt_offer/Utils/utils.dart';
 import 'package:tt_offer/Utils/widgets/others/app_button.dart';
 import 'package:tt_offer/Utils/widgets/others/app_field.dart';
 import 'package:tt_offer/Utils/widgets/others/app_text.dart';
+import 'package:tt_offer/View/All%20Aucton%20Products/all_auction_procucts.dart';
+import 'package:tt_offer/View/All%20Categories/all_caetgories.dart';
+import 'package:tt_offer/View/All%20Featured%20Products/all_feature_products.dart';
+import 'package:tt_offer/View/Auction%20Info/auction_info.dart';
+import 'package:tt_offer/View/Notification/notification_screen.dart';
 
 class LandingScreen extends StatefulWidget {
   const LandingScreen({super.key});
@@ -14,7 +20,6 @@ class LandingScreen extends StatefulWidget {
 }
 
 class _LandingScreenState extends State<LandingScreen> {
-  final PageController _pageController = PageController(initialPage: 0);
   int _currentPage = 0;
   TextEditingController _searchController = TextEditingController();
   static const List<String> _imagePaths = [
@@ -38,30 +43,24 @@ class _LandingScreenState extends State<LandingScreen> {
   ];
 
   @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: const CustomAppBar(),
+      appBar: CustomAppBar(context: context),
       body: Padding(
-        padding: const EdgeInsets.only(top: 20.0,),
+        padding: const EdgeInsets.only(
+          top: 20.0,
+        ),
         child: SingleChildScrollView(
           child: Column(
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
                 child: CustomAppFormField(
-                  height: 48,
                   radius: 15.0,
                   prefixIcon: Image.asset(
                     "assets/images/search.png",
-                    height: 20,
-                    width: 20,
+                    height: 17,
                     color: AppTheme.textColor,
                   ),
                   texthint: "Search",
@@ -112,7 +111,10 @@ class _LandingScreenState extends State<LandingScreen> {
               const SizedBox(
                 height: 20,
               ),
-              customRow(txt1: "Categories", txt2: "View All", txt3: ""),
+              customRow(
+                  txt1: "Categories", txt2: "View All", txt3: "", onTap: () {
+                    push(context, AllCategories());
+                  }),
               SizedBox(
                 height: 80,
                 width: screenWidth,
@@ -159,6 +161,9 @@ class _LandingScreenState extends State<LandingScreen> {
                 height: 20,
               ),
               customRow(
+                  onTap: () {
+                    push(context, ViewAllAuctionProducts());
+                  },
                   txt1: "Auction Products",
                   txt2: "View All",
                   txt3: "Hurry up! The auction is ending soon."),
@@ -176,82 +181,88 @@ class _LandingScreenState extends State<LandingScreen> {
                       padding: const EdgeInsets.only(left: 20.0),
                       child: Row(
                         children: [
-                          SizedBox(
-                            height: 325,
-                            width: 161,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  height: 210,
-                                  width: 161,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(14),
-                                      image: const DecorationImage(
-                                          image: AssetImage(
-                                              "assets/images/auction1.png"))),
-                                  child: Align(
-                                    alignment: Alignment.topRight,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Container(
-                                        height: 25,
-                                        width: 25,
-                                        decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: AppTheme.whiteColor),
-                                        child: Icon(
-                                          Icons.favorite_border,
-                                          size: 13,
-                                          color: AppTheme.textColor,
+                          GestureDetector(
+                            onTap: () {
+                              push(context, AuctionInfoScreen());
+                            },
+                            child: SizedBox(
+                              height: 325,
+                              width: 161,
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    height: 210,
+                                    width: 161,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(14),
+                                        image: const DecorationImage(
+                                            image: AssetImage(
+                                                "assets/images/auction1.png"))),
+                                    child: Align(
+                                      alignment: Alignment.topRight,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Container(
+                                          height: 25,
+                                          width: 25,
+                                          decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              color: AppTheme.whiteColor),
+                                          child: Icon(
+                                            Icons.favorite_border,
+                                            size: 13,
+                                            color: AppTheme.textColor,
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
-                                ),
-                                AppText.appText("Modern light clothes",
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                    textColor: AppTheme.textColor),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    AppText.appText("\$212.99",
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w700,
-                                        textColor: AppTheme.textColor),
-                                    AppText.appText("1 Bid Now",
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w200,
-                                        textColor: AppTheme.textColor),
-                                  ],
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    AppText.appText("Time Left:",
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w700,
-                                        textColor: AppTheme.textColor),
-                                    AppText.appText("1 Day 5 Hours",
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w600,
-                                        textColor: AppTheme.appColor),
-                                  ],
-                                ),
-                                AppButton.appButton("Get Started",
-                                    onTap: () {},
-                                    height: 32,
-                                    width: 161,
-                                    radius: 16.0,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                    backgroundColor: AppTheme.appColor,
-                                    textColor: AppTheme.whiteColor)
-                              ],
+                                  AppText.appText("Modern light clothes",
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      textColor: AppTheme.textColor),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      AppText.appText("\$212.99",
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w700,
+                                          textColor: AppTheme.textColor),
+                                      AppText.appText("1 Bid Now",
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w200,
+                                          textColor: AppTheme.textColor),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      AppText.appText("Time Left:",
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w700,
+                                          textColor: AppTheme.textColor),
+                                      AppText.appText("1 Day 5 Hours",
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w600,
+                                          textColor: AppTheme.appColor),
+                                    ],
+                                  ),
+                                  AppButton.appButton("Get Started",
+                                      onTap: () {},
+                                      height: 32,
+                                      width: 161,
+                                      radius: 16.0,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      backgroundColor: AppTheme.appColor,
+                                      textColor: AppTheme.whiteColor)
+                                ],
+                              ),
                             ),
                           ),
                           if (index == categoryColor.length - 1)
@@ -268,6 +279,9 @@ class _LandingScreenState extends State<LandingScreen> {
                 height: 20,
               ),
               customRow(
+                  onTap: () {
+                    push(context, ViewFeaturedProducts());
+                  },
                   txt1: "Feature Products",
                   txt2: "View All",
                   txt3: "Act fast! These featured products won't last long."),
@@ -303,7 +317,7 @@ class _LandingScreenState extends State<LandingScreen> {
                   ],
                 ),
               ),
-                const SizedBox(
+              const SizedBox(
                 height: 40,
               ),
             ],
@@ -313,7 +327,7 @@ class _LandingScreenState extends State<LandingScreen> {
     );
   }
 
-  Widget customRow({txt1, txt2, txt3}) {
+  Widget customRow({txt1, txt2, txt3, onTap}) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: Column(
@@ -326,10 +340,13 @@ class _LandingScreenState extends State<LandingScreen> {
                   fontSize: 20,
                   fontWeight: FontWeight.w600,
                   textColor: AppTheme.textColor),
-              AppText.appText("$txt2",
-                  fontSize: 12,
-                  fontWeight: FontWeight.w400,
-                  textColor: AppTheme.textColor)
+              GestureDetector(
+                onTap: onTap,
+                child: AppText.appText("$txt2",
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400,
+                    textColor: AppTheme.textColor),
+              )
             ],
           ),
           AppText.appText("$txt3",
@@ -388,7 +405,11 @@ class _LandingScreenState extends State<LandingScreen> {
                   textColor: AppTheme.textColor),
               Row(
                 children: [
-                  Icon(Icons.star, color: Colors.amber,size: 18,),
+                  Icon(
+                    Icons.star,
+                    color: Colors.amber,
+                    size: 18,
+                  ),
                   AppText.appText("5.0",
                       fontSize: 12,
                       fontWeight: FontWeight.w400,
@@ -400,21 +421,20 @@ class _LandingScreenState extends State<LandingScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-               Row(
-                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                 children: [
-                 
-                   Icon(
-                     Icons.location_on_outlined,
-                     color: AppTheme.textColor,
-                     size: 20,
-                   ),
-                   AppText.appText("Belarus",
-                       fontSize: 12,
-                       fontWeight: FontWeight.w400,
-                       textColor: AppTheme.textColor)
-                 ],
-               ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Icon(
+                    Icons.location_on_outlined,
+                    color: AppTheme.textColor,
+                    size: 20,
+                  ),
+                  AppText.appText("Belarus",
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400,
+                      textColor: AppTheme.textColor)
+                ],
+              ),
               AppText.appText("2 Week ago",
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
@@ -429,9 +449,10 @@ class _LandingScreenState extends State<LandingScreen> {
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final double preferredHeight = 70.0;
+  final context;
   // Callback function
 
-  const CustomAppBar();
+  const CustomAppBar({this.context});
   @override
   Widget build(BuildContext contex7t) {
     return Padding(
@@ -449,10 +470,15 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Icon(
-                  Icons.notifications_outlined,
-                  color: AppTheme.textColor,
-                  size: 20,
+                GestureDetector(
+                  onTap: () {
+                    push(context, NotificationScreen());
+                  },
+                  child: Icon(
+                    Icons.notifications_outlined,
+                    color: AppTheme.textColor,
+                    size: 20,
+                  ),
                 ),
                 Icon(
                   Icons.location_on_outlined,

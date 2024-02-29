@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:tt_offer/Utils/resources/res/app_theme.dart';
 import 'package:tt_offer/Utils/widgets/others/app_text.dart';
@@ -40,7 +39,7 @@ class AppButton {
                   : BoxShadow()
             ],
             color: backgroundColor,
-            borderRadius: BorderRadius.circular(radius == null? 10: radius),
+            borderRadius: BorderRadius.circular(radius == null ? 10 : radius),
             border: border == false
                 ? null
                 : Border.all(color: AppTheme.appColor, width: 1)),
@@ -122,6 +121,7 @@ class AppButton {
   static Widget appButtonWithLeadingImage(String text,
       {double? height,
       double? width,
+      double? imgHeight,
       Color? backgroundColor,
       EdgeInsetsGeometry? padding,
       TextAlign? textAlign,
@@ -146,37 +146,39 @@ class AppButton {
         height: height,
         decoration: BoxDecoration(
             color: backgroundColor,
-            borderRadius: BorderRadius.circular(50),
+            borderRadius: BorderRadius.circular(16),
             border: border == false
                 ? null
                 : Border.all(
-                    color: AppTheme.appColor,
-                    width: 2,
+                    color: Color(0xffE5E9EB),
+                    width: 1,
                   )),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Image(
-            //   // image: AssetImage(imagePath!),
-            //   image:
-            //   SvgPicture.asset(
-            //     imagePath!,
-            //     height: 25,),
-            // //   height: 25,
-            // // ),
-            AppText.appText(text,
-                fontFamily: fontFamily,
-                fontSize: fontSize,
-                textAlign: textAlign,
-                fontWeight: fontWeight,
-                textColor: textColor,
-                overflow: overflow,
-                letterSpacing: letterSpacing,
-                textBaseline: textBaseline,
-                fontStyle: fontStyle,
-                underLine: underLine),
+            Container(
+              width: 30,
+              child: Image.asset(
+                "$imagePath",
+                height: imgHeight,
+              ),
+            ),
+            const SizedBox(
+              width: 10,
+            ),
             SizedBox(
-              width: 20,
+              width: 140,
+              child: AppText.appText(text,
+                  fontFamily: fontFamily,
+                  fontSize: fontSize,
+                  textAlign: textAlign,
+                  fontWeight: fontWeight,
+                  textColor: textColor,
+                  overflow: overflow,
+                  letterSpacing: letterSpacing,
+                  textBaseline: textBaseline,
+                  fontStyle: fontStyle,
+                  underLine: underLine),
             ),
           ],
         ),

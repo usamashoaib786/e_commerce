@@ -26,6 +26,9 @@ class CustomAppFormField extends StatefulWidget {
   final Color? prefixIconColor;
   final Color? suffixIconColor;
   final Color? cursorColor;
+  final borderColor;
+  final hintTextColor;
+
   final TextStyle? hintStyle;
   final style;
   final radius;
@@ -58,11 +61,13 @@ class CustomAppFormField extends StatefulWidget {
     this.fontweight,
     this.fontsize,
     this.hintStyle,
+    this.borderColor,
     this.errorText,
     this.radius,
     this.style,
     this.errorStyle,
     this.errorBorder,
+    this.hintTextColor,
     this.focusedErrorBorder,
     this.cursorColor,
   }) : super(key: key);
@@ -76,12 +81,12 @@ class _CustomAppFormFieldState extends State<CustomAppFormField> {
   Widget build(BuildContext context) {
     return Container(
       height: 48,
-      width: MediaQuery.of(context).size.width,
+      width: widget.width ?? MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
-          border: Border.all(color: Color(0xff464646)),
+          border:
+              Border.all(color: widget.borderColor ?? const Color(0xff464646)),
           color: AppTheme.white,
-          borderRadius: BorderRadius.circular(
-              widget.radius == null ? 10 : widget.radius)),
+          borderRadius: BorderRadius.circular(widget.radius ?? 10)),
       child: TextField(
         controller: widget.controller,
         cursorColor: AppTheme.white,
@@ -96,9 +101,9 @@ class _CustomAppFormFieldState extends State<CustomAppFormField> {
             border: InputBorder.none,
             contentPadding: const EdgeInsets.all(10),
             hintText: widget.texthint,
-            hintStyle:  TextStyle(
-                color: AppTheme.textColor,
-                fontSize: 16,
+            hintStyle: TextStyle(
+                color: widget.hintTextColor ?? AppTheme.textColor,
+                fontSize: 14,
                 fontWeight: FontWeight.w400),
             isDense: true),
       ),
@@ -230,7 +235,7 @@ class _CustomAppPasswordfieldState extends State<CustomAppPasswordfield> {
               });
             },
             child: Padding(
-              padding: EdgeInsets.only(top: 13),
+              padding: const EdgeInsets.only(top: 13),
               child: Icon(
                 _obscureText
                     ? Icons.visibility_off_outlined

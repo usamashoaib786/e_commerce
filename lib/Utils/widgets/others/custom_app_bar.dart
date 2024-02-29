@@ -17,10 +17,13 @@ class CustomAppBar1 extends StatelessWidget implements PreferredSizeWidget {
           onTap: () {
             Navigator.pop(context);
           },
-          child: const Icon(
-            Icons.arrow_back_ios,
-            size: 24,
-            color: Color(0xff292D32),
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Image.asset(
+              "assets/images/arrow-left.png",
+              height: 24,
+              width: 24,
+            ),
           )),
       title: AppText.appText("$title",
           fontSize: 16,

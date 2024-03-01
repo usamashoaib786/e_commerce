@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:tt_offer/Utils/resources/res/app_theme.dart';
+import 'package:tt_offer/Utils/utils.dart';
 import 'package:tt_offer/Utils/widgets/others/app_text.dart';
+import 'package:tt_offer/View/Profile%20Screen/Account%20Settigs/account_setting.dart';
+import 'package:tt_offer/View/Profile%20Screen/custom_link.dart';
+import 'package:tt_offer/View/Profile%20Screen/payment%20Screens/payment_screen.dart';
+import 'package:tt_offer/View/Profile%20Screen/saved_products.dart';
+import 'package:tt_offer/View/Profile%20Screen/selling&purchase.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -54,17 +60,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               headingText(txt: "Transactions"),
               customRow(
-                  onTap: () {},
+                  onTap: () {
+                    push(context, const SellingPurchaseScreen());
+                  },
                   txt: "Purchases & Sales",
                   img: "assets/images/receipt.png"),
               customRow(
-                  onTap: () {},
+                  onTap: () {
+                    push(context, const PaymentScreen());
+
+                  },
                   txt: "Payment & Deposit method",
                   img: "assets/images/payment.png"),
               divider(),
               headingText(txt: "Save"),
               customRow(
-                  onTap: () {},
+                  onTap: () {
+                    push(context, const SavedItemsScreen());
+
+                  },
                   txt: "Saved items",
                   img: "assets/images/heart.png"),
               customRow(
@@ -74,7 +88,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
               divider(),
               headingText(txt: "Account"),
               customRow(
-                  onTap: () {},
+                  onTap: () {
+                    push(context, const AccountSettingScreen());
+
+                  },
                   txt: "Account Setting",
                   img: "assets/images/accountSetting.png"),
               customRow(
@@ -82,7 +99,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   txt: "Boost Plus",
                   img: "assets/images/boostPlus.png"),
               customRow(
-                  onTap: () {},
+                  onTap: () {
+                    push(context, const CustomLinkScreen());
+
+                  },
                   txt: "Custom Profile Link",
                   img: "assets/images/link.png"),
               divider(),

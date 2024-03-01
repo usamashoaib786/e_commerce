@@ -59,6 +59,8 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
                 },
                     height: 53,
                     radius: 32.0,
+                     fontWeight: FontWeight.w500,
+                    fontSize: 14,
                     backgroundColor: AppTheme.appColor,
                     textColor: AppTheme.whiteColor),
               )

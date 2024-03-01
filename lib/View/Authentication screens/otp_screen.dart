@@ -113,6 +113,8 @@ class _OTPScreenState extends State<OTPScreen> {
                   push(context, ProfileDetailScreen());
                 },
                     height: 53,
+                     fontWeight: FontWeight.w500,
+                    fontSize: 14,
                     radius: 32.0,
                     backgroundColor: AppTheme.appColor,
                     textColor: AppTheme.whiteColor),

@@ -5,28 +5,26 @@ import 'package:tt_offer/Utils/widgets/others/app_button.dart';
 import 'package:tt_offer/Utils/widgets/others/app_field.dart';
 import 'package:tt_offer/Utils/widgets/others/app_text.dart';
 import 'package:tt_offer/Utils/widgets/others/custom_app_bar.dart';
-import 'package:tt_offer/View/Authentication%20screens/otp_screen.dart';
 import 'package:tt_offer/View/BottomNavigation/navigation_bar.dart';
 
-class ProfileDetailScreen extends StatefulWidget {
-  const ProfileDetailScreen({super.key});
+class AddEditCardScreen extends StatefulWidget {
+  final edit;
+  const AddEditCardScreen({super.key, this.edit});
 
   @override
-  State<ProfileDetailScreen> createState() => _ProfileDetailScreenState();
+  State<AddEditCardScreen> createState() => _AddEditCardScreenState();
 }
 
-class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
-  TextEditingController _fNameController = TextEditingController();
-  TextEditingController _lNameController = TextEditingController();
-  TextEditingController _userNameController = TextEditingController();
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+class _AddEditCardScreenState extends State<AddEditCardScreen> {
+  TextEditingController _nameController = TextEditingController();
+  TextEditingController _cardNumController = TextEditingController();
+  TextEditingController _dateController = TextEditingController();
+  TextEditingController _cvcController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar1(
-        context: context,
-        title: "Profile Detail",
+        title: widget.edit == false ? "Add New Card" : "Edit",
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -34,55 +32,41 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 20.0),
-                child: Align(
-                    alignment: Alignment.center,
-                    child: Image.asset(
-                      "assets/images/profileDetail.png",
-                      height: 142,
-                      width: 146,
-                    )),
-              ),
               const SizedBox(
                 height: 30,
               ),
+              customColumn(
+                  txt: "Card Name",
+                  hintTxt: "Card Name",
+                  controller: _nameController),
+              customColumn(
+                  txt: "Card Number",
+                  hintTxt: "2323 2342 4234 4324",
+                  controller: _cardNumController),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   customColumn(
                       width: MediaQuery.of(context).size.width * 0.4,
-                      txt: "First Name",
-                      hintTxt: "First Name",
-                      controller: _fNameController),
+                      txt: "MM/YY",
+                      hintTxt: "MM/YY",
+                      controller: _dateController),
                   customColumn(
                       width: MediaQuery.of(context).size.width * 0.4,
-                      txt: "Last Name",
-                      hintTxt: "Last Name",
-                      controller: _lNameController),
+                      txt: "CVC",
+                      hintTxt: "CVC",
+                      controller: _cvcController),
                 ],
               ),
-              customColumn(
-                  txt: "Username",
-                  hintTxt: "Username",
-                  controller: _userNameController),
-              customColumn(
-                  txt: "Email/Phone",
-                  hintTxt: "Email/Phone",
-                  controller: _emailController),
-              customColumn(
-                  txt: "Password",
-                  hintTxt: "Password",
-                  controller: _passwordController),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 20.0),
-                child: AppButton.appButton("Confirm", onTap: () {
+                child: AppButton.appButton(  widget.edit == true? "Edit": "Add Payment Method", onTap: () {
                   push(context, BottomNavView());
                 },
                     height: 53,
-                     fontWeight: FontWeight.w500,
-                    fontSize: 14,
                     radius: 32.0,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14,
                     backgroundColor: AppTheme.appColor,
                     textColor: AppTheme.whiteColor),
               )

@@ -134,6 +134,8 @@ class _AuctionInfoScreenState extends State<AuctionInfoScreen> {
                         height: 53,
                         width: 150,
                         radius: 32.0,
+                         fontWeight: FontWeight.w500,
+                    fontSize: 14,
                         backgroundColor: AppTheme.appColor,
                         textColor: AppTheme.whiteColor),
                     const SizedBox(
@@ -142,6 +144,8 @@ class _AuctionInfoScreenState extends State<AuctionInfoScreen> {
                     AppButton.appButton("Make Offer",
                         height: 53,
                         width: 150,
+                         fontWeight: FontWeight.w500,
+                    fontSize: 14,
                         radius: 32.0, 
                         backgroundColor: AppTheme.appColor,
                         textColor: AppTheme.whiteColor)

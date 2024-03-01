@@ -14,6 +14,8 @@ class AppTheme {
   static Color hintTextColor = const Color(0xff939699);
 
   static Color txt1B20 = const Color(0xff1B2028);
+  static Color disableColor = const Color(0xffB9D4CD);
+
 
   // static const Color primaryColorLite = Color(0xff65FF8F);
   // static const Color primarySwatchColor = Color(0xff36F12C);

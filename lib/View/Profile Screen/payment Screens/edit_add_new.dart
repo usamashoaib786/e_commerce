@@ -16,13 +16,14 @@ class AddEditCardScreen extends StatefulWidget {
 }
 
 class _AddEditCardScreenState extends State<AddEditCardScreen> {
-  TextEditingController _nameController = TextEditingController();
-  TextEditingController _cardNumController = TextEditingController();
-  TextEditingController _dateController = TextEditingController();
-  TextEditingController _cvcController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _cardNumController = TextEditingController();
+  final TextEditingController _dateController = TextEditingController();
+  final TextEditingController _cvcController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppTheme.whiteColor,
       appBar: CustomAppBar1(
         title: widget.edit == false ? "Add New Card" : "Edit",
       ),
@@ -61,7 +62,7 @@ class _AddEditCardScreenState extends State<AddEditCardScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 20.0),
                 child: AppButton.appButton(  widget.edit == true? "Edit": "Add Payment Method", onTap: () {
-                  push(context, BottomNavView());
+                  push(context, const BottomNavView());
                 },
                     height: 53,
                     radius: 32.0,

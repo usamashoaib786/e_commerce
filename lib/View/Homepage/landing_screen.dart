@@ -1,5 +1,4 @@
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:tt_offer/Utils/resources/res/app_theme.dart';
 import 'package:tt_offer/Utils/utils.dart';
@@ -20,8 +19,7 @@ class LandingScreen extends StatefulWidget {
 }
 
 class _LandingScreenState extends State<LandingScreen> {
-  int _currentPage = 0;
-  TextEditingController _searchController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
   static const List<String> _imagePaths = [
     "assets/images/sliderImg.png",
     "assets/images/sliderImg.png",
@@ -46,6 +44,7 @@ class _LandingScreenState extends State<LandingScreen> {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
+      backgroundColor: AppTheme.whiteColor,
       appBar: CustomAppBar(context: context),
       body: Padding(
         padding: const EdgeInsets.only(
@@ -113,7 +112,7 @@ class _LandingScreenState extends State<LandingScreen> {
               ),
               customRow(
                   txt1: "Categories", txt2: "View All", txt3: "", onTap: () {
-                    push(context, AllCategories());
+                    push(context, const AllCategories());
                   }),
               SizedBox(
                 height: 80,
@@ -140,7 +139,7 @@ class _LandingScreenState extends State<LandingScreen> {
                                   height: 32,
                                   width: 32,
                                 ),
-                                AppText.appText("${categoryTxt[index]}",
+                                AppText.appText(categoryTxt[index],
                                     fontSize: 10,
                                     fontWeight: FontWeight.w400,
                                     textColor: AppTheme.textColor),
@@ -162,7 +161,7 @@ class _LandingScreenState extends State<LandingScreen> {
               ),
               customRow(
                   onTap: () {
-                    push(context, ViewAllAuctionProducts());
+                    push(context, const ViewAllAuctionProducts());
                   },
                   txt1: "Auction Products",
                   txt2: "View All",
@@ -183,7 +182,7 @@ class _LandingScreenState extends State<LandingScreen> {
                         children: [
                           GestureDetector(
                             onTap: () {
-                              push(context, AuctionInfoScreen());
+                              push(context, const AuctionInfoScreen());
                             },
                             child: SizedBox(
                               height: 325,
@@ -280,7 +279,7 @@ class _LandingScreenState extends State<LandingScreen> {
               ),
               customRow(
                   onTap: () {
-                    push(context, ViewFeaturedProducts());
+                    push(context, const ViewFeaturedProducts());
                   },
                   txt1: "Feature Products",
                   txt2: "View All",
@@ -359,7 +358,7 @@ class _LandingScreenState extends State<LandingScreen> {
   }
 
   Widget featureContainer({color, img, txt}) {
-    return Container(
+    return SizedBox(
       height: 245,
       width: 150,
       child: Column(
@@ -405,7 +404,7 @@ class _LandingScreenState extends State<LandingScreen> {
                   textColor: AppTheme.textColor),
               Row(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.star,
                     color: Colors.amber,
                     size: 18,
@@ -452,9 +451,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final context;
   // Callback function
 
-  const CustomAppBar({this.context});
+  const CustomAppBar({super.key, this.context});
   @override
-  Widget build(BuildContext contex7t) {
+  Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 25.0, top: 40, right: 25),
       child: Row(
@@ -472,7 +471,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-                    push(context, NotificationScreen());
+                    push(context, const NotificationScreen());
                   },
                   child: Icon(
                     Icons.notifications_outlined,

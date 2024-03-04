@@ -4,7 +4,6 @@ import 'package:tt_offer/Utils/utils.dart';
 import 'package:tt_offer/Utils/widgets/others/app_button.dart';
 import 'package:tt_offer/Utils/widgets/others/app_text.dart';
 import 'package:tt_offer/View/Authentication%20screens/login_screen.dart';
-import 'package:tt_offer/View/BottomNavigation/navigation_bar.dart';
 
 class OnBoardScreen extends StatefulWidget {
   const OnBoardScreen({super.key});
@@ -17,6 +16,7 @@ class _OnBoardScreenState extends State<OnBoardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppTheme.whiteColor,
       body: Padding(
         padding: const EdgeInsets.only(left: 30.0, right: 30, top: 50),
         child: Column(
@@ -36,7 +36,7 @@ class _OnBoardScreenState extends State<OnBoardScreen> {
             ),
             Image.asset("assets/images/onBorad.png"),
             AppButton.appButton("Get Started", onTap: () {
-              push(context, SigInScreen());
+              push(context, const SigInScreen());
             },
                 height: 53,
                 radius: 32.0,

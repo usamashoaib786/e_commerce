@@ -16,7 +16,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
 
     Future.delayed(const Duration(seconds: 2), () {
-      pushReplacement(context, OnBoardScreen());
+      pushReplacement(context, const OnBoardScreen());
 
       // getUserCredentials(context);
     });
@@ -38,9 +38,9 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.appColor,
+      backgroundColor: AppTheme.whiteColor,
       body: Container(
-        decoration: BoxDecoration(),
+        decoration: const BoxDecoration(),
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
         child: Align(

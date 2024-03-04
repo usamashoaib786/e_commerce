@@ -4,9 +4,11 @@ import 'package:tt_offer/View/ChatScreens/chat_screen.dart';
 import 'package:tt_offer/View/Homepage/landing_screen.dart';
 import 'package:tt_offer/View/Post%20screens/post_screen.dart';
 import 'package:tt_offer/View/Profile%20Screen/profile_screen.dart';
-import 'package:tt_offer/View/Settings/setting_screen.dart';
+import 'package:tt_offer/View/Sellings/selling_purchase.dart';
 
 class BottomNavView extends StatefulWidget {
+  const BottomNavView({super.key});
+
   @override
   _BottomNavViewState createState() => _BottomNavViewState();
 }
@@ -18,7 +20,7 @@ class _BottomNavViewState extends State<BottomNavView> {
     LandingScreen(),
     ChatScreen(),
     PostScreen(),
-    SettingScreen(),
+    SellingPurchaseScreen(title: "Selling",),
     ProfileScreen()
   ];
 
@@ -31,6 +33,7 @@ class _BottomNavViewState extends State<BottomNavView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppTheme.whiteColor,
       body: _widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
@@ -69,7 +72,7 @@ class _BottomNavViewState extends State<BottomNavView> {
               height: 30,
               color: _selectedIndex == 3 ? AppTheme.appColor : Colors.grey,
             ),
-            label: 'Settings',
+            label: 'Sellings',
           ),
           BottomNavigationBarItem(
             icon: Image.asset(

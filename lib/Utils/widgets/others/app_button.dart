@@ -32,14 +32,14 @@ class AppButton {
         decoration: BoxDecoration(
             boxShadow: [
               blurContainer == true
-                  ? BoxShadow(
+                  ? const BoxShadow(
                       color: Colors.black26,
                       blurRadius: 2,
                       offset: Offset(0.0, 4))
-                  : BoxShadow()
+                  : const BoxShadow()
             ],
             color: backgroundColor,
-            borderRadius: BorderRadius.circular(radius == null ? 10 : radius),
+            borderRadius: BorderRadius.circular(radius ?? 10),
             border: border == false
                 ? null
                 : Border.all(color: AppTheme.appColor, width: 1)),
@@ -121,6 +121,7 @@ class AppButton {
   static Widget appButtonWithLeadingImage(String text,
       {double? height,
       double? width,
+      space,
       double? imgHeight,
       Color? backgroundColor,
       EdgeInsetsGeometry? padding,
@@ -131,6 +132,7 @@ class AppButton {
       FontStyle? fontStyle,
       TextBaseline? textBaseline,
       TextOverflow? overflow,
+      Color? color,
       double? letterSpacing,
       IconData? icons,
       Function()? onTap,
@@ -150,36 +152,30 @@ class AppButton {
             border: border == false
                 ? null
                 : Border.all(
-                    color: Color(0xffE5E9EB),
+                    color: const Color(0xff292D32),
                     width: 1,
                   )),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(
-              width: 30,
-              child: Image.asset(
-                "$imagePath",
-                height: imgHeight,
-              ),
-            ),
-            const SizedBox(
-              width: 10,
+            Image.asset(
+              "$imagePath",
+              height: imgHeight,
             ),
             SizedBox(
-              width: 140,
-              child: AppText.appText(text,
-                  fontFamily: fontFamily,
-                  fontSize: fontSize,
-                  textAlign: textAlign,
-                  fontWeight: fontWeight,
-                  textColor: textColor,
-                  overflow: overflow,
-                  letterSpacing: letterSpacing,
-                  textBaseline: textBaseline,
-                  fontStyle: fontStyle,
-                  underLine: underLine),
+              width: space ?? 10,
             ),
+            AppText.appText(text,
+                fontFamily: fontFamily,
+                fontSize: fontSize,
+                textAlign: textAlign,
+                fontWeight: fontWeight,
+                textColor: textColor,
+                overflow: overflow,
+                letterSpacing: letterSpacing,
+                textBaseline: textBaseline,
+                fontStyle: fontStyle,
+                underLine: underLine),
           ],
         ),
       ),

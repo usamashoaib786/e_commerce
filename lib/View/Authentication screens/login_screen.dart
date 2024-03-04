@@ -17,6 +17,7 @@ class _SigInScreenState extends State<SigInScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppTheme.whiteColor,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         centerTitle: true,
@@ -60,14 +61,14 @@ class _SigInScreenState extends State<SigInScreen> {
                       imagePath: "assets/images/apple.png"),
                   AppButton.appButtonWithLeadingImage("Continue with Phone",
                       onTap: () {
-                    push(context, PhoneLoginScreen());
+                    push(context, const PhoneLoginScreen());
                   },
                       height: 44,
                       imgHeight: 20,
                       imagePath: "assets/images/call.png"),
                   AppButton.appButtonWithLeadingImage("Continue with Email",
                       onTap: () {
-                    push(context, EmailLoginScreen());
+                    push(context, const EmailLoginScreen());
                   },
                       height: 44,
                       imgHeight: 20,

@@ -62,14 +62,15 @@ class _AllCategoriesState extends State<AllCategories> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar1(
+      backgroundColor: AppTheme.whiteColor,
+      appBar: const CustomAppBar1(
         title: "Categories",
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: GridView.builder(
           itemCount: categoryImg.length,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             mainAxisSpacing: 30,
             crossAxisSpacing: 20,
             crossAxisCount: 4,
@@ -89,7 +90,7 @@ class _AllCategoriesState extends State<AllCategories> {
                     height: 32,
                     width: 32,
                   ),
-                  AppText.appText("${categoryTxt[index]}",
+                  AppText.appText(categoryTxt[index],
                       fontSize: 10,
                       fontWeight: FontWeight.w400,
                       textColor: AppTheme.textColor),

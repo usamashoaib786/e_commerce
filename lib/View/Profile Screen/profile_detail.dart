@@ -5,7 +5,6 @@ import 'package:tt_offer/Utils/widgets/others/app_button.dart';
 import 'package:tt_offer/Utils/widgets/others/app_field.dart';
 import 'package:tt_offer/Utils/widgets/others/app_text.dart';
 import 'package:tt_offer/Utils/widgets/others/custom_app_bar.dart';
-import 'package:tt_offer/View/Authentication%20screens/otp_screen.dart';
 import 'package:tt_offer/View/BottomNavigation/navigation_bar.dart';
 
 class ProfileDetailScreen extends StatefulWidget {
@@ -16,14 +15,15 @@ class ProfileDetailScreen extends StatefulWidget {
 }
 
 class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
-  TextEditingController _fNameController = TextEditingController();
-  TextEditingController _lNameController = TextEditingController();
-  TextEditingController _userNameController = TextEditingController();
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _fNameController = TextEditingController();
+  final TextEditingController _lNameController = TextEditingController();
+  final TextEditingController _userNameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppTheme.whiteColor,
       appBar: CustomAppBar1(
         context: context,
         title: "Profile Detail",
@@ -77,7 +77,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 20.0),
                 child: AppButton.appButton("Confirm", onTap: () {
-                  push(context, BottomNavView());
+                  push(context, const BottomNavView());
                 },
                     height: 53,
                      fontWeight: FontWeight.w500,

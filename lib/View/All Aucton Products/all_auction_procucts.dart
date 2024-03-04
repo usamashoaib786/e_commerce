@@ -15,12 +15,13 @@ class ViewAllAuctionProducts extends StatefulWidget {
 }
 
 class _ViewAllAuctionProductsState extends State<ViewAllAuctionProducts> {
-  TextEditingController _searchController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
+      backgroundColor: AppTheme.whiteColor,
       appBar: const CustomAppBar1(
         title: "Auction Products",
       ),
@@ -45,7 +46,7 @@ class _ViewAllAuctionProductsState extends State<ViewAllAuctionProducts> {
             Padding(
               padding:
                   const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
-              child: Container(
+              child: SizedBox(
                 height: 20,
                 width: screenWidth,
                 child: Row(
@@ -85,7 +86,7 @@ class _ViewAllAuctionProductsState extends State<ViewAllAuctionProducts> {
                 itemBuilder: (context, int index) {
                   return GestureDetector(
                     onTap: () {
-                      push(context, AuctionInfoScreen());
+                      push(context, const AuctionInfoScreen());
                     },
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,

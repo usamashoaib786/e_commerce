@@ -3,7 +3,6 @@ import 'package:pin_code_text_field/pin_code_text_field.dart';
 import 'package:tt_offer/Utils/resources/res/app_theme.dart';
 import 'package:tt_offer/Utils/utils.dart';
 import 'package:tt_offer/Utils/widgets/others/app_button.dart';
-import 'package:tt_offer/Utils/widgets/others/app_field.dart';
 import 'package:tt_offer/Utils/widgets/others/app_text.dart';
 import 'package:tt_offer/Utils/widgets/others/custom_app_bar.dart';
 import 'package:tt_offer/View/Profile%20Screen/profile_detail.dart';
@@ -17,12 +16,13 @@ class OTPScreen extends StatefulWidget {
 }
 
 class _OTPScreenState extends State<OTPScreen> {
-  TextEditingController _emailController = TextEditingController();
+  // final TextEditingController _emailController = TextEditingController();
   TextEditingController textEditingController = TextEditingController();
   String enteredOTP = "";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppTheme.whiteColor,
       appBar: CustomAppBar1(
         context: context,
         title: "Email",
@@ -109,8 +109,7 @@ class _OTPScreenState extends State<OTPScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 40.0),
                 child: AppButton.appButton("Verify", onTap: () {
-                  print("object");
-                  push(context, ProfileDetailScreen());
+                  push(context, const ProfileDetailScreen());
                 },
                     height: 53,
                      fontWeight: FontWeight.w500,

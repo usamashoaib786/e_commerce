@@ -16,6 +16,7 @@ class _AccountSettingScreenState extends State<AccountSettingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppTheme.whiteColor,
       appBar: const CustomAppBar1(
         title: "Account Setting",
       ),

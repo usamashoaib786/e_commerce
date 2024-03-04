@@ -6,7 +6,7 @@ import 'package:tt_offer/View/Profile%20Screen/Account%20Settigs/account_setting
 import 'package:tt_offer/View/Profile%20Screen/custom_link.dart';
 import 'package:tt_offer/View/Profile%20Screen/payment%20Screens/payment_screen.dart';
 import 'package:tt_offer/View/Profile%20Screen/saved_products.dart';
-import 'package:tt_offer/View/Profile%20Screen/selling&purchase.dart';
+import 'package:tt_offer/View/Sellings/selling_purchase.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -19,6 +19,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppTheme.whiteColor,
         appBar: AppBar(
           automaticallyImplyLeading: false,
           centerTitle: true,
@@ -61,7 +62,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               headingText(txt: "Transactions"),
               customRow(
                   onTap: () {
-                    push(context, const SellingPurchaseScreen());
+                    push(context, const SellingPurchaseScreen(title: "Purchase & Sale",));
                   },
                   txt: "Purchases & Sales",
                   img: "assets/images/receipt.png"),
@@ -122,7 +123,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget verifiedContainer({img, txt, color}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 20.0),
-      child: Container(
+      child: SizedBox(
         height: 80,
         width: 47,
         child: Column(
@@ -217,7 +218,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Container(
+          SizedBox(
             height: 160,
             width: 150,
             child: Column(
@@ -259,8 +260,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    StarRating(
-                      rating: 2.5 ?? 0,
+                    const StarRating(
+                      rating: 2.5 ,
                       color: Colors.yellow,
                       size: 14,
                     ),
@@ -297,7 +298,7 @@ class StarRating extends StatelessWidget {
   final double size;
   final Color color;
 
-  StarRating({required this.rating, this.size = 30, required this.color});
+  const StarRating({super.key, required this.rating, this.size = 30, required this.color});
 
   @override
   Widget build(BuildContext context) {
@@ -310,19 +311,19 @@ class StarRating extends StatelessWidget {
         if (index < filledStars) {
           return Icon(
             Icons.star,
-            color: color ?? Colors.yellow,
+            color: color ,
             size: size,
           );
         } else if (index == filledStars && hasHalfStar) {
           return Icon(
             Icons.star_half,
-            color: color ?? Colors.yellow,
+            color: color ,
             size: size,
           );
         } else {
           return Icon(
             Icons.star_border,
-            color: color ?? Colors.grey,
+            color: color ,
             size: size,
           );
         }

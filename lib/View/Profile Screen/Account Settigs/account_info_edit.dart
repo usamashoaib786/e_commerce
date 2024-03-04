@@ -31,9 +31,10 @@ class AccountEditInfoScreen extends StatefulWidget {
 class _AccountEditInfoScreenState extends State<AccountEditInfoScreen> {
   @override
   Widget build(BuildContext context) {
-    TextEditingController _controller = TextEditingController();
+    TextEditingController controller = TextEditingController();
 
     return Scaffold(
+      backgroundColor: AppTheme.whiteColor,
       appBar: CustomAppBar1(
         title: "${widget.title}",
       ),
@@ -55,7 +56,7 @@ class _AccountEditInfoScreenState extends State<AccountEditInfoScreen> {
                   ),
                   CustomAppFormField(
                     texthint: "${widget.infoText}",
-                    controller: _controller,
+                    controller: controller,
                     borderColor: AppTheme.borderColor,
                     hintTextColor: AppTheme.hintTextColor,
                   )
@@ -77,7 +78,7 @@ class _AccountEditInfoScreenState extends State<AccountEditInfoScreen> {
                   ),
                   CustomAppFormField(
                     texthint: "",
-                    controller: _controller,
+                    controller: controller,
                     borderColor: AppTheme.borderColor,
                     hintTextColor: AppTheme.hintTextColor,
                   )
@@ -94,7 +95,7 @@ class _AccountEditInfoScreenState extends State<AccountEditInfoScreen> {
                           : widget.location == true
                               ? "Update Location"
                               : "Update", onTap: () {
-                push(context, BottomNavView());
+                push(context, const BottomNavView());
               },
                   height: 53,
                   fontWeight: FontWeight.w500,

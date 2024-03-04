@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tt_offer/Utils/resources/res/app_theme.dart';
 import 'package:tt_offer/Utils/widgets/others/app_text.dart';
 import 'package:tt_offer/Utils/widgets/others/custom_app_bar.dart';
+import 'package:tt_offer/Utils/widgets/others/divider.dart';
 
 class SavedItemsScreen extends StatefulWidget {
   const SavedItemsScreen({Key? key}) : super(key: key);
@@ -13,12 +14,12 @@ class SavedItemsScreen extends StatefulWidget {
 class _SavedItemsScreenState extends State<SavedItemsScreen> {
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    return const Scaffold(
-      appBar: CustomAppBar1(
+    return  Scaffold(
+      backgroundColor: AppTheme.whiteColor,
+      appBar: const CustomAppBar1(
         title: "Saved items",
       ),
-      body: Padding(
+      body: const Padding(
         padding: EdgeInsets.symmetric(horizontal: 20.0),
         child: SavedItemListView(
           ischeck: 1,
@@ -39,7 +40,6 @@ class SavedItemListView extends StatefulWidget {
 class _SavedItemListViewState extends State<SavedItemListView> {
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
 
     return ListView.builder(
       shrinkWrap: true,
@@ -107,11 +107,7 @@ class _SavedItemListViewState extends State<SavedItemListView> {
                 ),
               ),
             ),
-            Container(
-              height: 1,
-              width: MediaQuery.of(context).size.width,
-              color: const Color(0xffEAEAEA),
-            )
+            CustomDivider()
           ],
         );
       },

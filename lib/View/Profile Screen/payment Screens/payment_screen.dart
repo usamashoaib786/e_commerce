@@ -3,6 +3,7 @@ import 'package:tt_offer/Utils/resources/res/app_theme.dart';
 import 'package:tt_offer/Utils/utils.dart';
 import 'package:tt_offer/Utils/widgets/others/app_text.dart';
 import 'package:tt_offer/Utils/widgets/others/custom_app_bar.dart';
+import 'package:tt_offer/Utils/widgets/others/divider.dart';
 import 'package:tt_offer/View/Profile%20Screen/payment%20Screens/edit_add_new.dart';
 
 class PaymentScreen extends StatefulWidget {
@@ -18,8 +19,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
   List<bool> isSelectedList = [true, false, false, false];
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
+      backgroundColor: AppTheme.whiteColor,
       appBar: const CustomAppBar1(
         title: "Payment",
       ),
@@ -28,12 +29,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
         child: Column(
           children: [
             Align(alignment: Alignment.center, child: selectOption()),
-            if(selectedOption == "Accounts")
-            accountContainer(),
-            if(selectedOption == "Transactions")
-            transactionContainer(),
-
-            ],
+            if (selectedOption == "Accounts") accountContainer(),
+            if (selectedOption == "Transactions") transactionContainer(),
+          ],
         ),
       ),
     );
@@ -138,13 +136,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
             ],
           ),
         ),
-        Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Container(
-              height: 1,
-              width: MediaQuery.of(context).size.width,
-              color: const Color(0xffEAEAEA),
-            ))
+        const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.0),
+            child: CustomDivider())
       ],
     );
   }
@@ -180,10 +174,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 child: Container(
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    border: Border.all(color:
-                     selectedOption == 'Accounts'
-                        ? AppTheme.appColor :
-                     const Color(0xffEDEDED)),
+                    border: Border.all(
+                        color: selectedOption == 'Accounts'
+                            ? AppTheme.appColor
+                            : const Color(0xffEDEDED)),
                     borderRadius: const BorderRadius.horizontal(
                         left: Radius.circular(100)),
                     color: selectedOption == 'Accounts'
@@ -207,8 +201,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   decoration: BoxDecoration(
                     borderRadius: const BorderRadius.horizontal(
                         right: Radius.circular(100)),
-                    border: Border.all(color:  selectedOption == 'Transactions'
-                        ? AppTheme.appColor : const Color(0xffEDEDED)),
+                    border: Border.all(
+                        color: selectedOption == 'Transactions'
+                            ? AppTheme.appColor
+                            : const Color(0xffEDEDED)),
                     color: selectedOption == 'Transactions'
                         ? AppTheme.appColor // Change color when selected
                         : Colors.transparent,
@@ -230,129 +226,130 @@ class _PaymentScreenState extends State<PaymentScreen> {
     );
   }
 
-
-  Widget    accountContainer(){
-    return  Column(
+  Widget accountContainer() {
+    return Column(
       children: [
-         SizedBox(
-              height: 70,
-              width: 105,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  AppText.appText("Total Balance",
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400,
-                      textColor: AppTheme.txt1B20),
-                  AppText.appText("\$5000",
-                      fontSize: 32,
-                      fontWeight: FontWeight.w700,
-                      textColor: AppTheme.blackColor),
-                ],
-              ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                AppText.appText("Cards",
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    textColor: AppTheme.txt1B20),
-                GestureDetector(
-                  onTap: () {
-                    push(
-                        context,
-                        const AddEditCardScreen(
-                          edit: false,
-                        ));
-                  },
-                  child: AppText.appText("Add New Card",
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      textColor: AppTheme.appColor),
-                ),
-              ],
-            ),
-            cardContainer(
-              img: "assets/images/ApplePayment.png",
-              txt: "Apple Pay",
-              txt1: "Default",
-              isSelected: isSelectedList[0],
-              onChanged: () {
-                setState(() {
-                  isSelectedList = [true, false, false, false];
-                });
-              },
-              apple: true,
-            ),
-            cardContainer(
-              img: "assets/images/visaPayment.png",
-              txt: "Visa",
-              isSelected: isSelectedList[1],
-              txt1: "Expiry 06/2024",
-              ontap: () {
+        SizedBox(
+          height: 70,
+          width: 105,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              AppText.appText("Total Balance",
+                  fontSize: 12,
+                  fontWeight: FontWeight.w400,
+                  textColor: AppTheme.txt1B20),
+              AppText.appText("\$5000",
+                  fontSize: 32,
+                  fontWeight: FontWeight.w700,
+                  textColor: AppTheme.blackColor),
+            ],
+          ),
+        ),
+        const SizedBox(
+          height: 20,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            AppText.appText("Cards",
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                textColor: AppTheme.txt1B20),
+            GestureDetector(
+              onTap: () {
                 push(
                     context,
                     const AddEditCardScreen(
-                      edit: true,
+                      edit: false,
                     ));
               },
-              onChanged: () {
-                setState(() {
-                  isSelectedList = [false, true, false, false];
-                });
-              },
+              child: AppText.appText("Add New Card",
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  textColor: AppTheme.appColor),
             ),
-            cardContainer(
-              img: "assets/images/masterCardPayment.png",
-              txt: "MasterCard",
-              isSelected: isSelectedList[2],
-              txt1: "Expiry 06/2024",
-              ontap: () {
-                push(
-                    context,
-                    const AddEditCardScreen(
-                      edit: true,
-                    ));
-              },
-              onChanged: () {
-                setState(() {
-                  isSelectedList = [false, false, true, false];
-                });
-              },
-            ),
-            cardContainer(
-              img: "assets/images/googlePayment.png",
-              txt: "Google Pay",
-              isSelected: isSelectedList[3],
-              txt1: "Expiry 06/2024",
-              ontap: () {
-                push(
-                    context,
-                    const AddEditCardScreen(
-                      edit: true,
-                    ));
-              },
-              onChanged: () {
-                setState(() {
-                  isSelectedList = [false, false, false, true];
-                });
-              },
-            ),
-         
+          ],
+        ),
+        cardContainer(
+          img: "assets/images/ApplePayment.png",
+          txt: "Apple Pay",
+          txt1: "Default",
+          isSelected: isSelectedList[0],
+          onChanged: () {
+            setState(() {
+              isSelectedList = [true, false, false, false];
+            });
+          },
+          apple: true,
+        ),
+        cardContainer(
+          img: "assets/images/visaPayment.png",
+          txt: "Visa",
+          isSelected: isSelectedList[1],
+          txt1: "Expiry 06/2024",
+          ontap: () {
+            push(
+                context,
+                const AddEditCardScreen(
+                  edit: true,
+                ));
+          },
+          onChanged: () {
+            setState(() {
+              isSelectedList = [false, true, false, false];
+            });
+          },
+        ),
+        cardContainer(
+          img: "assets/images/masterCardPayment.png",
+          txt: "MasterCard",
+          isSelected: isSelectedList[2],
+          txt1: "Expiry 06/2024",
+          ontap: () {
+            push(
+                context,
+                const AddEditCardScreen(
+                  edit: true,
+                ));
+          },
+          onChanged: () {
+            setState(() {
+              isSelectedList = [false, false, true, false];
+            });
+          },
+        ),
+        cardContainer(
+          img: "assets/images/googlePayment.png",
+          txt: "Google Pay",
+          isSelected: isSelectedList[3],
+          txt1: "Expiry 06/2024",
+          ontap: () {
+            push(
+                context,
+                const AddEditCardScreen(
+                  edit: true,
+                ));
+          },
+          onChanged: () {
+            setState(() {
+              isSelectedList = [false, false, false, true];
+            });
+          },
+        ),
       ],
     );
   }
-  Widget   transactionContainer(){
-    return   Container(
+
+  Widget transactionContainer() {
+    return SizedBox(
       height: 400,
       child: Center(
-        child: Image.asset("assets/images/transaction.png", height: 140,),
+        child: Image.asset(
+          "assets/images/transaction.png",
+          height: 140,
+        ),
       ),
     );
   }
-
 }

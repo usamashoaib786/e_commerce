@@ -47,6 +47,7 @@ class _AuctionInfoScreenState extends State<AuctionInfoScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppTheme.whiteColor,
         body: Container(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
@@ -55,7 +56,7 @@ class _AuctionInfoScreenState extends State<AuctionInfoScreen> {
         children: [
           Align(
             alignment: Alignment.topCenter,
-            child: Container(
+            child: SizedBox(
               height: 300,
               child: Stack(
                 children: [
@@ -174,7 +175,7 @@ class _AuctionInfoScreenState extends State<AuctionInfoScreen> {
                   fontWeight: FontWeight.w600,
                   textColor: AppTheme.textColor),
             ),
-            Container(
+            SizedBox(
               width: screenWidth,
               child: AppText.appText(
                   "Its simple and elegant shape makes it perfect for those of you who like you who want minimalist watch. Its simple and elegant shape makes it perfect for those of you who like you who want minimalist watch.",
@@ -288,7 +289,7 @@ class _AuctionInfoScreenState extends State<AuctionInfoScreen> {
                                   fontSize: 12,
                                   fontWeight: FontWeight.w400,
                                   textColor: AppTheme.lighttextColor),
-                              AppText.appText("${wrapList1[i]}",
+                              AppText.appText(wrapList1[i],
                                   fontSize: 12,
                                   fontWeight: FontWeight.w600,
                                   textColor: AppTheme.textColor),

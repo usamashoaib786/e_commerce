@@ -5,9 +5,13 @@ class CustomAppBar1 extends StatelessWidget implements PreferredSizeWidget {
   final double preferredHeight = 50.0;
   final context;
   final title;
+  final action;
+  final actionOntap;
+
   // Callback function
 
-  const CustomAppBar1({this.context, this.title});
+  const CustomAppBar1(
+      {super.key, this.context, this.title, this.action, this.actionOntap});
   @override
   Widget build(BuildContext context) {
     return AppBar(
@@ -30,6 +34,21 @@ class CustomAppBar1 extends StatelessWidget implements PreferredSizeWidget {
           fontWeight: FontWeight.w400,
           textColor: const Color(0xff1B2028)),
       centerTitle: true,
+      actions: [
+        action == true
+            ? Padding(
+              padding: const EdgeInsets.only(right:10),
+              child: GestureDetector(
+                  onTap: actionOntap,
+                  child: Image.asset(
+                    "assets/images/more.png",
+                    height: 24,
+                    width: 24,
+                  ),
+                ),
+            )
+            : const SizedBox.shrink()
+      ],
     );
   }
 

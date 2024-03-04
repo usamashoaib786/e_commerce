@@ -15,10 +15,11 @@ class EmailLoginScreen extends StatefulWidget {
 }
 
 class _EmailLoginScreenState extends State<EmailLoginScreen> {
-  TextEditingController _emailController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppTheme.whiteColor,
       appBar: CustomAppBar1(
         context: context,
         title: "Email",
@@ -44,18 +45,18 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
                 child: AppText.appText("Email",
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
-                    textColor: Color(0xff090B0C)),
+                    textColor: const Color(0xff090B0C)),
               ),
               CustomAppFormField(
                 texthint: "Email",
                 controller: _emailController,
-                hintTextColor: Color(0xff939699),
-                borderColor: Color(0xffE5E9EB),
+                hintTextColor: const Color(0xff939699),
+                borderColor: const Color(0xffE5E9EB),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 40.0),
                 child: AppButton.appButton("Send OTP", onTap: () {
-                  push(context, OTPScreen(email: true,));
+                  push(context, const OTPScreen(email: true,));
                 },
                     height: 53,
                     radius: 32.0,

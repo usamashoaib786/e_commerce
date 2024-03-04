@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tt_offer/Utils/resources/res/app_theme.dart';
-import 'package:tt_offer/Utils/utils.dart';
-import 'package:tt_offer/Utils/widgets/others/app_button.dart';
 import 'package:tt_offer/Utils/widgets/others/app_field.dart';
 import 'package:tt_offer/Utils/widgets/others/app_text.dart';
 import 'package:tt_offer/Utils/widgets/others/custom_app_bar.dart';
-import 'package:tt_offer/View/Auction%20Info/auction_info.dart';
 
 class ViewFeaturedProducts extends StatefulWidget {
   const ViewFeaturedProducts({super.key});
@@ -15,12 +12,13 @@ class ViewFeaturedProducts extends StatefulWidget {
 }
 
 class _ViewFeaturedProductsState extends State<ViewFeaturedProducts> {
-  TextEditingController _searchController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
+      backgroundColor: AppTheme.whiteColor,
       appBar: const CustomAppBar1(
         title: "Featured Products",
       ),
@@ -45,7 +43,7 @@ class _ViewFeaturedProductsState extends State<ViewFeaturedProducts> {
             Padding(
               padding:
                   const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
-              child: Container(
+              child: SizedBox(
                 height: 20,
                 width: screenWidth,
                 child: Row(

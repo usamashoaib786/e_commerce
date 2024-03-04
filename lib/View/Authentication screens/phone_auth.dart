@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:tt_offer/Utils/resources/res/app_theme.dart';
 import 'package:tt_offer/Utils/utils.dart';
 import 'package:tt_offer/Utils/widgets/others/app_button.dart';
-import 'package:tt_offer/Utils/widgets/others/app_field.dart';
 import 'package:tt_offer/Utils/widgets/others/app_text.dart';
 import 'package:tt_offer/Utils/widgets/others/custom_app_bar.dart';
 import 'package:tt_offer/View/Authentication%20screens/otp_screen.dart';
@@ -16,7 +15,7 @@ class PhoneLoginScreen extends StatefulWidget {
 }
 
 class _PhoneLoginScreenState extends State<PhoneLoginScreen> {
-  TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
 
   @override
   void initState() {
@@ -27,6 +26,7 @@ class _PhoneLoginScreenState extends State<PhoneLoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppTheme.whiteColor,
       appBar: CustomAppBar1(
         context: context,
         title: "Phone",
@@ -52,7 +52,7 @@ class _PhoneLoginScreenState extends State<PhoneLoginScreen> {
                 child: AppText.appText("Phone",
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
-                    textColor: Color(0xff090B0C)),
+                    textColor: const Color(0xff090B0C)),
               ),
               phoneField(controller: _phoneController),
               Padding(
@@ -60,7 +60,7 @@ class _PhoneLoginScreenState extends State<PhoneLoginScreen> {
                 child: AppButton.appButton("Send OTP", onTap: () {
                   push(
                       context,
-                      OTPScreen(
+                      const OTPScreen(
                         email: false,
                       ));
                 },
@@ -79,11 +79,11 @@ class _PhoneLoginScreenState extends State<PhoneLoginScreen> {
   }
 
   Widget phoneField({controller}) {
-    String _initialCountry = "by";
+    String initialCountry = "by";
     return Container(
       decoration: BoxDecoration(
           color: AppTheme.whiteColor,
-          border: Border.all(color: Color(0xffE5E9EB)),
+          border: Border.all(color: const Color(0xffE5E9EB)),
           borderRadius: BorderRadius.circular(14)),
       height: 50,
       width: MediaQuery.of(context).size.width,
@@ -99,7 +99,7 @@ class _PhoneLoginScreenState extends State<PhoneLoginScreen> {
                 isShowTitle: false,
                 isShowCode: false,
                 isDownIcon: false),
-            initialSelection: _initialCountry,
+            initialSelection: initialCountry,
             useUiOverlay: false,
             useSafeArea: false,
           ),

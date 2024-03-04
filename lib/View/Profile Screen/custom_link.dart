@@ -4,7 +4,6 @@ import 'package:tt_offer/Utils/widgets/others/app_button.dart';
 import 'package:tt_offer/Utils/widgets/others/app_field.dart';
 import 'package:tt_offer/Utils/widgets/others/app_text.dart';
 import 'package:tt_offer/Utils/widgets/others/custom_app_bar.dart';
-import 'package:tt_offer/View/Profile%20Screen/profile_detail.dart';
 
 class CustomLinkScreen extends StatefulWidget {
   const CustomLinkScreen({super.key});
@@ -14,10 +13,11 @@ class CustomLinkScreen extends StatefulWidget {
 }
 
 class _CustomLinkScreenState extends State<CustomLinkScreen> {
-  TextEditingController _linkController = TextEditingController();
+  final TextEditingController _linkController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppTheme.whiteColor,
       appBar: const CustomAppBar1(
         title: "Custom Link",
       ),

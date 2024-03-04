@@ -14,7 +14,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar1(title: "Notifications",),
+      backgroundColor: AppTheme.whiteColor,
+      appBar: const CustomAppBar1(title: "Notifications",),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: SingleChildScrollView(
@@ -24,7 +25,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 height: 20,
               ),
               ListView.builder(
-                physics: NeverScrollableScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 itemCount: 10,
                 itemBuilder: (context, index) {

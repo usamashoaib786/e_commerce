@@ -7,11 +7,12 @@ class CustomAppBar1 extends StatelessWidget implements PreferredSizeWidget {
   final title;
   final action;
   final actionOntap;
+  final img;
 
   // Callback function
 
   const CustomAppBar1(
-      {super.key, this.context, this.title, this.action, this.actionOntap});
+      {super.key, this.context, this.title, this.action, this.actionOntap, this.img});
   @override
   Widget build(BuildContext context) {
     return AppBar(
@@ -41,7 +42,7 @@ class CustomAppBar1 extends StatelessWidget implements PreferredSizeWidget {
               child: GestureDetector(
                   onTap: actionOntap,
                   child: Image.asset(
-                    "assets/images/more.png",
+                    "${img}",
                     height: 24,
                     width: 24,
                   ),

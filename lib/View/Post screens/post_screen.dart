@@ -6,6 +6,8 @@ import 'package:tt_offer/Utils/widgets/others/app_field.dart';
 import 'package:tt_offer/Utils/widgets/others/app_text.dart';
 import 'package:tt_offer/Utils/widgets/others/custom_app_bar.dart';
 import 'package:tt_offer/View/BottomNavigation/navigation_bar.dart';
+import 'package:tt_offer/View/Post%20screens/add_post_detail.dart';
+import 'package:tt_offer/View/Post%20screens/indicator.dart';
 
 class PostScreen extends StatefulWidget {
   const PostScreen({super.key});
@@ -19,14 +21,21 @@ class _PostScreenState extends State<PostScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.whiteColor,
-      appBar: const CustomAppBar1(
+      appBar:  CustomAppBar1(
         title: "Post an Item",
+         actionOntap: () {
+          pushUntil(context, const BottomNavView());
+        },
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: SingleChildScrollView(
           child: Column(
             children: [
+              const SizedBox(
+                height: 20,
+              ),
+              StepsIndicator( conColor1: AppTheme.appColor, circleColor1: AppTheme.appColor,),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 20.0),
                 child: AppButton.appButtonWithLeadingImage("Take Photo",
@@ -70,7 +79,7 @@ class _PostScreenState extends State<PostScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 20.0),
                 child: AppButton.appButton("Next", onTap: () {
-                  push(context, const BottomNavView());
+                  push(context, const PostDetailScreen());
                 },
                     height: 53,
                     fontWeight: FontWeight.w500,
@@ -112,4 +121,6 @@ class _PostScreenState extends State<PostScreen> {
       ),
     );
   }
+
+
 }

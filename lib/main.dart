@@ -16,11 +16,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
     return Sizer(builder: (context, orientation, deviceType) {
-      return MaterialApp(
+      return const MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'HRM',
-        theme: ThemeData(),
-        home: const SplashScreen(),
+        title: 'TT Offer',
+        home: SplashScreen(),
       );
     });
   }

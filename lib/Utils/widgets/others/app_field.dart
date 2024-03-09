@@ -29,13 +29,15 @@ class CustomAppFormField extends StatefulWidget {
   final borderColor;
   final hintTextColor;
   final maxline;
-
+  final texAlign;
   final TextStyle? hintStyle;
   final style;
   final radius;
   final errorStyle;
   final errorBorder;
   final focusedErrorBorder;
+  final cPadding;
+  final type;
 
   CustomAppFormField({
     Key? key,
@@ -72,6 +74,8 @@ class CustomAppFormField extends StatefulWidget {
     this.hintTextColor,
     this.focusedErrorBorder,
     this.cursorColor,
+    this.texAlign,
+    this.cPadding, this.type,
   }) : super(key: key);
 
   @override
@@ -82,7 +86,7 @@ class _CustomAppFormFieldState extends State<CustomAppFormField> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: widget.height?? 48,
+      height: widget.height ?? 48,
       width: widget.width ?? MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
           border:
@@ -90,19 +94,23 @@ class _CustomAppFormFieldState extends State<CustomAppFormField> {
           color: AppTheme.white,
           borderRadius: BorderRadius.circular(widget.radius ?? 10)),
       child: TextField(
-        maxLines: widget.maxline?? 1,
+        style:
+            TextStyle(fontSize: widget.fontsize, fontWeight: widget.fontweight),
+        textAlign: widget.textAlign ?? TextAlign.start,
+        maxLines: widget.maxline ?? 1,
         controller: widget.controller,
         cursorColor: AppTheme.white,
         cursorHeight: 20,
+        
         cursorWidth: 2,
-        keyboardType: TextInputType.name,
+        keyboardType: widget.type??TextInputType.name,
         decoration: InputDecoration(
             prefixIcon: widget.prefixIcon,
             prefixIconConstraints: const BoxConstraints(
               minWidth: 50,
             ),
             border: InputBorder.none,
-            contentPadding: const EdgeInsets.all(10),
+            contentPadding: EdgeInsets.all(widget.cPadding ?? 8),
             hintText: widget.texthint,
             hintStyle: TextStyle(
                 color: widget.hintTextColor ?? AppTheme.textColor,
@@ -189,61 +197,61 @@ class _CustomAppPasswordfieldState extends State<CustomAppPasswordfield> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-          textAlignVertical: TextAlignVertical.center,
-          onChanged: widget.onChanged,
-          onTap: widget.onTap,
-          onTapOutside: widget.onTapOutside,
-          onFieldSubmitted: widget.onFieldSubmitted,
-          cursorHeight: widget.cursorHeight,
-          textAlign: widget.textAlign,
-          key: widget.key,
-          obscureText: _obscureText,
-          validator: widget.validator,
-          controller: widget.controller,
-          cursorColor: widget.cursorColor,
-          style: widget.style,
-          decoration: InputDecoration(
-      errorText: widget.errorText,
-      errorStyle: widget.errorStyle,
-      errorBorder: widget.errorBorder,
-      focusedErrorBorder: widget.focusedErrorBorder,
-      prefixIconColor: widget.prefixIconColor,
-      suffixIconColor: widget.suffixIconColor,
-      prefix: widget.prefix,
-      suffix: widget.suffix,
-      prefixIcon: widget.prefixIcon,
-      contentPadding: const EdgeInsets.only(
-        top: 20,
-        left: 5,
-      ),
-      enabledBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: AppTheme.appColor)),
-      disabledBorder:
-          const UnderlineInputBorder(borderSide: BorderSide.none),
-      focusedBorder: UnderlineInputBorder(
-          borderSide: BorderSide(
-        color: AppTheme.appColor,
-      )),
-      border: UnderlineInputBorder(
-          borderSide: BorderSide(color: AppTheme.appColor)),
-      hintText: widget.texthint,
-      hintStyle: widget.hintStyle,
-      suffixIcon: InkWell(
-        onTap: () {
-          setState(() {
-            _obscureText = !_obscureText;
-          });
-        },
-        child: Padding(
-          padding: const EdgeInsets.only(top: 13),
-          child: Icon(
-            _obscureText
-                ? Icons.visibility_off_outlined
-                : Icons.visibility_outlined,
-            color: AppTheme.appColor,
+      textAlignVertical: TextAlignVertical.center,
+      onChanged: widget.onChanged,
+      onTap: widget.onTap,
+      onTapOutside: widget.onTapOutside,
+      onFieldSubmitted: widget.onFieldSubmitted,
+      cursorHeight: widget.cursorHeight,
+      textAlign: widget.textAlign,
+      key: widget.key,
+      obscureText: _obscureText,
+      validator: widget.validator,
+      controller: widget.controller,
+      cursorColor: widget.cursorColor,
+      style: widget.style,
+      decoration: InputDecoration(
+          errorText: widget.errorText,
+          errorStyle: widget.errorStyle,
+          errorBorder: widget.errorBorder,
+          focusedErrorBorder: widget.focusedErrorBorder,
+          prefixIconColor: widget.prefixIconColor,
+          suffixIconColor: widget.suffixIconColor,
+          prefix: widget.prefix,
+          suffix: widget.suffix,
+          prefixIcon: widget.prefixIcon,
+          contentPadding: const EdgeInsets.only(
+            top: 20,
+            left: 5,
           ),
-        ),
-      )),
-        );
+          enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: AppTheme.appColor)),
+          disabledBorder:
+              const UnderlineInputBorder(borderSide: BorderSide.none),
+          focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+            color: AppTheme.appColor,
+          )),
+          border: UnderlineInputBorder(
+              borderSide: BorderSide(color: AppTheme.appColor)),
+          hintText: widget.texthint,
+          hintStyle: widget.hintStyle,
+          suffixIcon: InkWell(
+            onTap: () {
+              setState(() {
+                _obscureText = !_obscureText;
+              });
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(top: 13),
+              child: Icon(
+                _obscureText
+                    ? Icons.visibility_off_outlined
+                    : Icons.visibility_outlined,
+                color: AppTheme.appColor,
+              ),
+            ),
+          )),
+    );
   }
 }

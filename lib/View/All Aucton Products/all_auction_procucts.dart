@@ -86,7 +86,7 @@ class _ViewAllAuctionProductsState extends State<ViewAllAuctionProducts> {
                 itemBuilder: (context, int index) {
                   return GestureDetector(
                     onTap: () {
-                      push(context, const AuctionInfoScreen());
+                      push(context, const AuctionInfoScreen(auction: true,));
                     },
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,

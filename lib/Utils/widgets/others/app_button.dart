@@ -42,7 +42,11 @@ class AppButton {
             borderRadius: BorderRadius.circular(radius ?? 10),
             border: border == false
                 ? null
-                : Border.all(color: AppTheme.appColor, width: 1)),
+                : Border.all(
+                    color: border == true
+                        ? AppTheme.blackColor
+                        : AppTheme.appColor,
+                    width: 1)),
         child: AppText.appText(text,
             fontFamily: fontFamily,
             fontSize: fontSize,

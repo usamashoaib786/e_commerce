@@ -1,99 +1,69 @@
 import 'package:flutter/material.dart';
 import 'package:tt_offer/Utils/resources/res/app_theme.dart';
+import 'package:tt_offer/Utils/widgets/others/app_button.dart';
+import 'package:tt_offer/Utils/widgets/others/app_text.dart';
 
-showLogOutALert(BuildContext context, {controller}) {
+showLogOutALert(BuildContext context, price) {
   return showDialog(
     context: context,
     builder: (BuildContext context) {
       return Dialog(
           shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(32.0)),
           child: SingleChildScrollView(
             child: Container(
-              // width: 100,
-              // height: 500,
+              height: 346,
+              width: MediaQuery.of(context).size.width,
               decoration: BoxDecoration(
-                color: const Color(0xFFB38ADE),
-                borderRadius: BorderRadius.circular(8),
+                color: AppTheme.whiteColor,
+                borderRadius: BorderRadius.circular(32),
               ),
-              child: Column(
-                children: [
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  const Text.rich(
-                    TextSpan(
-                      children: [
-                        TextSpan(
-                          text: 'Are you sure, you want\nto',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontFamily: 'Roboto',
-                            fontWeight: FontWeight.w400,
-                            letterSpacing: -0.33,
-                          ),
-                        ),
-                        TextSpan(
-                          text: ' Log out?',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontFamily: 'Roboto',
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: -0.33,
-                          ),
-                        ),
-                      ],
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: Column(
+                  children: [
+                    const SizedBox(
+                      height: 20,
                     ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Divider(
-                      thickness: 2,
-                      // color: AppTheme.primaryColor,
+                    AppText.appText("Confirm Bid",
+                        fontSize: 32,
+                        fontWeight: FontWeight.w700,
+                        textColor: const Color(0xff14181B)),
+                    const SizedBox(
+                      height: 30,
                     ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      const Text(
-                        'Yes',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontFamily: 'Roboto',
+                    Container(
+                      child: AppText.appText(
+                          "You have placed a bid for \$$price. Should we place this as your Bid?",
+                          textAlign: TextAlign.center,
+                          fontSize: 16,
                           fontWeight: FontWeight.w400,
-                          letterSpacing: -0.33,
-                        ),
-                      ),
-                      Container(
-                        height: 30,
-                        width: 2,
-                        color: AppTheme.whiteColor,
-                      ),
-                      const Text(
-                        'No',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontFamily: 'Roboto',
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: -0.33,
-                        ),
+                          textColor: const Color(0xff14181B)),
+                    ),
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    AppButton.appButton("Yes, Place My Bid",
+                        height: 53,
+                        fontSize: 14,
+                        radius: 32.0,
+                        fontWeight: FontWeight.w500,
+                        textColor: AppTheme.whiteColor,
+                        backgroundColor: AppTheme.appColor),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    AppButton.appButton("Cancel",
+                        height: 53,
+                        fontSize: 14,
+                        radius: 32.0,
+                        border: true,
+                        fontWeight: FontWeight.w500,
+                        textColor: AppTheme.blackColor,
+                        backgroundColor:AppTheme.whiteColor
                       )
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ));

@@ -322,8 +322,8 @@ class StarRating extends StatelessWidget {
           );
         } else {
           return Icon(
-            Icons.star_border,
-            color: color ,
+            Icons.star,
+            color: const Color(0xffD5DADD) ,
             size: size,
           );
         }

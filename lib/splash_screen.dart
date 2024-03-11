@@ -38,7 +38,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.whiteColor,
+      backgroundColor: AppTheme.appColor,
       body: Container(
         decoration: const BoxDecoration(),
         height: MediaQuery.of(context).size.height,

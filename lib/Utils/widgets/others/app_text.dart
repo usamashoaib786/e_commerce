@@ -21,7 +21,7 @@ class AppText {
       style: TextStyle(
           color: textColor,
           fontSize: fontSize,
-          fontFamily: fontFamily == false ? 'Roboto' : "Inter",
+          fontFamily:  'Poppins',
           fontWeight: fontWeight,
           letterSpacing: letterSpacing,
           overflow: overflow,

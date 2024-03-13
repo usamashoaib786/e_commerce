@@ -75,7 +75,8 @@ class CustomAppFormField extends StatefulWidget {
     this.focusedErrorBorder,
     this.cursorColor,
     this.texAlign,
-    this.cPadding, this.type,
+    this.cPadding,
+    this.type,
   }) : super(key: key);
 
   @override
@@ -101,10 +102,12 @@ class _CustomAppFormFieldState extends State<CustomAppFormField> {
         controller: widget.controller,
         cursorColor: AppTheme.white,
         cursorHeight: 20,
-        
         cursorWidth: 2,
-        keyboardType: widget.type??TextInputType.name,
+        keyboardType: widget.type ?? TextInputType.name,
         decoration: InputDecoration(
+          
+            suffixIcon: widget.suffixIcon,
+            suffixIconConstraints: const BoxConstraints(maxHeight: 20, minWidth: 40),
             prefixIcon: widget.prefixIcon,
             prefixIconConstraints: const BoxConstraints(
               minWidth: 50,

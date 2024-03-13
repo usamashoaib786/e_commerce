@@ -16,6 +16,7 @@ class ViewAllAuctionProducts extends StatefulWidget {
 
 class _ViewAllAuctionProductsState extends State<ViewAllAuctionProducts> {
   final TextEditingController _searchController = TextEditingController();
+  final TextEditingController _locationController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -53,20 +54,35 @@ class _ViewAllAuctionProductsState extends State<ViewAllAuctionProducts> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     customRow(
-                        img: "assets/images/location.png", txt: "Belarus"),
+                      img: "assets/images/location.png",
+                      txt: "Belarus",
+                      onTap: () {
+                        _showLocationBottomSheet(context);
+                      },
+                    ),
                     Container(
                       width: 1,
                       height: 20,
                       color: AppTheme.blackColor,
                     ),
                     customRow(
-                        img: "assets/images/category.png", txt: "All Category"),
+                      img: "assets/images/category.png",
+                      txt: "All Category",
+                      onTap: () {
+                        print("kfn4f");
+                        _showCategoryBottomSheet(context);
+                      },
+                    ),
                     Container(
                       width: 1,
                       height: 20,
                       color: AppTheme.blackColor,
                     ),
-                    customRow(img: "assets/images/filter.png", txt: "Filter"),
+                    customRow(
+                      img: "assets/images/filter.png",
+                      txt: "Filter",
+                      onTap: () {},
+                    ),
                   ],
                 ),
               ),
@@ -86,7 +102,11 @@ class _ViewAllAuctionProductsState extends State<ViewAllAuctionProducts> {
                 itemBuilder: (context, int index) {
                   return GestureDetector(
                     onTap: () {
-                      push(context, const AuctionInfoScreen(auction: true,));
+                      push(
+                          context,
+                          const AuctionInfoScreen(
+                            auction: true,
+                          ));
                     },
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -171,20 +191,194 @@ class _ViewAllAuctionProductsState extends State<ViewAllAuctionProducts> {
     );
   }
 
-  Widget customRow({img, txt}) {
-    return Row(
+  Widget customRow({img, txt, Function()? onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Row(
+        children: [
+          Image.asset(
+            "$img",
+            height: 20,
+          ),
+          const SizedBox(
+            width: 5,
+          ),
+          AppText.appText("$txt",
+              fontSize: 12,
+              fontWeight: FontWeight.w400,
+              textColor: AppTheme.textColor)
+        ],
+      ),
+    );
+  }
+
+  void _showCategoryBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return Container(
+              decoration: BoxDecoration(
+                  color: AppTheme.whiteColor,
+                  borderRadius: BorderRadius.circular(30)),
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Align(
+                    alignment: Alignment.center,
+                    child: AppText.appText(
+                      "Categories",
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  CustomAppFormField(
+                    radius: 15.0,
+                    prefixIcon: Image.asset(
+                      "assets/images/search.png",
+                      height: 17,
+                      color: AppTheme.textColor,
+                    ),
+                    texthint: "Search",
+                    controller: _searchController,
+                  ),
+                  const SizedBox(height: 16),
+                  Expanded(
+                    child: ListView(
+                      children: _buildCategoryList(setState),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  List<Widget> _buildCategoryList(StateSetter setState) {
+    List<String> categories = [
+      "Electronic And Media",
+      "Home And Garden",
+      "Clothing, Shoes & Acessories",
+      " Baby & Kids",
+      "Vehicles",
+      "Toys, Games & Hobbies",
+      " Collectibles & Arts",
+      "Pet Supplies",
+      "Healthy & Beauties ",
+      "Wedding",
+    ];
+
+    return categories.map((category) {
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 10.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            AppText.appText(category,
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                textColor: const Color(0xff1B2028)),
+            Image.asset(
+              "assets/images/arrowFor.png",
+              height: 16,
+            )
+          ],
+        ),
+      );
+    }).toList();
+  }
+
+  void _showLocationBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return Container(
+              height: MediaQuery.of(context).size.height,
+              decoration: BoxDecoration(
+                  color: AppTheme.whiteColor,
+                  borderRadius: BorderRadius.circular(30)),
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Align(
+                    alignment: Alignment.center,
+                    child: AppText.appText(
+                      "Location",
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  AppText.appText("Address",
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      textColor: AppTheme.textColor),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  CustomAppFormField(
+                    texthint: "Set a loction",
+                    controller: _locationController,
+                    borderColor: const Color(0xffE5E9EB),
+                    hintTextColor: AppTheme.hintTextColor,
+                    suffixIcon: Image.asset(
+                      "assets/images/location.png",
+                      height: 20,
+                      width: 20,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      customLocationRow(txt1: "City", txt2:"New York"),
+                      customLocationRow(txt1: "State", txt2:"California"),
+                      customLocationRow(txt1: "Zip", txt2:"3254"),
+                    ],
+                  ),
+                   const SizedBox(
+                    height: 20,
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget customLocationRow({txt1, txt2}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Image.asset(
-          "$img",
-          height: 20,
-        ),
-        const SizedBox(
-          width: 5,
-        ),
-        AppText.appText("$txt",
+        AppText.appText("$txt1",
             fontSize: 12,
-            fontWeight: FontWeight.w400,
-            textColor: AppTheme.textColor)
+            fontWeight: FontWeight.w600,
+            textColor: AppTheme.textColor),
+        const SizedBox(
+          height: 10,
+        ),
+        CustomAppFormField(
+          texthint: "$txt2",
+          controller: _locationController,
+          borderColor: const Color(0xffE5E9EB),
+          hintTextColor: AppTheme.hintTextColor,
+          width: MediaQuery.of(context).size.width * 0.25,
+        ),
       ],
     );
   }

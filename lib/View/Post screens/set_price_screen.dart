@@ -9,6 +9,7 @@ import 'package:tt_offer/Utils/widgets/others/app_text.dart';
 import 'package:tt_offer/Utils/widgets/others/custom_app_bar.dart';
 import 'package:tt_offer/Utils/widgets/others/divider.dart';
 import 'package:tt_offer/View/BottomNavigation/navigation_bar.dart';
+import 'package:tt_offer/View/Post%20screens/enter_location_screen.dart';
 import 'package:tt_offer/View/Post%20screens/indicator.dart';
 
 class SetPostPriceScreen extends StatefulWidget {
@@ -40,7 +41,7 @@ class _SetPostPriceScreenState extends State<SetPostPriceScreen> {
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(20.0),
         child: AppButton.appButton("Next", onTap: () {
-          push(context, const SetPostPriceScreen());
+          push(context, const PostLocationScreen());
         },
             height: 53,
             fontWeight: FontWeight.w500,

@@ -1,6 +1,7 @@
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:tt_offer/Utils/resources/res/app_theme.dart';
 import 'package:tt_offer/Utils/utils.dart';
 import 'package:tt_offer/Utils/widgets/others/app_button.dart';
@@ -8,6 +9,7 @@ import 'package:tt_offer/Utils/widgets/others/app_field.dart';
 import 'package:tt_offer/Utils/widgets/others/app_text.dart';
 import 'package:tt_offer/Utils/widgets/others/custom_logout_pop_up.dart';
 import 'package:tt_offer/View/Auction%20Info/make_offer_screen.dart';
+import 'package:tt_offer/View/Auction%20Info/panel_widget.dart';
 import 'package:tt_offer/View/ChatScreens/provider_class.dart';
 
 class AuctionInfoScreen extends StatefulWidget {
@@ -20,6 +22,8 @@ class AuctionInfoScreen extends StatefulWidget {
 
 class _AuctionInfoScreenState extends State<AuctionInfoScreen> {
   int _currentPage = 0;
+  final panelController = PanelController();
+
   final PageController _pageController = PageController(
     initialPage: 0,
   );
@@ -68,108 +72,22 @@ class _AuctionInfoScreenState extends State<AuctionInfoScreen> {
   @override
   Widget build(BuildContext context) {
     final open = Provider.of<NotifyProvider>(context);
-    final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-        bottomNavigationBar:
-            widget.auction == true ? auctionBottomCard() : featureBottomCard(),
         backgroundColor: AppTheme.whiteColor,
-        bottomSheet: open.sheet == false
-            ? const SizedBox.shrink()
-            : Container(
-                height: 300,
-                decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(32),
-                        topRight: Radius.circular(32))),
-                child: Column(
-                  children: [
-                    Container(
-                      height: 104,
-                      width: screenWidth,
-                      decoration: BoxDecoration(
-                          color: AppTheme.appColor,
-                          borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(32),
-                              topRight: Radius.circular(32))),
-                    )
-                  ],
-                ),
-              ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(
-                height: 300,
-                child: Stack(
-                  children: [
-                    SizedBox(
-                      height: 270,
-                      child: Stack(
-                        children: [
-                          PageView.builder(
-                            controller: _pageController,
-                            itemCount: _imagePaths.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              return Image.asset(
-                                _imagePaths[index],
-                                fit: BoxFit.fill,
-                              );
-                            },
-                            onPageChanged: (int index) {
-                              setState(() {
-                                _currentPage = index;
-                              });
-                            },
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 60.0),
-                            child: Align(
-                              alignment: Alignment.bottomCenter,
-                              child: DotsIndicator(
-                                dotsCount: _imagePaths.length,
-                                position: _currentPage,
-                                decorator: DotsDecorator(
-                                  color: const Color(
-                                      0xffEDEDED), // Inactive dot color
-                                  activeColor:
-                                      AppTheme.appColor, // Active dot color
-                                  size: const Size.square(8.0),
-                                  activeSize: const Size(20.0, 8.0),
-                                  spacing: const EdgeInsets.all(4.0),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Container(
-                        height: 70,
-                        width: screenWidth,
-                        decoration: BoxDecoration(
-                            color: AppTheme.whiteColor,
-                            borderRadius: const BorderRadius.only(
-                                topLeft: Radius.circular(32),
-                                topRight: Radius.circular(32))),
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                              top: 20, bottom: 10, left: 20, right: 20),
-                          child: AppText.appText("Modern light watch",
-                              fontSize: 24,
-                              fontWeight: FontWeight.w600,
-                              textColor: AppTheme.textColor),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              customColumn(),
-            ],
-          ),
-        ));
+        body: widget.auction == false
+            ? bodyColumn()
+            : SlidingUpPanel(
+                controller: panelController,
+                isDraggable: false,
+                footer: auctionBottomCard(),
+                maxHeight: MediaQuery.of(context).size.height - 300,
+                minHeight: 250,
+                borderRadius: BorderRadius.circular(32),
+                body: bodyColumn(),
+                panelBuilder: (controller) => PanelWidget(
+                      controller: controller,
+                      panelController: panelController,
+                    )));
   }
 ////////////////////////////////////////////////// auction ///////////////////////////////////
 
@@ -182,6 +100,7 @@ class _AuctionInfoScreenState extends State<AuctionInfoScreen> {
           borderRadius: BorderRadius.only(
               topLeft: Radius.circular(32), topRight: Radius.circular(32))),
       elevation: 10,
+      shadowColor: Colors.grey,
       child: Container(
         height: 120,
         width: MediaQuery.of(context).size.width,
@@ -276,8 +195,8 @@ class _AuctionInfoScreenState extends State<AuctionInfoScreen> {
                         GestureDetector(
                           onTap: () {
                             if (open.field == false) {
-                              open.sheetTrue();
-                            } else {}
+                              panelController.open();
+                            }
                           },
                           child: Container(
                             height: 53,
@@ -300,8 +219,8 @@ class _AuctionInfoScreenState extends State<AuctionInfoScreen> {
                         GestureDetector(
                           onTap: () {
                             if (open.field == false) {
-                              open.sheetFalse();
-                            } else {}
+                              panelController.close();
+                            }
                           },
                           child: Container(
                             height: 53,
@@ -338,6 +257,7 @@ class _AuctionInfoScreenState extends State<AuctionInfoScreen> {
           borderRadius: BorderRadius.only(
               topLeft: Radius.circular(32), topRight: Radius.circular(32))),
       elevation: 10,
+      shadowColor: Colors.grey,
       child: Container(
         height: 120,
         width: MediaQuery.of(context).size.width,
@@ -383,144 +303,240 @@ class _AuctionInfoScreenState extends State<AuctionInfoScreen> {
     final screenWidth = MediaQuery.of(context).size.width;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              width: screenWidth,
-              child: AppText.appText(
-                  "Its simple and elegant shape makes it perfect for those of you who like you who want minimalist watch. Its simple and elegant shape makes it perfect for those of you who like you who want minimalist watch.",
-                  fontSize: 12,
-                  fontWeight: FontWeight.w400,
-                  textColor: AppTheme.lighttextColor),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10.0, bottom: 20),
-              child: AppText.appText(
-                  "Posted on 15-09-2023 10:11 am Dhaka, Bangladesh",
-                  fontSize: 12,
-                  fontWeight: FontWeight.w400,
-                  textColor: AppTheme.blackColor),
-            ),
-            Container(
-              height: 1,
-              width: screenWidth,
-              decoration: const BoxDecoration(color: Color(0xffEAEAEA)),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20.0),
-              child: SizedBox(
-                height: 102,
+      child: Column(
+        children: [
+          Column(
+            children: [
+              SizedBox(
                 width: screenWidth,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        AppText.appText("\$212.99",
-                            fontSize: 24,
-                            fontWeight: FontWeight.w700,
-                            textColor: AppTheme.appColor),
-                        const SizedBox(
-                          width: 20,
-                        ),
-                        AppText.appText("Negtiable",
-                            fontSize: 14,
+                child: AppText.appText(
+                    "Its simple and elegant shape makes it perfect for those of you who like you who want minimalist watch. Its simple and elegant shape makes it perfect for those of you who like you who want minimalist watch.",
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400,
+                    textColor: AppTheme.lighttextColor),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 10.0, bottom: 20),
+                child: AppText.appText(
+                    "Posted on 15-09-2023 10:11 am Dhaka, Bangladesh",
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400,
+                    textColor: AppTheme.blackColor),
+              ),
+              Container(
+                height: 1,
+                width: screenWidth,
+                decoration: const BoxDecoration(color: Color(0xffEAEAEA)),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 20.0),
+                child: SizedBox(
+                  height: 102,
+                  width: screenWidth,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          AppText.appText("\$212.99",
+                              fontSize: 24,
+                              fontWeight: FontWeight.w700,
+                              textColor: AppTheme.appColor),
+                          const SizedBox(
+                            width: 20,
+                          ),
+                          AppText.appText("Negtiable",
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                              textColor: AppTheme.lighttextColor),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                height: 45,
+                                width: 45,
+                                decoration: const BoxDecoration(
+                                  image: DecorationImage(
+                                      image: AssetImage(
+                                          "assets/images/auction2.png"),
+                                      fit: BoxFit.cover),
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                              AppText.appText("Cameron Williamson",
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                  textColor: AppTheme.blackColor),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Image.asset(
+                                "assets/images/verify.png",
+                                height: 24,
+                              ),
+                              AppText.appText("Verified Member",
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w500,
+                                  textColor: AppTheme.blackColor),
+                            ],
+                          ),
+                        ],
+                      ),
+                      Align(
+                        alignment: Alignment.bottomRight,
+                        child: AppText.appText("Member since August 2020",
+                            fontSize: 10,
                             fontWeight: FontWeight.w400,
                             textColor: AppTheme.lighttextColor),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Container(
-                              height: 45,
-                              width: 45,
-                              decoration: const BoxDecoration(
-                                image: DecorationImage(
-                                    image: AssetImage(
-                                        "assets/images/auction2.png"),
-                                    fit: BoxFit.cover),
-                                shape: BoxShape.circle,
-                              ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Container(
+                height: 1,
+                width: screenWidth,
+                decoration: const BoxDecoration(color: Color(0xffEAEAEA)),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 20.0),
+                child: Wrap(
+                  spacing: 20,
+                  runSpacing: 10,
+                  children: [
+                    for (int i = 0; i <= 4; i++)
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Container(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              children: [
+                                AppText.appText("${wrapList[i]}  ",
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w400,
+                                    textColor: AppTheme.lighttextColor),
+                                AppText.appText(wrapList1[i],
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                    textColor: AppTheme.textColor),
+                              ],
                             ),
-                            AppText.appText("Cameron Williamson",
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                                textColor: AppTheme.blackColor),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Image.asset(
-                              "assets/images/verify.png",
-                              height: 24,
-                            ),
-                            AppText.appText("Verified Member",
-                                fontSize: 10,
-                                fontWeight: FontWeight.w500,
-                                textColor: AppTheme.blackColor),
-                          ],
-                        ),
-                      ],
-                    ),
-                    Align(
-                      alignment: Alignment.bottomRight,
-                      child: AppText.appText("Member since August 2020",
-                          fontSize: 10,
-                          fontWeight: FontWeight.w400,
-                          textColor: AppTheme.lighttextColor),
-                    ),
+                          ),
+                        ],
+                      )
                   ],
                 ),
               ),
-            ),
-            Container(
-              height: 1,
-              width: screenWidth,
-              decoration: const BoxDecoration(color: Color(0xffEAEAEA)),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20.0),
-              child: Wrap(
-                spacing: 20,
-                runSpacing: 10,
-                children: [
-                  for (int i = 0; i <= 4; i++)
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Container(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            children: [
-                              AppText.appText("${wrapList[i]}  ",
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w400,
-                                  textColor: AppTheme.lighttextColor),
-                              AppText.appText(wrapList1[i],
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w600,
-                                  textColor: AppTheme.textColor),
-                            ],
+              Container(
+                height: 1,
+                width: screenWidth,
+                decoration: const BoxDecoration(color: Color(0xffEAEAEA)),
+              )
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget bodyColumn() {
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    return Stack(
+      children: [
+        SizedBox(
+          height: widget.auction == true
+              ? MediaQuery.of(context).size.height - 250
+              : MediaQuery.of(context).size.height - 100,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 300,
+                  child: Stack(
+                    children: [
+                      SizedBox(
+                        height: 270,
+                        child: Stack(
+                          children: [
+                            PageView.builder(
+                              controller: _pageController,
+                              itemCount: _imagePaths.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return Image.asset(
+                                  _imagePaths[index],
+                                  fit: BoxFit.fill,
+                                );
+                              },
+                              onPageChanged: (int index) {
+                                setState(() {
+                                  _currentPage = index;
+                                });
+                              },
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 60.0),
+                              child: Align(
+                                alignment: Alignment.bottomCenter,
+                                child: DotsIndicator(
+                                  dotsCount: _imagePaths.length,
+                                  position: _currentPage,
+                                  decorator: DotsDecorator(
+                                    color: const Color(
+                                        0xffEDEDED), // Inactive dot color
+                                    activeColor:
+                                        AppTheme.appColor, // Active dot color
+                                    size: const Size.square(8.0),
+                                    activeSize: const Size(20.0, 8.0),
+                                    spacing: const EdgeInsets.all(4.0),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Container(
+                          height: 70,
+                          width: screenWidth,
+                          decoration: BoxDecoration(
+                              color: AppTheme.whiteColor,
+                              borderRadius: const BorderRadius.only(
+                                  topLeft: Radius.circular(32),
+                                  topRight: Radius.circular(32))),
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                                top: 20, bottom: 10, left: 20, right: 20),
+                            child: AppText.appText("Modern light watch",
+                                fontSize: 24,
+                                fontWeight: FontWeight.w600,
+                                textColor: AppTheme.textColor),
                           ),
                         ),
-                      ],
-                    )
-                ],
-              ),
+                      )
+                    ],
+                  ),
+                ),
+                customColumn(),
+              ],
             ),
-            Container(
-              height: 1,
-              width: screenWidth,
-              decoration: const BoxDecoration(color: Color(0xffEAEAEA)),
-            )
-          ],
+          ),
         ),
-      ),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: widget.auction == true
+              ? const SizedBox.shrink()
+              : featureBottomCard(),
+        )
+      ],
     );
   }
 }

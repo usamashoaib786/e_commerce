@@ -15,6 +15,8 @@ class AppTheme {
 
   static Color txt1B20 = const Color(0xff1B2028);
   static Color disableColor = const Color(0xffB9D4CD);
+  static Color textColor00 = const Color(0xff001B2E);
+  
 
 
   // static const Color primaryColorLite = Color(0xff65FF8F);

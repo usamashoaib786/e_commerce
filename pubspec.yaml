@@ -58,6 +58,7 @@ dependencies:
   pin_code_text_field: ^1.8.0
   country_list_pick: ^1.0.1+6
   fl_chart: ^0.66.2
+  sliding_up_panel: ^2.0.0+1
 
 flutter_icons:
   image_path: "assets/images/TTOffer.png"

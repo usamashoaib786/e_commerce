@@ -185,7 +185,11 @@ class _LandingScreenState extends State<LandingScreen> {
                         children: [
                           GestureDetector(
                             onTap: () {
-                              push(context, const AuctionInfoScreen(auction: true,));
+                              push(
+                                  context,
+                                  const AuctionInfoScreen(
+                                    auction: true,
+                                  ));
                             },
                             child: SizedBox(
                               height: 325,
@@ -254,7 +258,7 @@ class _LandingScreenState extends State<LandingScreen> {
                                           textColor: AppTheme.appColor),
                                     ],
                                   ),
-                                  AppButton.appButton("Get Started",
+                                  AppButton.appButton("Bid Now",
                                       onTap: () {},
                                       height: 32,
                                       width: 161,
@@ -363,7 +367,11 @@ class _LandingScreenState extends State<LandingScreen> {
   Widget featureContainer({color, img, txt}) {
     return GestureDetector(
       onTap: () {
-        push(context, const AuctionInfoScreen(auction: false,));
+        push(
+            context,
+            const AuctionInfoScreen(
+              auction: false,
+            ));
       },
       child: SizedBox(
         height: 245,
@@ -478,19 +486,16 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 GestureDetector(
-                  onTap: () {
-                    push(context, const NotificationScreen());
-                  },
-                  child: Icon(
-                    Icons.notifications_outlined,
-                    color: AppTheme.textColor,
-                    size: 20,
-                  ),
-                ),
-                Icon(
-                  Icons.location_on_outlined,
-                  color: AppTheme.textColor,
-                  size: 20,
+                    onTap: () {
+                      push(context, const NotificationScreen());
+                    },
+                    child: Image.asset(
+                      "assets/images/notification.png",
+                      height: 20,
+                    )),
+                Image.asset(
+                  "assets/images/location.png",
+                  height: 20,
                 ),
                 AppText.appText("Belarus",
                     fontSize: 12,

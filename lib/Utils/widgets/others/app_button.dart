@@ -126,11 +126,13 @@ class AppButton {
       {double? height,
       double? width,
       space,
+      borderColor,
       double? imgHeight,
       Color? backgroundColor,
       EdgeInsetsGeometry? padding,
       TextAlign? textAlign,
       Color? textColor,
+      radius,
       double? fontSize,
       FontWeight? fontWeight,
       FontStyle? fontStyle,
@@ -152,11 +154,11 @@ class AppButton {
         height: height,
         decoration: BoxDecoration(
             color: backgroundColor,
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(radius?? 16),
             border: border == false
                 ? null
                 : Border.all(
-                    color: const Color(0xff292D32),
+                    color: borderColor?? const Color(0xff292D32),
                     width: 1,
                   )),
         child: Row(
@@ -165,6 +167,7 @@ class AppButton {
             Image.asset(
               "$imagePath",
               height: imgHeight,
+              color: borderColor?? null,
             ),
             SizedBox(
               width: space ?? 10,

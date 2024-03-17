@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:tt_offer/Utils/resources/res/app_theme.dart';
 import 'package:tt_offer/Utils/widgets/others/app_text.dart';
+import 'package:tt_offer/View/ChatScreens/provider_class.dart';
 
 class PanelWidget extends StatefulWidget {
   final ScrollController controller;
@@ -19,15 +21,19 @@ class PanelWidget extends StatefulWidget {
 }
 
 class _PanelWidgetState extends State<PanelWidget> {
-  List<String> listItems = [];
 
   @override
   void initState() {
     super.initState();
   }
 
+  
+
   @override
   Widget build(BuildContext context) {
+    final open = Provider.of<NotifyProvider>(context);
+    print(open.sheet);
+    print("object${widget.panelController.isPanelOpen}");
     Size size = MediaQuery.of(context).size;
     return Container(
       padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
@@ -38,6 +44,10 @@ class _PanelWidgetState extends State<PanelWidget> {
       child: Padding(
         padding: const EdgeInsets.only(left: 20.0, right: 20, bottom: 110),
         child: SingleChildScrollView(
+          controller: open.scrollController,
+          physics: open.sheet == true
+              ? const ScrollPhysics()
+              : const NeverScrollableScrollPhysics(),
           child: Column(
             children: [
               const SizedBox(

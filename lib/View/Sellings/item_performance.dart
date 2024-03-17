@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:tt_offer/Utils/resources/res/app_theme.dart';
+import 'package:tt_offer/Utils/utils.dart';
+import 'package:tt_offer/Utils/widgets/others/app_button.dart';
 import 'package:tt_offer/Utils/widgets/others/app_text.dart';
 import 'package:tt_offer/Utils/widgets/others/custom_app_bar.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:tt_offer/View/Boost%20Plus%20Screens/boost_plus_screen.dart';
 
 class ItemPerformanceScreen extends StatefulWidget {
   const ItemPerformanceScreen({super.key});
@@ -91,14 +94,32 @@ class _ItemPerformanceScreenState extends State<ItemPerformanceScreen> {
               ),
             ),
             const Padding(
-              padding: EdgeInsets.symmetric(vertical: 20.0, ),
-              child: SizedBox(
-                height: 256,
-                child: ProductPerformanceChart(
-                  viewsData: [10, 20, 15, 30, 25, 80],
+                padding: EdgeInsets.symmetric(
+                  vertical: 20.0,
                 ),
-              ),
-            )
+                child: SizedBox(
+                  height: 256,
+                  child: ProductPerformanceChart(
+                    viewsData: [10, 20, 15, 30, 25, 80],
+                  ),
+                )),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical:10.0),
+              child: AppButton.appButton("Boost Plus",
+              onTap: () {
+                push(context, const BoostPlusScreen());
+              },
+                  height: 50,
+                  textColor: AppTheme.whiteColor,
+                  backgroundColor: AppTheme.appColor,
+                  radius: 32.0,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500),
+            ),
+            AppText.appText("Get an average of 20x more views each day",
+                fontSize: 12,
+                fontWeight: FontWeight.w400,
+                textColor: const Color(0xff8A8A8A))
           ],
         ),
       ),

@@ -40,7 +40,7 @@ class _BottomNavViewState extends State<BottomNavView> {
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Image.asset(
-              'assets/images/home-2.png',
+              'assets/images/home.png',
               width: 30,
               height: 30,
               color: _selectedIndex == 0 ? AppTheme.appColor : Colors.grey,

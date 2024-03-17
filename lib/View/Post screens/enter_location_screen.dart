@@ -7,7 +7,6 @@ import 'package:tt_offer/Utils/widgets/others/app_text.dart';
 import 'package:tt_offer/Utils/widgets/others/custom_app_bar.dart';
 import 'package:tt_offer/Utils/widgets/others/divider.dart';
 import 'package:tt_offer/View/BottomNavigation/navigation_bar.dart';
-import 'package:tt_offer/View/Post%20screens/add_post_detail.dart';
 import 'package:tt_offer/View/Post%20screens/indicator.dart';
 import 'package:tt_offer/View/Post%20screens/post_product_payment.dart';
 

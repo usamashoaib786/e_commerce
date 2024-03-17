@@ -69,7 +69,6 @@ class _ViewAllAuctionProductsState extends State<ViewAllAuctionProducts> {
                       img: "assets/images/category.png",
                       txt: "All Category",
                       onTap: () {
-                        print("kfn4f");
                         _showCategoryBottomSheet(context);
                       },
                     ),
@@ -170,7 +169,7 @@ class _ViewAllAuctionProductsState extends State<ViewAllAuctionProducts> {
                                 textColor: AppTheme.appColor),
                           ],
                         ),
-                        AppButton.appButton("Get Started",
+                        AppButton.appButton("Bid Now",
                             onTap: () {},
                             height: 32,
                             width: 161,
@@ -344,12 +343,12 @@ class _ViewAllAuctionProductsState extends State<ViewAllAuctionProducts> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      customLocationRow(txt1: "City", txt2:"New York"),
-                      customLocationRow(txt1: "State", txt2:"California"),
-                      customLocationRow(txt1: "Zip", txt2:"3254"),
+                      customLocationRow(txt1: "City", txt2: "New York"),
+                      customLocationRow(txt1: "State", txt2: "California"),
+                      customLocationRow(txt1: "Zip", txt2: "3254"),
                     ],
                   ),
-                   const SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                 ],

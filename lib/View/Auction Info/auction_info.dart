@@ -11,6 +11,7 @@ import 'package:tt_offer/Utils/widgets/others/custom_logout_pop_up.dart';
 import 'package:tt_offer/View/Auction%20Info/make_offer_screen.dart';
 import 'package:tt_offer/View/Auction%20Info/panel_widget.dart';
 import 'package:tt_offer/View/ChatScreens/provider_class.dart';
+import 'package:tt_offer/View/Seller%20Profile/seller_profile.dart';
 
 class AuctionInfoScreen extends StatefulWidget {
   final bool auction;
@@ -21,6 +22,9 @@ class AuctionInfoScreen extends StatefulWidget {
 }
 
 class _AuctionInfoScreenState extends State<AuctionInfoScreen> {
+  final GlobalKey<_AuctionInfoScreenState> _panelKey =
+      GlobalKey<_AuctionInfoScreenState>();
+
   int _currentPage = 0;
   final panelController = PanelController();
 
@@ -55,6 +59,7 @@ class _AuctionInfoScreenState extends State<AuctionInfoScreen> {
     "2/32",
     "Original"
   ];
+
   @override
   void initState() {
     _priceController.text = "\$ 60";
@@ -77,6 +82,7 @@ class _AuctionInfoScreenState extends State<AuctionInfoScreen> {
         body: widget.auction == false
             ? bodyColumn()
             : SlidingUpPanel(
+                key: _panelKey,
                 controller: panelController,
                 isDraggable: false,
                 footer: auctionBottomCard(),
@@ -195,7 +201,9 @@ class _AuctionInfoScreenState extends State<AuctionInfoScreen> {
                         GestureDetector(
                           onTap: () {
                             if (open.field == false) {
+                              open.sheetTrue();
                               panelController.open();
+                              // _panelKey.currentState!.re;
                             }
                           },
                           child: Container(
@@ -219,6 +227,7 @@ class _AuctionInfoScreenState extends State<AuctionInfoScreen> {
                         GestureDetector(
                           onTap: () {
                             if (open.field == false) {
+                              open.sheetFalse();
                               panelController.close();
                             }
                           },
@@ -356,15 +365,20 @@ class _AuctionInfoScreenState extends State<AuctionInfoScreen> {
                         children: [
                           Row(
                             children: [
-                              Container(
-                                height: 45,
-                                width: 45,
-                                decoration: const BoxDecoration(
-                                  image: DecorationImage(
-                                      image: AssetImage(
-                                          "assets/images/auction2.png"),
-                                      fit: BoxFit.cover),
-                                  shape: BoxShape.circle,
+                              GestureDetector(
+                                onTap: () {
+                                  push(context, const SellerProfileScreen());
+                                },
+                                child: Container(
+                                  height: 45,
+                                  width: 45,
+                                  decoration: const BoxDecoration(
+                                    image: DecorationImage(
+                                        image: AssetImage(
+                                            "assets/images/auction2.png"),
+                                        fit: BoxFit.cover),
+                                    shape: BoxShape.circle,
+                                  ),
                                 ),
                               ),
                               AppText.appText("Cameron Williamson",
@@ -458,20 +472,23 @@ class _AuctionInfoScreenState extends State<AuctionInfoScreen> {
             child: Column(
               children: [
                 SizedBox(
-                  height: 300,
+                  height: 350,
                   child: Stack(
                     children: [
                       SizedBox(
-                        height: 270,
+                        height: 300,
                         child: Stack(
                           children: [
                             PageView.builder(
                               controller: _pageController,
                               itemCount: _imagePaths.length,
                               itemBuilder: (BuildContext context, int index) {
-                                return Image.asset(
-                                  _imagePaths[index],
-                                  fit: BoxFit.fill,
+                                return SizedBox(
+                                  height: 300,
+                                  child: Image.asset(
+                                    _imagePaths[index],
+                                    fit: BoxFit.fill,
+                                  ),
                                 );
                               },
                               onPageChanged: (int index) {
@@ -480,25 +497,41 @@ class _AuctionInfoScreenState extends State<AuctionInfoScreen> {
                                 });
                               },
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 60.0),
-                              child: Align(
-                                alignment: Alignment.bottomCenter,
-                                child: DotsIndicator(
-                                  dotsCount: _imagePaths.length,
-                                  position: _currentPage,
-                                  decorator: DotsDecorator(
-                                    color: const Color(
-                                        0xffEDEDED), // Inactive dot color
-                                    activeColor:
-                                        AppTheme.appColor, // Active dot color
-                                    size: const Size.square(8.0),
-                                    activeSize: const Size(20.0, 8.0),
-                                    spacing: const EdgeInsets.all(4.0),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.pop(context);
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0, vertical: 30),
+                                child: Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Container(
+                                    height: 40,
+                                    width: 40,
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: AppTheme.whiteColor),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Image.asset(
+                                          "assets/images/arrow-left.png"),
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
+                            iconContainer(
+                                ontap: () {
+                                  Navigator.pop(context);
+                                },
+                                alignment: Alignment.topLeft,
+                                img: "assets/images/arrow-left.png"),
+                                iconContainer(
+                                ontap: () {
+                                },
+                                alignment: Alignment.topRight,
+                                img: "assets/images/heart.png")
                           ],
                         ),
                       ),
@@ -537,6 +570,28 @@ class _AuctionInfoScreenState extends State<AuctionInfoScreen> {
               : featureBottomCard(),
         )
       ],
+    );
+  }
+
+  Widget iconContainer({Function()? ontap, img, alignment}) {
+    return GestureDetector(
+      onTap: ontap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 30),
+        child: Align(
+          alignment: alignment,
+          child: Container(
+            height: 40,
+            width: 40,
+            decoration: BoxDecoration(
+                shape: BoxShape.circle, color: AppTheme.whiteColor),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Image.asset("$img"),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

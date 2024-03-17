@@ -5,6 +5,14 @@ class NotifyProvider extends ChangeNotifier {
   bool isCustom = false;
   bool field = false;
   bool sheet = false;
+  final scrollController = ScrollController();
+  void scrollToTop() {
+    scrollController.animateTo(
+      0.0,
+      duration: const Duration(milliseconds: 500),
+      curve: Curves.easeInOut,
+    );
+  }
 
   String bidPrice = "";
   int? indexbid;
@@ -33,11 +41,13 @@ class NotifyProvider extends ChangeNotifier {
 
   sheetTrue() {
     sheet = true;
+    scrollToTop();
     notifyListeners();
   }
 
   sheetFalse() {
     sheet = false;
+    scrollToTop();
     notifyListeners();
   }
 }

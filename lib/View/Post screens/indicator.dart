@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tt_offer/Utils/resources/res/app_theme.dart';
 import 'package:tt_offer/Utils/widgets/others/app_text.dart';
 
 class StepsIndicator extends StatefulWidget {
@@ -50,7 +49,7 @@ class _StepsIndicatorState extends State<StepsIndicator> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               progressNum(bottomTxt: "Post", color1: widget.circleColor1),
-              progressNum(bottomTxt: "dDetail", color1: widget.circleColor2),
+              progressNum(bottomTxt: "Detail", color1: widget.circleColor2),
               progressNum(bottomTxt: "Price", color1: widget.circleColor3),
               progressNum(bottomTxt: "Finish", color1: widget.circleColor4),
             ],
@@ -61,7 +60,6 @@ class _StepsIndicatorState extends State<StepsIndicator> {
   }
 
   progressIndicator({color}) {
-    final screenWidth = MediaQuery.of(context).size.width;
 
     return Padding(
         padding: const EdgeInsets.only(top: 16.0),

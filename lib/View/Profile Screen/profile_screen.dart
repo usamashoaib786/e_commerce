@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tt_offer/Utils/resources/res/app_theme.dart';
 import 'package:tt_offer/Utils/utils.dart';
 import 'package:tt_offer/Utils/widgets/others/app_text.dart';
+import 'package:tt_offer/Utils/widgets/others/divider.dart';
 import 'package:tt_offer/View/Profile%20Screen/Account%20Settigs/account_setting.dart';
 import 'package:tt_offer/View/Profile%20Screen/custom_link.dart';
 import 'package:tt_offer/View/Profile%20Screen/payment%20Screens/payment_screen.dart';
@@ -19,7 +20,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.whiteColor,
+        backgroundColor: AppTheme.whiteColor,
         appBar: AppBar(
           automaticallyImplyLeading: false,
           centerTitle: true,
@@ -62,23 +63,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
               headingText(txt: "Transactions"),
               customRow(
                   onTap: () {
-                    push(context, const SellingPurchaseScreen(title: "Purchase & Sale",));
+                    push(
+                        context,
+                        const SellingPurchaseScreen(
+                          title: "Purchase & Sale",
+                        ));
                   },
                   txt: "Purchases & Sales",
                   img: "assets/images/receipt.png"),
               customRow(
                   onTap: () {
                     push(context, const PaymentScreen());
-
                   },
                   txt: "Payment & Deposit method",
                   img: "assets/images/payment.png"),
-              divider(),
+              const CustomDivider(),
               headingText(txt: "Save"),
               customRow(
                   onTap: () {
                     push(context, const SavedItemsScreen());
-
                   },
                   txt: "Saved items",
                   img: "assets/images/heart.png"),
@@ -86,12 +89,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   onTap: () {},
                   txt: "Search alerts",
                   img: "assets/images/notification.png"),
-              divider(),
+              const CustomDivider(),
               headingText(txt: "Account"),
               customRow(
                   onTap: () {
                     push(context, const AccountSettingScreen());
-
                   },
                   txt: "Account Setting",
                   img: "assets/images/accountSetting.png"),
@@ -102,11 +104,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
               customRow(
                   onTap: () {
                     push(context, const CustomLinkScreen());
-
                   },
                   txt: "Custom Profile Link",
                   img: "assets/images/link.png"),
-              divider(),
+              const CustomDivider(),
               headingText(txt: "Help"),
               customRow(
                   onTap: () {},
@@ -125,7 +126,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       padding: const EdgeInsets.symmetric(vertical: 20.0),
       child: SizedBox(
         height: 80,
-        width: 47,
+        width: 48,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -157,16 +158,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       ),
     );
-  }
-
-  Widget divider() {
-    return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0),
-        child: Container(
-          height: 1,
-          width: MediaQuery.of(context).size.width,
-          color: const Color(0xffEAEAEA),
-        ));
   }
 
   Widget headingText({txt}) {
@@ -219,7 +210,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SizedBox(
-            height: 160,
+            height: 140,
             width: 150,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -261,7 +252,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const StarRating(
-                      rating: 2.5 ,
+                      rating: 2.5,
                       color: Colors.yellow,
                       size: 14,
                     ),
@@ -271,19 +262,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         textColor: AppTheme.txt1B20),
                   ],
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    AppText.appText("0 Follower",
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400,
-                        textColor: AppTheme.txt1B20),
-                    AppText.appText("0 Following",
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400,
-                        textColor: AppTheme.txt1B20),
-                  ],
-                )
               ],
             ),
           ),
@@ -298,7 +276,8 @@ class StarRating extends StatelessWidget {
   final double size;
   final Color color;
 
-  const StarRating({super.key, required this.rating, this.size = 30, required this.color});
+  const StarRating(
+      {super.key, required this.rating, this.size = 30, required this.color});
 
   @override
   Widget build(BuildContext context) {
@@ -311,19 +290,19 @@ class StarRating extends StatelessWidget {
         if (index < filledStars) {
           return Icon(
             Icons.star,
-            color: color ,
+            color: color,
             size: size,
           );
         } else if (index == filledStars && hasHalfStar) {
           return Icon(
             Icons.star_half,
-            color: color ,
+            color: color,
             size: size,
           );
         } else {
           return Icon(
             Icons.star,
-            color: const Color(0xffD5DADD) ,
+            color: const Color(0xffD5DADD),
             size: size,
           );
         }

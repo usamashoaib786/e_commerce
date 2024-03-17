@@ -79,6 +79,7 @@ class _ItemDashBoardState extends State<ItemDashBoard> {
       appBar: const CustomAppBar1(
         title: "Item DashBoard",
         action: true,
+        img: "assets/images/more.png",
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -119,7 +120,7 @@ class _ItemDashBoardState extends State<ItemDashBoard> {
                   img: "assets/images/performance.png"),
               const Padding(
                 padding: EdgeInsets.symmetric(vertical: 20.0),
-                child:  CustomDivider(),
+                child: CustomDivider(),
               ),
               AppText.appText("Message",
                   fontSize: 16,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tt_offer/Constants/app_logger.dart';
 import 'package:tt_offer/Utils/resources/res/app_theme.dart';
 import 'package:tt_offer/Utils/utils.dart';
 import 'package:tt_offer/Utils/widgets/others/app_button.dart';
@@ -6,6 +7,8 @@ import 'package:tt_offer/Utils/widgets/others/app_field.dart';
 import 'package:tt_offer/Utils/widgets/others/app_text.dart';
 import 'package:tt_offer/Utils/widgets/others/custom_app_bar.dart';
 import 'package:tt_offer/View/BottomNavigation/navigation_bar.dart';
+import 'package:tt_offer/config/app_urls.dart';
+import 'package:tt_offer/config/dio/app_dio.dart';
 
 class ProfileDetailScreen extends StatefulWidget {
   const ProfileDetailScreen({super.key});
@@ -20,13 +23,23 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
   final TextEditingController _userNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool _isLoading = false;
+  late AppDio dio;
+  AppLogger logger = AppLogger();
+  @override
+  void initState() {
+    dio = AppDio(context);
+    logger.init();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.whiteColor,
       appBar: CustomAppBar1(
         context: context,
-        title: "Profile Detail",
+        title: "Registration",
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -73,14 +86,42 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
               customColumn(
                   txt: "Password",
                   hintTxt: "Password",
+                  pass: true,
                   controller: _passwordController),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 20.0),
-                child: AppButton.appButton("Confirm", onTap: () {
-                  push(context, const BottomNavView());
+                child: AppButton.appButton("Register", onTap: () {
+                  if (_fNameController.text.isNotEmpty) {
+                    if (_userNameController.text.isNotEmpty) {
+                      if (_emailController.text.isNotEmpty) {
+                        final emailPattern =
+                            RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+                        if (!emailPattern.hasMatch(_emailController.text)) {
+                          showSnackBar(
+                              context, "Please enter a valid email address");
+                        }
+                        if (_passwordController.text.isNotEmpty) {
+                          if (_passwordController.text.isNotEmpty) {
+                            register();
+                          } else {
+                            showSnackBar(
+                                context, "Password length is minimum 8");
+                          }
+                        } else {
+                          showSnackBar(context, "Enter Password");
+                        }
+                      } else {
+                        showSnackBar(context, "Enter Email");
+                      }
+                    } else {
+                      showSnackBar(context, "Enter Username");
+                    }
+                  } else {
+                    showSnackBar(context, "Enter Name");
+                  }
                 },
                     height: 53,
-                     fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.w500,
                     fontSize: 14,
                     radius: 32.0,
                     backgroundColor: AppTheme.appColor,
@@ -93,7 +134,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
     );
   }
 
-  Widget customColumn({txt, hintTxt, controller, width}) {
+  Widget customColumn({txt, hintTxt, controller, width, pass}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 20.0),
       child: Column(
@@ -106,17 +147,103 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
           const SizedBox(
             height: 10,
           ),
-          CustomAppFormField(
-            width: width ?? MediaQuery.of(context).size.width,
-            texthint: "$hintTxt",
-            controller: controller,
-            borderColor: AppTheme.borderColor,
-            hintTextColor: AppTheme.hintTextColor,
-          )
+          pass == true
+              ? CustomAppPasswordfield(
+                  texthint: "Password",
+                  controller: _passwordController,
+                )
+              : CustomAppFormField(
+                  validator: (value) {
+                    value = "123";
+                  },
+                  errorText: "jbefjbbf",
+                  width: width ?? MediaQuery.of(context).size.width,
+                  texthint: "$hintTxt",
+                  controller: controller,
+                  borderColor: AppTheme.borderColor,
+                  hintTextColor: AppTheme.hintTextColor,
+                )
         ],
       ),
     );
   }
 
+  void register() async {
+    setState(() {
+      _isLoading = true;
+    });
+    var response;
+    int responseCode200 = 200; // For successful request.
+    int responseCode400 = 400; // For Bad Request.
+    int responseCode401 = 401; // For Unauthorized access.
+    int responseCode404 = 404; // For For data not found
+    int responseCode422 = 422; // For For data not found
+    int responseCode500 = 500; // Internal server error.
+    Map<String, dynamic> params = {
+      "name": "${_fNameController.text} ${_lNameController.text}",
+      "email": _emailController.text,
+      "username": _userNameController.text,
+      "password": _passwordController.text,
+    };
+    try {
+      response = await dio.post(path: AppUrls.registration, data: params);
+      var responseData = response.data;
+      if (response.statusCode == responseCode400) {
+        showSnackBar(context, "${responseData["msg"]}");
+        setState(() {
+          _isLoading = false;
+        });
+      } else if (response.statusCode == responseCode401) {
+        showSnackBar(context, "${responseData["msg"]}");
+        setState(() {
+          _isLoading = false;
+        });
+      } else if (response.statusCode == responseCode404) {
+        showSnackBar(context, "${responseData["msg"]}");
+        setState(() {
+          _isLoading = false;
+        });
+      } else if (response.statusCode == responseCode500) {
+        showSnackBar(context, "${responseData["msg"]}");
+        setState(() {
+          _isLoading = false;
+        });
+      } else if (response.statusCode == responseCode422) {
+        setState(() {
+          _isLoading = false;
+        });
+      } else if (response.statusCode == responseCode200) {
+        if (responseData["status"] == false) {
+          setState(() {
+            _isLoading = false;
+          });
 
+          return;
+        } else {
+          setState(() {
+            _isLoading = false;
+          });
+          // var token = responseData["token"];
+          // var user = responseData["User"]["id"];
+          // var id = user.toString();
+          // SharedPreferences prefs = await SharedPreferences.getInstance();
+          // prefs.setString(PrefKey.authorization, token ?? '');
+          // prefs.setString(PrefKey.userId, id ?? '');
+
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const BottomNavView(),
+              ),
+              (route) => false);
+        }
+      }
+    } catch (e) {
+      print("Something went Wrong ${e}");
+      showSnackBar(context, "Something went Wrong.");
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
 }

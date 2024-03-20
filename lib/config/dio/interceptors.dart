@@ -1,6 +1,6 @@
-
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tt_offer/Constants/app_logger.dart';
 import 'package:tt_offer/config/app_urls.dart';
@@ -9,7 +9,7 @@ import 'package:tt_offer/config/keys/pref_keys.dart';
 // import 'package:req_fun/req_fun.dart';
 
 class AppDioInterceptor extends Interceptor {
-   final BuildContext  context;
+  final BuildContext context;
   String token = "";
   final AppLogger _logger = AppLogger();
 
@@ -80,7 +80,7 @@ class AppDioInterceptor extends Interceptor {
     handler.next(options);
   }
 
-  void gettokenSharedPreferences() async{
+  void gettokenSharedPreferences() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     token = prefs.getString(PrefKey.authorization) ?? "";
   }

@@ -3,8 +3,10 @@ import 'package:tt_offer/Utils/resources/res/app_theme.dart';
 import 'package:tt_offer/Utils/utils.dart';
 import 'package:tt_offer/Utils/widgets/others/app_button.dart';
 import 'package:tt_offer/Utils/widgets/others/app_text.dart';
+import 'package:tt_offer/View/Authentication%20screens/GoogleSignIn/google_sign_in_button.dart';
 import 'package:tt_offer/View/Authentication%20screens/email_screen.dart';
 import 'package:tt_offer/View/Authentication%20screens/phone_auth.dart';
+import 'package:tt_offer/View/Profile%20Screen/profile_detail.dart';
 
 class SigInScreen extends StatefulWidget {
   const SigInScreen({super.key});
@@ -45,15 +47,11 @@ class _SigInScreenState extends State<SigInScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             SizedBox(
-              height: 200,
+              height: 230,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  AppButton.appButtonWithLeadingImage("Continue with Google",
-                      onTap: () {},
-                      height: 44,
-                      imgHeight: 20,
-                      imagePath: "assets/images/google.png"),
+                  const GoogleSignInButton(),
                   AppButton.appButtonWithLeadingImage("Continue with Apple",
                       onTap: () {},
                       height: 44,
@@ -72,7 +70,29 @@ class _SigInScreenState extends State<SigInScreen> {
                   },
                       height: 44,
                       imgHeight: 20,
-                      imagePath: "assets/images/sms.png")
+                      imagePath: "assets/images/sms.png"),
+                  GestureDetector(
+                    onTap: () {
+                      push(context, const ProfileDetailScreen());
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        AppText.appText("Don't have an account?",
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400,
+                            textColor: AppTheme.txt1B20),
+                        const SizedBox(
+                          width: 5,
+                        ),
+                        AppText.appText("Register",
+                            fontSize: 12,
+                            underLine: true,
+                            fontWeight: FontWeight.w400,
+                            textColor: AppTheme.appColor),
+                      ],
+                    ),
+                  )
                 ],
               ),
             ),

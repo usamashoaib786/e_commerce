@@ -6,21 +6,20 @@ import 'package:tt_offer/Utils/widgets/others/app_button.dart';
 import 'package:tt_offer/Utils/widgets/others/app_field.dart';
 import 'package:tt_offer/Utils/widgets/others/app_text.dart';
 import 'package:tt_offer/Utils/widgets/others/custom_app_bar.dart';
-import 'package:tt_offer/View/Authentication%20screens/GoogleSignIn/forgot_email.dart';
+import 'package:tt_offer/View/Authentication%20screens/otp_screen.dart';
 import 'package:tt_offer/View/BottomNavigation/navigation_bar.dart';
 import 'package:tt_offer/config/app_urls.dart';
 import 'package:tt_offer/config/dio/app_dio.dart';
 
-class EmailLoginScreen extends StatefulWidget {
-  const EmailLoginScreen({super.key});
+class ForgotEmailPass extends StatefulWidget {
+  const ForgotEmailPass({super.key});
 
   @override
-  State<EmailLoginScreen> createState() => _EmailLoginScreenState();
+  State<ForgotEmailPass> createState() => _ForgotEmailPassState();
 }
 
-class _EmailLoginScreenState extends State<EmailLoginScreen> {
+class _ForgotEmailPassState extends State<ForgotEmailPass> {
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
 
   bool _isLoading = false;
   late AppDio dio;
@@ -70,34 +69,8 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
                 borderColor: const Color(0xffE5E9EB),
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 20.0, bottom: 10),
-                child: AppText.appText("Password",
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    textColor: const Color(0xff090B0C)),
-              ),
-              CustomAppPasswordfield(
-                texthint: "Password",
-                controller: _passwordController,
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              GestureDetector(
-                onTap: () {
-                  push(context, const ForgotEmailPass());
-                },
-                child: Align(
-                  alignment: Alignment.centerRight,
-                  child: AppText.appText("Forgot Password?",
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400,
-                      textColor: AppTheme.txt1B20),
-                ),
-              ),
-              Padding(
                 padding: const EdgeInsets.symmetric(vertical: 40.0),
-                child: AppButton.appButton("Sign In", onTap: () {
+                child: AppButton.appButton("Send OTP", onTap: () {
                   if (_emailController.text.isNotEmpty) {
                     final emailPattern =
                         RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
@@ -105,11 +78,7 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
                       showSnackBar(
                           context, "Please enter a valid email address");
                     } else {
-                      if (_passwordController.text.isNotEmpty) {
-                        signIn();
-                      } else {
-                        showSnackBar(context, "Enter Password");
-                      }
+                      forgotPassword();
                     }
                   } else {
                     showSnackBar(context, "Enter Email");
@@ -129,7 +98,7 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
     );
   }
 
-  void signIn() async {
+  void forgotPassword() async {
     setState(() {
       _isLoading = true;
     });
@@ -140,12 +109,9 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
     int responseCode404 = 404; // For For data not found
     int responseCode422 = 422; // For For data not found
     int responseCode500 = 500; // Internal server error.
-    Map<String, dynamic> params = {
-      "email": _emailController.text,
-      "password": _passwordController.text
-    };
+    Map<String, dynamic> params = {"email": _emailController.text};
     try {
-      response = await dio.post(path: AppUrls.logInEmail, data: params);
+      response = await dio.post(path: AppUrls.forgotEmailPass, data: params);
       var responseData = response.data;
       if (response.statusCode == responseCode400) {
         showSnackBar(context, "${responseData["msg"]}");
@@ -182,19 +148,7 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
           setState(() {
             _isLoading = false;
           });
-          // var token = responseData["token"];
-          // var user = responseData["User"]["id"];
-          // var id = user.toString();
-          // SharedPreferences prefs = await SharedPreferences.getInstance();
-          // prefs.setString(PrefKey.authorization, token ?? '');
-          // prefs.setString(PrefKey.userId, id ?? '');
-
-          Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const BottomNavView(),
-              ),
-              (route) => false);
+          pushReplacement(context, const OTPScreen());
         }
       }
     } catch (e) {
@@ -205,6 +159,4 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
       });
     }
   }
-
-
 }

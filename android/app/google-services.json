@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "436690066546",
+    "project_id": "tt-offer",
+    "storage_bucket": "tt-offer.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:436690066546:android:ee3b79749c0012b39536eb",
+        "android_client_info": {
+          "package_name": "com.example.tt_offer"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBOi-QC3JtjE1quObTgDAmJdTYReJmFR1I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -94,7 +94,7 @@ class _CustomAppFormFieldState extends State<CustomAppFormField> {
               Border.all(color: widget.borderColor ?? const Color(0xff464646)),
           color: AppTheme.white,
           borderRadius: BorderRadius.circular(widget.radius ?? 10)),
-      child: TextField(
+      child: TextFormField(
         style:
             TextStyle(fontSize: widget.fontsize, fontWeight: widget.fontweight),
         textAlign: widget.textAlign ?? TextAlign.start,
@@ -105,9 +105,9 @@ class _CustomAppFormFieldState extends State<CustomAppFormField> {
         cursorWidth: 2,
         keyboardType: widget.type ?? TextInputType.name,
         decoration: InputDecoration(
-          
             suffixIcon: widget.suffixIcon,
-            suffixIconConstraints: const BoxConstraints(maxHeight: 20, minWidth: 40),
+            suffixIconConstraints:
+                const BoxConstraints(maxHeight: 20, minWidth: 40),
             prefixIcon: widget.prefixIcon,
             prefixIconConstraints: const BoxConstraints(
               minWidth: 50,
@@ -199,62 +199,61 @@ class _CustomAppPasswordfieldState extends State<CustomAppPasswordfield> {
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      textAlignVertical: TextAlignVertical.center,
-      onChanged: widget.onChanged,
-      onTap: widget.onTap,
-      onTapOutside: widget.onTapOutside,
-      onFieldSubmitted: widget.onFieldSubmitted,
-      cursorHeight: widget.cursorHeight,
-      textAlign: widget.textAlign,
-      key: widget.key,
-      obscureText: _obscureText,
-      validator: widget.validator,
-      controller: widget.controller,
-      cursorColor: widget.cursorColor,
-      style: widget.style,
-      decoration: InputDecoration(
-          errorText: widget.errorText,
-          errorStyle: widget.errorStyle,
-          errorBorder: widget.errorBorder,
-          focusedErrorBorder: widget.focusedErrorBorder,
-          prefixIconColor: widget.prefixIconColor,
-          suffixIconColor: widget.suffixIconColor,
-          prefix: widget.prefix,
-          suffix: widget.suffix,
-          prefixIcon: widget.prefixIcon,
-          contentPadding: const EdgeInsets.only(
-            top: 20,
-            left: 5,
-          ),
-          enabledBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: AppTheme.appColor)),
-          disabledBorder:
-              const UnderlineInputBorder(borderSide: BorderSide.none),
-          focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(
-            color: AppTheme.appColor,
-          )),
-          border: UnderlineInputBorder(
-              borderSide: BorderSide(color: AppTheme.appColor)),
-          hintText: widget.texthint,
-          hintStyle: widget.hintStyle,
-          suffixIcon: InkWell(
-            onTap: () {
-              setState(() {
-                _obscureText = !_obscureText;
-              });
-            },
-            child: Padding(
-              padding: const EdgeInsets.only(top: 13),
-              child: Icon(
-                _obscureText
-                    ? Icons.visibility_off_outlined
-                    : Icons.visibility_outlined,
-                color: AppTheme.appColor,
-              ),
+    return Container(
+      height: widget.height ?? 48,
+      width: widget.width ?? MediaQuery.of(context).size.width,
+      decoration: BoxDecoration(
+          border: Border.all(color: const Color(0xffE5E9EB)),
+          color: AppTheme.white,
+          borderRadius: BorderRadius.circular(10)),
+      child: TextFormField(
+        textAlign: widget.textAlign ?? TextAlign.start,
+        controller: widget.controller,
+        cursorColor: AppTheme.white,
+        cursorHeight: 20,
+        cursorWidth: 2,
+        keyboardType: TextInputType.visiblePassword,
+        textAlignVertical: TextAlignVertical.center,
+        onChanged: widget.onChanged,
+        onTap: widget.onTap,
+        onTapOutside: widget.onTapOutside,
+        onFieldSubmitted: widget.onFieldSubmitted,
+        key: widget.key,
+        obscureText: _obscureText,
+        validator: widget.validator,
+        style: widget.style,
+        decoration: InputDecoration(
+            suffixIconConstraints:
+                const BoxConstraints(maxHeight: 20, minWidth: 40),
+            prefixIcon: widget.prefixIcon,
+            prefixIconConstraints: const BoxConstraints(
+              minWidth: 50,
             ),
-          )),
+            border: InputBorder.none,
+            contentPadding: const EdgeInsets.all(8),
+            hintText: widget.texthint,
+            hintStyle: const TextStyle(
+                color: Color(0xff939699),
+                fontSize: 14,
+                fontWeight: FontWeight.w400),
+            isDense: true,
+            suffixIcon: InkWell(
+              onTap: () {
+                setState(() {
+                  _obscureText = !_obscureText;
+                });
+              },
+              child: Padding(
+                padding: const EdgeInsets.only(top: 5),
+                child: Icon(
+                  _obscureText
+                      ? Icons.visibility_off_outlined
+                      : Icons.visibility_outlined,
+                  color: AppTheme.appColor,
+                ),
+              ),
+            )),
+      ),
     );
   }
 }

@@ -3,6 +3,7 @@ import 'package:tt_offer/Utils/resources/res/app_theme.dart';
 import 'package:tt_offer/Utils/utils.dart';
 import 'package:tt_offer/Utils/widgets/others/app_text.dart';
 import 'package:tt_offer/Utils/widgets/others/divider.dart';
+import 'package:tt_offer/View/Authentication%20screens/login_screen.dart';
 import 'package:tt_offer/View/Profile%20Screen/Account%20Settigs/account_setting.dart';
 import 'package:tt_offer/View/Profile%20Screen/custom_link.dart';
 import 'package:tt_offer/View/Profile%20Screen/payment%20Screens/payment_screen.dart';
@@ -32,7 +33,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             Padding(
               padding: const EdgeInsets.only(right: 20.0),
               child: GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  pushUntil(context, const SigInScreen());
+                },
                 child: Image.asset(
                   "assets/images/logout.png",
                   height: 20,

@@ -189,22 +189,22 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
       response = await dio.post(path: AppUrls.registration, data: params);
       var responseData = response.data;
       if (response.statusCode == responseCode400) {
-        showSnackBar(context, "${responseData["msg"]}");
+        showSnackBar(context, "${responseData["message"]}");
         setState(() {
           _isLoading = false;
         });
       } else if (response.statusCode == responseCode401) {
-        showSnackBar(context, "${responseData["msg"]}");
+        showSnackBar(context, "${responseData["message"]}");
         setState(() {
           _isLoading = false;
         });
       } else if (response.statusCode == responseCode404) {
-        showSnackBar(context, "${responseData["msg"]}");
+        showSnackBar(context, "${responseData["message"]}");
         setState(() {
           _isLoading = false;
         });
       } else if (response.statusCode == responseCode500) {
-        showSnackBar(context, "${responseData["msg"]}");
+        showSnackBar(context, "${responseData["message"]}");
         setState(() {
           _isLoading = false;
         });

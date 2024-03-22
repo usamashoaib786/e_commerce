@@ -147,23 +147,24 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
     try {
       response = await dio.post(path: AppUrls.logInEmail, data: params);
       var responseData = response.data;
+      print("object${responseData}");
       if (response.statusCode == responseCode400) {
-        showSnackBar(context, "${responseData["msg"]}");
+        showSnackBar(context, "${responseData["message"]}");
         setState(() {
           _isLoading = false;
         });
       } else if (response.statusCode == responseCode401) {
-        showSnackBar(context, "${responseData["msg"]}");
+        showSnackBar(context, "${responseData["message"]}");
         setState(() {
           _isLoading = false;
         });
       } else if (response.statusCode == responseCode404) {
-        showSnackBar(context, "${responseData["msg"]}");
+        showSnackBar(context, "${responseData["message"]}");
         setState(() {
           _isLoading = false;
         });
       } else if (response.statusCode == responseCode500) {
-        showSnackBar(context, "${responseData["msg"]}");
+        showSnackBar(context, "${responseData["message"]}");
         setState(() {
           _isLoading = false;
         });

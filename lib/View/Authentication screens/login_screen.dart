@@ -6,7 +6,7 @@ import 'package:tt_offer/Utils/widgets/others/app_text.dart';
 import 'package:tt_offer/View/Authentication%20screens/GoogleSignIn/google_sign_in_button.dart';
 import 'package:tt_offer/View/Authentication%20screens/email_screen.dart';
 import 'package:tt_offer/View/Authentication%20screens/phone_auth.dart';
-import 'package:tt_offer/View/Profile%20Screen/profile_detail.dart';
+import 'package:tt_offer/View/Authentication%20screens/registration_screen.dart';
 
 class SigInScreen extends StatefulWidget {
   const SigInScreen({super.key});
@@ -73,7 +73,7 @@ class _SigInScreenState extends State<SigInScreen> {
                       imagePath: "assets/images/sms.png"),
                   GestureDetector(
                     onTap: () {
-                      push(context, const ProfileDetailScreen());
+                      push(context, const RegistrationScreen());
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,

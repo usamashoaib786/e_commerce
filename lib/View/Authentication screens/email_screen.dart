@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tt_offer/Constants/app_logger.dart';
 import 'package:tt_offer/Utils/resources/res/app_theme.dart';
 import 'package:tt_offer/Utils/utils.dart';
@@ -10,6 +11,7 @@ import 'package:tt_offer/View/Authentication%20screens/GoogleSignIn/forgot_email
 import 'package:tt_offer/View/BottomNavigation/navigation_bar.dart';
 import 'package:tt_offer/config/app_urls.dart';
 import 'package:tt_offer/config/dio/app_dio.dart';
+import 'package:tt_offer/config/keys/pref_keys.dart';
 
 class EmailLoginScreen extends StatefulWidget {
   const EmailLoginScreen({super.key});
@@ -97,30 +99,36 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 40.0),
-                child: AppButton.appButton("Sign In", onTap: () {
-                  if (_emailController.text.isNotEmpty) {
-                    final emailPattern =
-                        RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-                    if (!emailPattern.hasMatch(_emailController.text)) {
-                      showSnackBar(
-                          context, "Please enter a valid email address");
-                    } else {
-                      if (_passwordController.text.isNotEmpty) {
-                        signIn();
-                      } else {
-                        showSnackBar(context, "Enter Password");
-                      }
-                    }
-                  } else {
-                    showSnackBar(context, "Enter Email");
-                  }
-                },
-                    height: 53,
-                    radius: 32.0,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 14,
-                    backgroundColor: AppTheme.appColor,
-                    textColor: AppTheme.whiteColor),
+                child: _isLoading == true
+                    ? Center(
+                        child: CircularProgressIndicator(
+                          color: AppTheme.appColor,
+                        ),
+                      )
+                    : AppButton.appButton("Sign In", onTap: () {
+                        if (_emailController.text.isNotEmpty) {
+                          final emailPattern =
+                              RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+                          if (!emailPattern.hasMatch(_emailController.text)) {
+                            showSnackBar(
+                                context, "Please enter a valid email address");
+                          } else {
+                            if (_passwordController.text.isNotEmpty) {
+                              signIn();
+                            } else {
+                              showSnackBar(context, "Enter Password");
+                            }
+                          }
+                        } else {
+                          showSnackBar(context, "Enter Email");
+                        }
+                      },
+                        height: 53,
+                        radius: 32.0,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 14,
+                        backgroundColor: AppTheme.appColor,
+                        textColor: AppTheme.whiteColor),
               )
             ],
           ),
@@ -183,12 +191,12 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
           setState(() {
             _isLoading = false;
           });
-          // var token = responseData["token"];
-          // var user = responseData["User"]["id"];
-          // var id = user.toString();
-          // SharedPreferences prefs = await SharedPreferences.getInstance();
-          // prefs.setString(PrefKey.authorization, token ?? '');
-          // prefs.setString(PrefKey.userId, id ?? '');
+          var userId = responseData["data"]["id"];
+          var id = userId.toString();
+          print("id$id");
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setString(PrefKey.userId, id ?? '');
+        
 
           Navigator.pushAndRemoveUntil(
               context,
@@ -206,6 +214,5 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
       });
     }
   }
-
 
 }

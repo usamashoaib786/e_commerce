@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:tt_offer/Constants/app_logger.dart';
 import 'package:tt_offer/Utils/resources/res/app_theme.dart';
 import 'package:tt_offer/Utils/utils.dart';
 import 'package:tt_offer/Utils/widgets/others/app_button.dart';
@@ -7,12 +8,16 @@ import 'package:tt_offer/Utils/widgets/others/app_field.dart';
 import 'package:tt_offer/Utils/widgets/others/app_text.dart';
 import 'package:tt_offer/Utils/widgets/others/custom_app_bar.dart';
 import 'package:tt_offer/Utils/widgets/others/divider.dart';
+import 'package:tt_offer/Utils/widgets/textField_lable.dart';
 import 'package:tt_offer/View/BottomNavigation/navigation_bar.dart';
 import 'package:tt_offer/View/Post%20screens/enter_location_screen.dart';
 import 'package:tt_offer/View/Post%20screens/indicator.dart';
+import 'package:tt_offer/config/app_urls.dart';
+import 'package:tt_offer/config/dio/app_dio.dart';
 
 class SetPostPriceScreen extends StatefulWidget {
-  const SetPostPriceScreen({super.key});
+  final productId;
+  const SetPostPriceScreen({super.key, this.productId});
 
   @override
   State<SetPostPriceScreen> createState() => _SetPostPriceScreenState();
@@ -26,11 +31,19 @@ class _SetPostPriceScreenState extends State<SetPostPriceScreen> {
 
   DateTime? startDate;
   DateTime? endDate;
+  DateTime? sellDate;
+
   var startTime;
   var endTime;
+  bool _isLoading = false;
+  late AppDio dio;
+  AppLogger logger = AppLogger();
+  int _toggleValue = 0;
   @override
   void initState() {
     _priceController.text = "\$ 60";
+    dio = AppDio(context);
+    logger.init();
     super.initState();
   }
 
@@ -41,6 +54,7 @@ class _SetPostPriceScreenState extends State<SetPostPriceScreen> {
         padding: const EdgeInsets.all(20.0),
         child: AppButton.appButton("Next", onTap: () {
           push(context, const PostLocationScreen());
+          // addProducrPrice()
         },
             height: 53,
             fontWeight: FontWeight.w500,
@@ -126,14 +140,14 @@ class _SetPostPriceScreenState extends State<SetPostPriceScreen> {
                     borderRadius: const BorderRadius.horizontal(
                         left: Radius.circular(100)),
                     color: selectedOption == 'Fixed Price'
-                        ? AppTheme.appColor // Change color when selected
+                        ? AppTheme.appColor
                         : Colors.transparent,
                   ),
                   child: Text(
                     'Fixed Price',
                     style: TextStyle(
                       color: selectedOption == 'Fixed Price'
-                          ? Colors.white // Change text color when selected
+                          ? Colors.white
                           : Colors.black,
                     ),
                   ),
@@ -218,11 +232,21 @@ class _SetPostPriceScreenState extends State<SetPostPriceScreen> {
             height: 15,
           ),
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               AppText.appText("Firm on price",
                   fontSize: 16,
                   fontWeight: FontWeight.w400,
                   textColor: AppTheme.txt1B20),
+              Switch(
+                activeColor: AppTheme.appColor,
+                value: _toggleValue == 1,
+                onChanged: (bool value) {
+                  setState(() {
+                    _toggleValue = value ? 1 : 0;
+                  });
+                },
+              ),
             ],
           ),
           const SizedBox(
@@ -240,22 +264,11 @@ class _SetPostPriceScreenState extends State<SetPostPriceScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          AppText.appText("Starting Price",
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-              textColor: AppTheme.text09),
-          const SizedBox(
-            height: 10,
-          ),
-          CustomAppFormField(
-            width: MediaQuery.of(context).size.width,
-            texthint: "Starting Price",
+          LableTextField(
+            labelTxt: "Starting Price",
+            hintTxt: "Starting Price",
             controller: _startingPriceController,
-            borderColor: AppTheme.borderColor,
-            hintTextColor: AppTheme.hintTextColor,
-          ),
-          const SizedBox(
-            height: 15,
+            width: MediaQuery.of(context).size.width,
           ),
           AppText.appText("Time",
               fontSize: 12,
@@ -474,23 +487,160 @@ class _SetPostPriceScreenState extends State<SetPostPriceScreen> {
     }
   }
 
+  Future<void> _selectSellDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: sellDate ?? DateTime.now(),
+        firstDate: DateTime(1900),
+        lastDate: DateTime(2100),
+        initialEntryMode: DatePickerEntryMode.calendarOnly,
+        builder: (BuildContext context, Widget? child) {
+          return Theme(
+            data: ThemeData.light().copyWith(
+              primaryColor: AppTheme.white, // Change the primary color
+              colorScheme: ColorScheme.light(
+                  primary: AppTheme.appColor), // Change overall color scheme
+              buttonTheme: ButtonThemeData(buttonColor: AppTheme.appColor),
+            ),
+            child: child!,
+          );
+        });
+    if (picked != null && picked != sellDate) {
+      setState(() {
+        sellDate = picked;
+      });
+    }
+  }
+
   Widget uXColumn() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Column(
       children: [
-        SizedBox(
-          width: MediaQuery.of(context).size.width * 0.7,
-          child: AppText.appText(
-              "Kindly schedule a convenient date for a meeting with our specialist to assess your items.",
-              textColor: AppTheme.hintTextColor,
-              fontSize: 10,
-              fontWeight: FontWeight.w400),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            SizedBox(
+              width: MediaQuery.of(context).size.width * 0.7,
+              child: AppText.appText(
+                  "Kindly schedule a convenient date for a meeting with our specialist to assess your items.",
+                  textColor: AppTheme.hintTextColor,
+                  fontSize: 10,
+                  fontWeight: FontWeight.w400),
+            ),
+            GestureDetector(
+              onTap: () {
+                _selectSellDate(context);
+              },
+              child: Image.asset(
+                "assets/images/calender.png",
+                height: 18,
+              ),
+            ),
+          ],
         ),
-        Image.asset(
-          "assets/images/calender.png",
-          height: 18,
+        Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              AppText.appText("Selected Date:",
+                  textColor: AppTheme.hintTextColor,
+                  fontSize: 10,
+                  fontWeight: FontWeight.w400),
+              AppText.appText(
+                  sellDate == null
+                      ? ""
+                      : DateFormat('MM-dd-yyyy').format(sellDate!),
+                  textColor: AppTheme.txt1B20,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400),
+            ],
+          ),
         ),
       ],
     );
+  }
+
+  void addProducrPrice() async {
+    setState(() {
+      _isLoading = true;
+    });
+    var response;
+    int responseCode200 = 200; // For successful request.
+    int responseCode400 = 400; // For Bad Request.
+    int responseCode401 = 401; // For Unauthorized access.
+    int responseCode404 = 404; // For For data not found
+    int responseCode422 = 422; // For For data not found
+    int responseCode500 = 500;
+    Map<String, dynamic> params = {
+      "product_id": "${widget.productId}",
+      "fix_price": _priceController.text,
+      "firm_on_price": _toggleValue,
+      "auction_price": _startingPriceController.text,
+      "starting_date": startDate,
+      "starting_time": startTime,
+      "ending_date": endDate,
+      "ending_time": endTime,
+      "sell_to_us": sellDate,
+    };
+    if (selectedOption == "Fixed Price") {
+      params.remove("auction_price");
+      params.remove("starting_date");
+      params.remove("starting_time");
+      params.remove("ending_date");
+      params.remove("ending_time");
+      params.remove("sell_to_us");
+    } else if (selectedOption == "Auction") {
+      params.remove("fix_price");
+      params.remove("firm_on_price");
+      params.remove("sell_to_us");
+    } else if (selectedOption == "Sell to Ux") {
+      params.remove("fix_price");
+      params.remove("firm_on_price");
+      params.remove("auction_price");
+      params.remove("starting_date");
+      params.remove("starting_time");
+      params.remove("ending_date");
+      params.remove("ending_time");
+    }
+
+    try {
+      response = await dio.post(path: AppUrls.addProductPrice, data: params);
+      var responseData = response.data;
+      if (response.statusCode == responseCode400) {
+        showSnackBar(context, "${responseData["msg"]}");
+        setState(() {
+          _isLoading = false;
+        });
+      } else if (response.statusCode == responseCode401) {
+        showSnackBar(context, "${responseData["msg"]}");
+        setState(() {
+          _isLoading = false;
+        });
+      } else if (response.statusCode == responseCode404) {
+        showSnackBar(context, "${responseData["msg"]}");
+        setState(() {
+          _isLoading = false;
+        });
+      } else if (response.statusCode == responseCode500) {
+        showSnackBar(context, "${responseData["msg"]}");
+        setState(() {
+          _isLoading = false;
+        });
+      } else if (response.statusCode == responseCode422) {
+        setState(() {
+          _isLoading = false;
+        });
+      } else if (response.statusCode == responseCode200) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      print("Something went Wrong ${e}");
+      showSnackBar(context, "Something went Wrong.");
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 }

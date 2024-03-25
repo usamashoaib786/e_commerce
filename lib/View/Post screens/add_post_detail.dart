@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tt_offer/Constants/app_logger.dart';
 import 'package:tt_offer/Utils/resources/res/app_theme.dart';
 import 'package:tt_offer/Utils/utils.dart';
 import 'package:tt_offer/Utils/widgets/others/app_button.dart';
@@ -6,33 +7,58 @@ import 'package:tt_offer/Utils/widgets/others/app_field.dart';
 import 'package:tt_offer/Utils/widgets/others/app_text.dart';
 import 'package:tt_offer/Utils/widgets/others/custom_app_bar.dart';
 import 'package:tt_offer/Utils/widgets/others/divider.dart';
+import 'package:tt_offer/Utils/widgets/textField_lable.dart';
 import 'package:tt_offer/View/BottomNavigation/navigation_bar.dart';
 import 'package:tt_offer/View/Post%20screens/indicator.dart';
 import 'package:tt_offer/View/Post%20screens/set_price_screen.dart';
+import 'package:tt_offer/config/app_urls.dart';
+import 'package:tt_offer/config/dio/app_dio.dart';
 
 class PostDetailScreen extends StatefulWidget {
-  const PostDetailScreen({super.key});
+  final productId;
+  const PostDetailScreen({super.key, this.productId});
 
   @override
   State<PostDetailScreen> createState() => _PostDetailScreenState();
 }
 
 class _PostDetailScreenState extends State<PostDetailScreen> {
-  List<String> _selectedCategories = [];
-  List<String> _selectedSubCategories = [];
-  List<String> _selectedCondition = [];
+  String _selectedCategory = "";
+  String _selectedSubCategory = "";
+  String _selectedCondition = "";
+  var catagoryId;
+  var subCatagoryId;
   final TextEditingController _searchController = TextEditingController();
+  final TextEditingController _millageController = TextEditingController();
+  final TextEditingController _colorController = TextEditingController();
+  final TextEditingController _modelYearController = TextEditingController();
+
+  bool _isLoading = false;
+  late AppDio dio;
+  AppLogger logger = AppLogger();
+  var catagoryData;
+  var subCatagoryData;
+
+  @override
+  void initState() {
+    dio = AppDio(context);
+    logger.init();
+    getCatagories(search: "");
+    getSubCatagories(search: "");
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    print("object${_selectedCategories}");
+    print("object${_selectedCategory}");
     return Scaffold(
       appBar: CustomAppBar1(
         title: "Detail",
         action: true,
         img: "assets/images/cross.png",
         actionOntap: () {
-          pushUntil(context, BottomNavView());
+          pushUntil(context, const BottomNavView());
         },
       ),
       body: Padding(
@@ -53,43 +79,37 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                 height: 20,
               ),
               customRow(
-                onTap: () {
-                  _showCategoryBottomSheet(context);
-                },
-                title: "Category(required)",
-                selectText: _selectedCategories.isNotEmpty
-                    ? _selectedCategories.join(", ")
-                    : "",
-              ),
+                  onTap: () {
+                    _showCategoryBottomSheet(context);
+                  },
+                  title: "Category(required)",
+                  selectText: _selectedCategory),
               customRow(
                 onTap: () {
                   _showSubCategoryBottomSheet(context);
                 },
                 title: "Sub-category(optional)",
-                selectText: _selectedSubCategories.isNotEmpty
-                    ? _selectedSubCategories.join(", ")
-                    : "",
+                selectText: _selectedSubCategory,
               ),
               customRow(
                 onTap: () {
                   _showConditionBottomSheet(context);
                 },
                 title: "Condition (required)",
-                selectText: _selectedCondition.isNotEmpty
-                    ? _selectedCondition.join(", ")
-                    : "",
+                selectText: _selectedCondition,
               ),
-              customRow(
-                  onTap: () {},
-                  title: "Year, Make & Model (optional)",
-                  selectText: ""),
-              customRow(
-                  onTap: () {}, title: "Mileage (optional)", selectText: ""),
-              customRow(
-                  onTap: () {}, title: "Color (optional)", selectText: ""),
+              lableFields(
+                  lableTtxt: "Year, Make & Model(Optional)",
+                  controller: _modelYearController),
+              lableFields(
+                  lableTtxt: "Mileage (Optional)",
+                  controller: _millageController),
+              lableFields(
+                  lableTtxt: "Color (optional)", controller: _colorController),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 40.0),
                 child: AppButton.appButton("Next", onTap: () {
+                  print("object $catagoryId  $subCatagoryId");
                   push(context, const SetPostPriceScreen());
                 },
                     height: 53,
@@ -102,6 +122,22 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget lableFields({lableTtxt, controller}) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 20.0),
+      child: Column(
+        children: [
+          LableTextField(
+              labelTxt: "$lableTtxt",
+              lableColor: AppTheme.hintTextColor,
+              hintTxt: "",
+              controller: controller),
+          const CustomDivider(),
+        ],
       ),
     );
   }
@@ -185,11 +221,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                     controller: _searchController,
                   ),
                   const SizedBox(height: 16),
-                  Expanded(
-                    child: ListView(
-                      children: _buildCategoryList(setState),
-                    ),
-                  ),
+                  Expanded(child: _buildCategoryList(setState)),
                 ],
               ),
             );
@@ -198,51 +230,43 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
       },
     ).then((value) {
       setState(() {
-        _selectedCategories = _selectedCategories;
+        _selectedCategory = _selectedCategory;
       });
     });
   }
 
-  List<Widget> _buildCategoryList(StateSetter setState) {
-    List<String> categories = [
-      "Electronic And Media",
-      "Home And Garden",
-      "Clothing, Shoes & Acessories",
-      " Baby & Kids",
-      "Vehicles",
-      "Toys, Games & Hobbies",
-      " Collectibles & Arts",
-      "Pet Supplies",
-      "Healthy & Beauties ",
-      "Wedding",
-    ];
-
-    return categories.map((category) {
-      return Row(
-        children: [
-          Checkbox(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-            checkColor: AppTheme.whiteColor,
-            activeColor: AppTheme.appColor,
-            value: _selectedCategories.contains(category),
-            onChanged: (bool? value) {
-              setState(() {
-                if (value!) {
-                  _selectedCategories.add(category);
-                } else {
-                  _selectedCategories.remove(category);
-                }
-              });
-            },
-          ),
-          AppText.appText(category,
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-              textColor: AppTheme.textColor),
-        ],
-      );
-    }).toList();
+  Widget _buildCategoryList(StateSetter setState) {
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: catagoryData.length,
+      itemBuilder: (context, index) {
+        return Row(
+          children: [
+            Checkbox(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
+              checkColor: AppTheme.whiteColor,
+              activeColor: AppTheme.appColor,
+              value: _selectedCategory == catagoryData[index]["name"],
+              onChanged: (bool? value) {
+                setState(() {
+                  if (value != null && value) {
+                    _selectedCategory = catagoryData[index]["name"];
+                    catagoryId = catagoryData[index]["id"];
+                  } else {
+                    _selectedCategory = "";
+                  }
+                });
+              },
+            ),
+            AppText.appText(catagoryData[index]["name"],
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                textColor: AppTheme.textColor),
+          ],
+        );
+      },
+    );
   }
 
   /////////////////////////////   Subcategory bottom sheet ///////////////////////
@@ -282,9 +306,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                   ),
                   const SizedBox(height: 16),
                   Expanded(
-                    child: ListView(
-                      children: _buildSubCategoryList(setState),
-                    ),
+                    child: _buildSubCategoryList(setState),
                   ),
                 ],
               ),
@@ -294,49 +316,43 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
       },
     ).then((value) {
       setState(() {
-        _selectedSubCategories = _selectedSubCategories;
+        _selectedSubCategory = _selectedSubCategory;
       });
     });
   }
 
-  List<Widget> _buildSubCategoryList(StateSetter setState) {
-    List<String> subCategories = [
-      "Audio & Speakers",
-      "Cell Phone & Acessories",
-      "Camera & Photography",
-      "TV & Media Player",
-      "Vedio games & Console",
-      "Toys, Games & Hobbies",
-      "oomputer & Acesories",
-      "Books, Movies & Music"
-    ];
-
-    return subCategories.map((subCategory) {
-      return Row(
-        children: [
-          Checkbox(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-            checkColor: AppTheme.whiteColor,
-            activeColor: AppTheme.appColor,
-            value: _selectedSubCategories.contains(subCategory),
-            onChanged: (bool? value) {
-              setState(() {
-                if (value!) {
-                  _selectedSubCategories.add(subCategory);
-                } else {
-                  _selectedSubCategories.remove(subCategory);
-                }
-              });
-            },
-          ),
-          AppText.appText(subCategory,
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-              textColor: AppTheme.textColor),
-        ],
-      );
-    }).toList();
+  Widget _buildSubCategoryList(StateSetter setState) {
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: subCatagoryData.length,
+      itemBuilder: (context, index) {
+        return Row(
+          children: [
+            Checkbox(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
+              checkColor: AppTheme.whiteColor,
+              activeColor: AppTheme.appColor,
+              value: _selectedSubCategory == subCatagoryData[index]["name"],
+              onChanged: (bool? value) {
+                setState(() {
+                  if (value != null && value) {
+                    _selectedSubCategory = subCatagoryData[index]["name"];
+                    subCatagoryId = subCatagoryData[index]["id"];
+                  } else {
+                    _selectedSubCategory = "";
+                  }
+                });
+              },
+            ),
+            AppText.appText(subCatagoryData[index]["name"],
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                textColor: AppTheme.textColor),
+          ],
+        );
+      },
+    );
   }
 
   /////////////////////////////  Condition bottom sheet ///////////////////////
@@ -376,9 +392,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                   ),
                   const SizedBox(height: 16),
                   Expanded(
-                    child: ListView(
-                      children: _buildConditionList(setState),
-                    ),
+                    child: _buildConditionList(setState),
                   ),
                 ],
               ),
@@ -393,7 +407,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
     });
   }
 
-  List<Widget> _buildConditionList(StateSetter setState) {
+  Widget _buildConditionList(StateSetter setState) {
     List<String> conditions = [
       "New",
       "Good",
@@ -402,31 +416,212 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
       "For Part or Not Working"
     ];
 
-    return conditions.map((condition) {
-      return Row(
-        children: [
-          Checkbox(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-            checkColor: AppTheme.whiteColor,
-            activeColor: AppTheme.appColor,
-            value: _selectedCondition.contains(condition),
-            onChanged: (bool? value) {
-              setState(() {
-                if (value!) {
-                  _selectedCondition.add(condition);
-                } else {
-                  _selectedCondition.remove(condition);
-                }
-              });
-            },
-          ),
-          AppText.appText(condition,
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-              textColor: AppTheme.textColor),
-        ],
-      );
-    }).toList();
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: conditions.length,
+      itemBuilder: (context, index) {
+        return Row(
+          children: [
+            Checkbox(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
+              checkColor: AppTheme.whiteColor,
+              activeColor: AppTheme.appColor,
+              value: _selectedCondition == conditions[index],
+              onChanged: (bool? value) {
+                setState(() {
+                  if (value != null && value) {
+                    _selectedCondition = conditions[index];
+                  } else {
+                    _selectedCondition = "";
+                  }
+                });
+              },
+            ),
+            AppText.appText(conditions[index],
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                textColor: AppTheme.textColor),
+          ],
+        );
+      },
+    );
+  }
+
+  void getCatagories({search}) async {
+    setState(() {
+      _isLoading = true;
+    });
+    var response;
+    int responseCode200 = 200; // For successful request.
+    int responseCode400 = 400; // For Bad Request.
+    int responseCode401 = 401; // For Unauthorized access.
+    int responseCode404 = 404; // For For data not found
+    int responseCode422 = 422; // For For data not found
+    int responseCode500 = 500; // Internal server error.
+    Map<String, dynamic> params = {
+      "search": "$search",
+      "limit": null,
+    };
+    try {
+      response = await dio.post(path: AppUrls.categories, data: params);
+      var responseData = response.data;
+      if (response.statusCode == responseCode400) {
+        showSnackBar(context, "${responseData["msg"]}");
+        setState(() {
+          _isLoading = false;
+        });
+      } else if (response.statusCode == responseCode401) {
+        showSnackBar(context, "${responseData["msg"]}");
+        setState(() {
+          _isLoading = false;
+        });
+      } else if (response.statusCode == responseCode404) {
+        showSnackBar(context, "${responseData["msg"]}");
+        setState(() {
+          _isLoading = false;
+        });
+      } else if (response.statusCode == responseCode500) {
+        showSnackBar(context, "${responseData["msg"]}");
+        setState(() {
+          _isLoading = false;
+        });
+      } else if (response.statusCode == responseCode422) {
+        setState(() {
+          _isLoading = false;
+        });
+      } else if (response.statusCode == responseCode200) {
+        setState(() {
+          catagoryData = responseData;
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      print("Something went Wrong ${e}");
+      showSnackBar(context, "Something went Wrong.");
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  void getSubCatagories({search}) async {
+    setState(() {
+      _isLoading = true;
+    });
+    var response;
+    int responseCode200 = 200; // For successful request.
+    int responseCode400 = 400; // For Bad Request.
+    int responseCode401 = 401; // For Unauthorized access.
+    int responseCode404 = 404; // For For data not found
+    int responseCode422 = 422; // For For data not found
+    int responseCode500 = 500; // Internal server error.
+    Map<String, dynamic> params = {
+      "category_id": "$search",
+      "search": null,
+      "limit": null,
+      "id": "",
+    };
+    try {
+      response = await dio.post(path: AppUrls.subCategories, data: params);
+      var responseData = response.data;
+      if (response.statusCode == responseCode400) {
+        showSnackBar(context, "${responseData["msg"]}");
+        setState(() {
+          _isLoading = false;
+        });
+      } else if (response.statusCode == responseCode401) {
+        showSnackBar(context, "${responseData["msg"]}");
+        setState(() {
+          _isLoading = false;
+        });
+      } else if (response.statusCode == responseCode404) {
+        showSnackBar(context, "${responseData["msg"]}");
+        setState(() {
+          _isLoading = false;
+        });
+      } else if (response.statusCode == responseCode500) {
+        showSnackBar(context, "${responseData["msg"]}");
+        setState(() {
+          _isLoading = false;
+        });
+      } else if (response.statusCode == responseCode422) {
+        setState(() {
+          _isLoading = false;
+        });
+      } else if (response.statusCode == responseCode200) {
+        setState(() {
+          subCatagoryData = responseData;
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      print("Something went Wrong ${e}");
+      showSnackBar(context, "Something went Wrong.");
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  void addProductDetail() async {
+    setState(() {
+      _isLoading = true;
+    });
+    var response;
+    int responseCode200 = 200; // For successful request.
+    int responseCode400 = 400; // For Bad Request.
+    int responseCode401 = 401; // For Unauthorized access.
+    int responseCode404 = 404; // For For data not found
+    int responseCode422 = 422; // For For data not found
+    int responseCode500 = 500; // Internal server error.
+    Map<String, dynamic> params = {
+      "category_id": "$catagoryId",
+      "product_id": "${widget.productId}",
+      "condition": _selectedCondition,
+      "sub_category_id": "$subCatagoryId",
+      "make_and_model": _modelYearController.text,
+      "mileage": _millageController.text,
+      "color": _colorController.text,
+    };
+    try {
+      response = await dio.post(path: AppUrls.addProductDetail, data: params);
+      var responseData = response.data;
+      if (response.statusCode == responseCode400) {
+        showSnackBar(context, "${responseData["msg"]}");
+        setState(() {
+          _isLoading = false;
+        });
+      } else if (response.statusCode == responseCode401) {
+        showSnackBar(context, "${responseData["msg"]}");
+        setState(() {
+          _isLoading = false;
+        });
+      } else if (response.statusCode == responseCode404) {
+        showSnackBar(context, "${responseData["msg"]}");
+        setState(() {
+          _isLoading = false;
+        });
+      } else if (response.statusCode == responseCode500) {
+        showSnackBar(context, "${responseData["msg"]}");
+        setState(() {
+          _isLoading = false;
+        });
+      } else if (response.statusCode == responseCode422) {
+        setState(() {
+          _isLoading = false;
+        });
+      } else if (response.statusCode == responseCode200) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      print("Something went Wrong ${e}");
+      showSnackBar(context, "Something went Wrong.");
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 }

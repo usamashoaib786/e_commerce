@@ -68,29 +68,35 @@ class _ForgotEmailPassState extends State<ForgotEmailPass> {
                 hintTextColor: const Color(0xff939699),
                 borderColor: const Color(0xffE5E9EB),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 40.0),
-                child: AppButton.appButton("Send OTP", onTap: () {
-                  if (_emailController.text.isNotEmpty) {
-                    final emailPattern =
-                        RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-                    if (!emailPattern.hasMatch(_emailController.text)) {
-                      showSnackBar(
-                          context, "Please enter a valid email address");
-                    } else {
-                      forgotPassword();
-                    }
-                  } else {
-                    showSnackBar(context, "Enter Email");
-                  }
-                },
-                    height: 53,
-                    radius: 32.0,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 14,
-                    backgroundColor: AppTheme.appColor,
-                    textColor: AppTheme.whiteColor),
-              )
+              _isLoading == true
+                  ? Center(
+                      child: CircularProgressIndicator(
+                        color: AppTheme.appColor,
+                      ),
+                    )
+                  : Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 40.0),
+                      child: AppButton.appButton("Send OTP", onTap: () {
+                        if (_emailController.text.isNotEmpty) {
+                          final emailPattern =
+                              RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+                          if (!emailPattern.hasMatch(_emailController.text)) {
+                            showSnackBar(
+                                context, "Please enter a valid email address");
+                          } else {
+                            forgotPassword();
+                          }
+                        } else {
+                          showSnackBar(context, "Enter Email");
+                        }
+                      },
+                          height: 53,
+                          radius: 32.0,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 14,
+                          backgroundColor: AppTheme.appColor,
+                          textColor: AppTheme.whiteColor),
+                    )
             ],
           ),
         ),

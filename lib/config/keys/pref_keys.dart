@@ -7,7 +7,7 @@ class PrefKey {
   static const String firstTimeLogin = "first_login";
   static const String firstTimeGetProfile = "first_get_profile";
   static const String notification = "notification";
-  static const String id = "id";
+  static const String userId = "userId";
   static const String unit = "unit";
   static const String socialId = "socialid";
   static const String parametersLists = "parameters";

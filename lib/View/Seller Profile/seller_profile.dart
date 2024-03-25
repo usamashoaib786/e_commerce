@@ -1,16 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:tt_offer/Utils/resources/res/app_theme.dart';
-import 'package:tt_offer/Utils/utils.dart';
 import 'package:tt_offer/Utils/widgets/listview_container.dart';
 import 'package:tt_offer/Utils/widgets/others/app_text.dart';
 import 'package:tt_offer/Utils/widgets/others/custom_app_bar.dart';
-import 'package:tt_offer/Utils/widgets/others/divider.dart';
-import 'package:tt_offer/View/Profile%20Screen/Account%20Settigs/account_setting.dart';
-import 'package:tt_offer/View/Profile%20Screen/custom_link.dart';
-import 'package:tt_offer/View/Profile%20Screen/payment%20Screens/payment_screen.dart';
 import 'package:tt_offer/View/Profile%20Screen/profile_screen.dart';
-import 'package:tt_offer/View/Profile%20Screen/saved_products.dart';
-import 'package:tt_offer/View/Sellings/selling_purchase.dart';
 
 class SellerProfileScreen extends StatefulWidget {
   const SellerProfileScreen({super.key});

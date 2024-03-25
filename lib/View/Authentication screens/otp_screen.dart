@@ -5,7 +5,7 @@ import 'package:tt_offer/Utils/utils.dart';
 import 'package:tt_offer/Utils/widgets/others/app_button.dart';
 import 'package:tt_offer/Utils/widgets/others/app_text.dart';
 import 'package:tt_offer/Utils/widgets/others/custom_app_bar.dart';
-import 'package:tt_offer/View/Profile%20Screen/profile_detail.dart';
+import 'package:tt_offer/View/Authentication%20screens/registration_screen.dart';
 
 class OTPScreen extends StatefulWidget {
   final email;
@@ -109,10 +109,10 @@ class _OTPScreenState extends State<OTPScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 40.0),
                 child: AppButton.appButton("Verify", onTap: () {
-                  push(context, const ProfileDetailScreen());
+                  push(context, const RegistrationScreen());
                 },
                     height: 53,
-                     fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.w500,
                     fontSize: 14,
                     radius: 32.0,
                     backgroundColor: AppTheme.appColor,

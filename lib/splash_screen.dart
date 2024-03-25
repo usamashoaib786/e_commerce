@@ -17,23 +17,8 @@ class _SplashScreenState extends State<SplashScreen> {
 
     Future.delayed(const Duration(seconds: 2), () {
       pushReplacement(context, const OnBoardScreen());
-
-      // getUserCredentials(context);
     });
-    // Use this method to get user credentials if needed
   }
-
-  // void getUserCredentials(BuildContext context) async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-
-  //   String? token = prefs.getString(PrefKey.authorization);
-
-  //   if (token != null && token.isNotEmpty) {
-  //     pushReplacement(context, BottomNavView());
-  //   } else {
-  //     pushReplacement(context, const LogInScreen());
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {

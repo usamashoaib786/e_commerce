@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tt_offer/Utils/resources/res/app_theme.dart';
 import 'package:tt_offer/Utils/utils.dart';
 import 'package:tt_offer/Utils/widgets/others/app_text.dart';
@@ -33,7 +34,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             Padding(
               padding: const EdgeInsets.only(right: 20.0),
               child: GestureDetector(
-                onTap: () {
+                onTap: () async {
+                  SharedPreferences pref =
+                      await SharedPreferences.getInstance();
+                  pref.clear();
                   pushUntil(context, const SigInScreen());
                 },
                 child: Image.asset(

@@ -1,8 +1,10 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:tt_offer/Constants/app_logger.dart';
 import 'package:tt_offer/Utils/resources/res/app_theme.dart';
 import 'package:tt_offer/Utils/utils.dart';
+import 'package:tt_offer/Utils/widgets/loading_popup.dart';
 import 'package:tt_offer/Utils/widgets/others/app_button.dart';
 import 'package:tt_offer/Utils/widgets/others/app_field.dart';
 import 'package:tt_offer/Utils/widgets/others/app_text.dart';
@@ -72,244 +74,265 @@ class _LandingScreenState extends State<LandingScreen> {
               const SizedBox(
                 height: 20,
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: CarouselSlider(
-                  options: CarouselOptions(
-                    aspectRatio: 16 / 9,
-                    viewportFraction: 1,
-                    initialPage: 0,
-                    enableInfiniteScroll: true,
-                    reverse: false,
-                    autoPlay: true,
-                    autoPlayInterval: const Duration(seconds: 3),
-                    autoPlayAnimationDuration:
-                        const Duration(milliseconds: 800),
-                    autoPlayCurve: Curves.fastOutSlowIn,
-                    enlargeCenterPage: true,
-                    scrollDirection: Axis.horizontal,
-                    // Display dots indicators
-                  ),
-                  items: _imagePaths.map((String imagePath) {
-                    return Builder(
-                      builder: (BuildContext context) {
-                        return Container(
-                          height: 154,
-                          width: screenWidth,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              image: DecorationImage(
-                                image: AssetImage(
-                                  imagePath,
-                                ),
-                                fit: BoxFit.cover,
-                              )),
-                        );
-                      },
-                    );
-                  }).toList(),
-                ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              customRow(
-                  txt1: "Categories",
-                  txt2: "View All",
-                  txt3: "",
-                  onTap: () {
-                    push(
-                        context,
-                        AllCategories(
-                          data: catagoryData,
-                        ));
-                  }),
-              SizedBox(
-                height: 80,
-                width: screenWidth,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: 5,
-                  itemBuilder: (context, index) {
-                    Color color = Color(int.parse(catagoryData[index]["color"]
-                        .replaceFirst('#', '0xFF')));
-
-                    return Padding(
-                      padding: const EdgeInsets.only(left: 20.0),
-                      child: Row(
-                        children: [
-                          CatagoryContainer(
-                            color: color,
-                            img: "${catagoryData[index]["image"]}",
-                            txt: "${catagoryData[index]["name"]}",
+              _isLoading == true
+                  ? LoadingDialog()
+                  : Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                          child: CarouselSlider(
+                            options: CarouselOptions(
+                              aspectRatio: 16 / 9,
+                              viewportFraction: 1,
+                              initialPage: 0,
+                              enableInfiniteScroll: true,
+                              reverse: false,
+                              autoPlay: true,
+                              autoPlayInterval: const Duration(seconds: 3),
+                              autoPlayAnimationDuration:
+                                  const Duration(milliseconds: 800),
+                              autoPlayCurve: Curves.fastOutSlowIn,
+                              enlargeCenterPage: true,
+                              scrollDirection: Axis.horizontal,
+                              // Display dots indicators
+                            ),
+                            items: _imagePaths.map((String imagePath) {
+                              return Builder(
+                                builder: (BuildContext context) {
+                                  return Container(
+                                    height: 154,
+                                    width: screenWidth,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(20),
+                                        image: DecorationImage(
+                                          image: AssetImage(
+                                            imagePath,
+                                          ),
+                                          fit: BoxFit.cover,
+                                        )),
+                                  );
+                                },
+                              );
+                            }).toList(),
                           ),
-                          if (index == 5 - 1)
-                            const SizedBox(
-                              width: 20,
-                            )
-                        ],
-                      ),
-                    );
-                  },
-                ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              customRow(
-                  onTap: () {
-                    push(context, const ViewAllAuctionProducts());
-                  },
-                  txt1: "Auction Products",
-                  txt2: "View All",
-                  txt3: "Hurry up! The auction is ending soon."),
-              const SizedBox(
-                height: 20,
-              ),
-              SizedBox(
-                height: 330,
-                width: screenWidth,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: 4,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.only(left: 20.0),
-                      child: Row(
-                        children: [
-                          GestureDetector(
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        customRow(
+                            txt1: "Categories",
+                            txt2: "View All",
+                            txt3: "",
                             onTap: () {
                               push(
                                   context,
-                                  const AuctionInfoScreen(
-                                    auction: true,
+                                  AllCategories(
+                                    data: catagoryData,
                                   ));
+                            }),
+                        SizedBox(
+                          height: 80,
+                          width: screenWidth,
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: 5,
+                            itemBuilder: (context, index) {
+                              Color color = Color(int.parse(catagoryData[index]
+                                      ["color"]
+                                  .replaceFirst('#', '0xFF')));
+
+                              return Padding(
+                                padding: const EdgeInsets.only(left: 20.0),
+                                child: Row(
+                                  children: [
+                                    CatagoryContainer(
+                                      color: color,
+                                      img: "${catagoryData[index]["image"]}",
+                                      txt: "${catagoryData[index]["name"]}",
+                                    ),
+                                    if (index == 5 - 1)
+                                      const SizedBox(
+                                        width: 20,
+                                      )
+                                  ],
+                                ),
+                              );
                             },
-                            child: SizedBox(
-                              height: 325,
-                              width: 161,
-                              child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    height: 210,
-                                    width: 161,
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(14),
-                                        image: const DecorationImage(
-                                            image: AssetImage(
-                                                "assets/images/auction1.png"))),
-                                    child: Align(
-                                      alignment: Alignment.topRight,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Container(
-                                          height: 25,
-                                          width: 25,
-                                          decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              color: AppTheme.whiteColor),
-                                          child: Icon(
-                                            Icons.favorite_border,
-                                            size: 13,
-                                            color: AppTheme.textColor,
-                                          ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        customRow(
+                            onTap: () {
+                              push(context, const ViewAllAuctionProducts());
+                            },
+                            txt1: "Auction Products",
+                            txt2: "View All",
+                            txt3: "Hurry up! The auction is ending soon."),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        SizedBox(
+                          height: 330,
+                          width: screenWidth,
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: 4,
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: const EdgeInsets.only(left: 20.0),
+                                child: Row(
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        push(
+                                            context,
+                                            const AuctionInfoScreen(
+                                              auction: true,
+                                            ));
+                                      },
+                                      child: SizedBox(
+                                        height: 325,
+                                        width: 161,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Container(
+                                              height: 210,
+                                              width: 161,
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(14),
+                                                  image: const DecorationImage(
+                                                      image: AssetImage(
+                                                          "assets/images/auction1.png"))),
+                                              child: Align(
+                                                alignment: Alignment.topRight,
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  child: Container(
+                                                    height: 25,
+                                                    width: 25,
+                                                    decoration: BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        color: AppTheme
+                                                            .whiteColor),
+                                                    child: Icon(
+                                                      Icons.favorite_border,
+                                                      size: 13,
+                                                      color: AppTheme.textColor,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            AppText.appText(
+                                                "Modern light clothes",
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w500,
+                                                textColor: AppTheme.textColor),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                AppText.appText("\$212.99",
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w700,
+                                                    textColor:
+                                                        AppTheme.textColor),
+                                                AppText.appText("1 Bid Now",
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.w200,
+                                                    textColor:
+                                                        AppTheme.textColor),
+                                              ],
+                                            ),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                AppText.appText("Time Left:",
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.w700,
+                                                    textColor:
+                                                        AppTheme.textColor),
+                                                AppText.appText("1 Day 5 Hours",
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.w600,
+                                                    textColor:
+                                                        AppTheme.appColor),
+                                              ],
+                                            ),
+                                            AppButton.appButton("Bid Now",
+                                                onTap: () {},
+                                                height: 32,
+                                                width: 161,
+                                                radius: 16.0,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w500,
+                                                backgroundColor:
+                                                    AppTheme.appColor,
+                                                textColor: AppTheme.whiteColor)
+                                          ],
                                         ),
                                       ),
                                     ),
-                                  ),
-                                  AppText.appText("Modern light clothes",
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
-                                      textColor: AppTheme.textColor),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      AppText.appText("\$212.99",
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w700,
-                                          textColor: AppTheme.textColor),
-                                      AppText.appText("1 Bid Now",
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w200,
-                                          textColor: AppTheme.textColor),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      AppText.appText("Time Left:",
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w700,
-                                          textColor: AppTheme.textColor),
-                                      AppText.appText("1 Day 5 Hours",
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w600,
-                                          textColor: AppTheme.appColor),
-                                    ],
-                                  ),
-                                  AppButton.appButton("Bid Now",
-                                      onTap: () {},
-                                      height: 32,
-                                      width: 161,
-                                      radius: 16.0,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
-                                      backgroundColor: AppTheme.appColor,
-                                      textColor: AppTheme.whiteColor)
-                                ],
-                              ),
-                            ),
+                                    if (index == 4 - 1)
+                                      const SizedBox(
+                                        width: 20,
+                                      )
+                                  ],
+                                ),
+                              );
+                            },
                           ),
-                          if (index == 4 - 1)
-                            const SizedBox(
-                              width: 20,
-                            )
-                        ],
-                      ),
-                    );
-                  },
-                ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              customRow(
-                  onTap: () {
-                    push(context, const ViewFeaturedProducts());
-                  },
-                  txt1: "Feature Products",
-                  txt2: "View All",
-                  txt3: "Act fast! These featured products won't last long."),
-              Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: GridView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    mainAxisSpacing: 30,
-                    crossAxisSpacing: 20,
-                    crossAxisCount: 2,
-                    childAspectRatio: screenWidth / (2.6 * 220),
-                  ),
-                  shrinkWrap: true,
-                  itemCount: 4,
-                  itemBuilder: (context, int index) {
-                    return GestureDetector(
-                        onTap: () {
-                          push(
-                              context,
-                              const AuctionInfoScreen(
-                                auction: false,
-                              ));
-                        },
-                        child: const FeatureProductContainer());
-                  },
-                ),
-              ),
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        customRow(
+                            onTap: () {
+                              push(context, const ViewFeaturedProducts());
+                            },
+                            txt1: "Feature Products",
+                            txt2: "View All",
+                            txt3:
+                                "Act fast! These featured products won't last long."),
+                        Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: GridView.builder(
+                            physics: const NeverScrollableScrollPhysics(),
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                              mainAxisSpacing: 30,
+                              crossAxisSpacing: 20,
+                              crossAxisCount: 2,
+                              childAspectRatio: screenWidth / (2.6 * 220),
+                            ),
+                            shrinkWrap: true,
+                            itemCount: 4,
+                            itemBuilder: (context, int index) {
+                              return GestureDetector(
+                                  onTap: () {
+                                    push(
+                                        context,
+                                        const AuctionInfoScreen(
+                                          auction: false,
+                                        ));
+                                  },
+                                  child: const FeatureProductContainer());
+                            },
+                          ),
+                        ),
+                      ],
+                    )
             ],
           ),
         ),

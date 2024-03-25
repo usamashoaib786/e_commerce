@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tt_offer/Utils/resources/res/app_theme.dart';
 import 'package:tt_offer/Utils/utils.dart';
 import 'package:tt_offer/Utils/widgets/others/app_button.dart';
 import 'package:tt_offer/Utils/widgets/others/app_text.dart';
 import 'package:tt_offer/View/Authentication%20screens/login_screen.dart';
+import 'package:tt_offer/View/BottomNavigation/navigation_bar.dart';
+import 'package:tt_offer/config/keys/pref_keys.dart';
 
 class OnBoardScreen extends StatefulWidget {
   const OnBoardScreen({super.key});
@@ -13,6 +16,20 @@ class OnBoardScreen extends StatefulWidget {
 }
 
 class _OnBoardScreenState extends State<OnBoardScreen> {
+  String? id;
+  @override
+  void initState() {
+    getUserCredentials();
+    super.initState();
+  }
+
+  void getUserCredentials() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      id = prefs.getString(PrefKey.userId);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,7 +45,9 @@ class _OnBoardScreenState extends State<OnBoardScreen> {
                     fontSize: 24,
                     fontWeight: FontWeight.w700,
                     textColor: AppTheme.blackColor),
-                    const SizedBox(height: 10,),
+                const SizedBox(
+                  height: 10,
+                ),
                 AppText.appText("Discover, chat, bid, and shop with ease",
                     fontSize: 16,
                     textAlign: TextAlign.center,
@@ -38,7 +57,12 @@ class _OnBoardScreenState extends State<OnBoardScreen> {
             ),
             Image.asset("assets/images/onBorad.png"),
             AppButton.appButton("Get Started", onTap: () {
-              push(context, const SigInScreen());
+              print("objectkndk$id");
+              if (id != null) {
+                pushReplacement(context, const BottomNavView());
+              } else {
+                pushReplacement(context, const SigInScreen());
+              }
             },
                 height: 53,
                 radius: 32.0,

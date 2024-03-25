@@ -3,21 +3,20 @@ import 'package:tt_offer/Constants/app_logger.dart';
 import 'package:tt_offer/Utils/resources/res/app_theme.dart';
 import 'package:tt_offer/Utils/utils.dart';
 import 'package:tt_offer/Utils/widgets/others/app_button.dart';
-import 'package:tt_offer/Utils/widgets/others/app_field.dart';
-import 'package:tt_offer/Utils/widgets/others/app_text.dart';
 import 'package:tt_offer/Utils/widgets/others/custom_app_bar.dart';
+import 'package:tt_offer/Utils/widgets/textField_lable.dart';
 import 'package:tt_offer/View/BottomNavigation/navigation_bar.dart';
 import 'package:tt_offer/config/app_urls.dart';
 import 'package:tt_offer/config/dio/app_dio.dart';
 
-class ProfileDetailScreen extends StatefulWidget {
-  const ProfileDetailScreen({super.key});
+class RegistrationScreen extends StatefulWidget {
+  const RegistrationScreen({super.key});
 
   @override
-  State<ProfileDetailScreen> createState() => _ProfileDetailScreenState();
+  State<RegistrationScreen> createState() => _RegistrationScreenState();
 }
 
-class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
+class _RegistrationScreenState extends State<RegistrationScreen> {
   final TextEditingController _fNameController = TextEditingController();
   final TextEditingController _lNameController = TextEditingController();
   final TextEditingController _userNameController = TextEditingController();
@@ -63,28 +62,28 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  customColumn(
+                  LableTextField(
                       width: MediaQuery.of(context).size.width * 0.4,
-                      txt: "First Name",
+                      labelTxt: "First Name",
                       hintTxt: "First Name",
                       controller: _fNameController),
-                  customColumn(
+                  LableTextField(
                       width: MediaQuery.of(context).size.width * 0.4,
-                      txt: "Last Name",
+                      labelTxt: "Last Name",
                       hintTxt: "Last Name",
                       controller: _lNameController),
                 ],
               ),
-              customColumn(
-                  txt: "Username",
+              LableTextField(
+                  labelTxt: "Username",
                   hintTxt: "Username",
                   controller: _userNameController),
-              customColumn(
-                  txt: "Email/Phone",
+              LableTextField(
+                  labelTxt: "Email/Phone",
                   hintTxt: "Email/Phone",
                   controller: _emailController),
-              customColumn(
-                  txt: "Password",
+              LableTextField(
+                  labelTxt: "Password",
                   hintTxt: "Password",
                   pass: true,
                   controller: _passwordController),
@@ -130,40 +129,6 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget customColumn({txt, hintTxt, controller, width, pass}) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 20.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          AppText.appText("$txt",
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-              textColor: AppTheme.text09),
-          const SizedBox(
-            height: 10,
-          ),
-          pass == true
-              ? CustomAppPasswordfield(
-                  texthint: "Password",
-                  controller: _passwordController,
-                )
-              : CustomAppFormField(
-                  validator: (value) {
-                    value = "123";
-                  },
-                  errorText: "jbefjbbf",
-                  width: width ?? MediaQuery.of(context).size.width,
-                  texthint: "$hintTxt",
-                  controller: controller,
-                  borderColor: AppTheme.borderColor,
-                  hintTextColor: AppTheme.hintTextColor,
-                )
-        ],
       ),
     );
   }

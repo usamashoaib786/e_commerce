@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tt_offer/Constants/app_logger.dart';
 import 'package:tt_offer/Utils/resources/res/app_theme.dart';
 import 'package:tt_offer/Utils/utils.dart';
+import 'package:tt_offer/Utils/widgets/loading_popup.dart';
 import 'package:tt_offer/Utils/widgets/others/app_button.dart';
 import 'package:tt_offer/Utils/widgets/others/app_field.dart';
 import 'package:tt_offer/Utils/widgets/others/app_text.dart';
@@ -106,19 +107,21 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                   controller: _millageController),
               lableFields(
                   lableTtxt: "Color (optional)", controller: _colorController),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 40.0),
-                child: AppButton.appButton("Next", onTap: () {
-                  print("object $catagoryId  $subCatagoryId");
-                  push(context, const SetPostPriceScreen());
-                },
-                    height: 53,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 14,
-                    radius: 32.0,
-                    backgroundColor: AppTheme.appColor,
-                    textColor: AppTheme.whiteColor),
-              )
+              _isLoading == true
+                  ? LoadingDialog()
+                  : Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 40.0),
+                      child: AppButton.appButton("Next", onTap: () {
+                        print("object $catagoryId  $subCatagoryId");
+                        addProductDetail();
+                      },
+                          height: 53,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 14,
+                          radius: 32.0,
+                          backgroundColor: AppTheme.appColor,
+                          textColor: AppTheme.whiteColor),
+                    )
             ],
           ),
         ),
@@ -613,6 +616,11 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
         });
       } else if (response.statusCode == responseCode200) {
         setState(() {
+          pushReplacement(
+              context,
+              SetPostPriceScreen(
+                productId: widget.productId,
+              ));
           _isLoading = false;
         });
       }

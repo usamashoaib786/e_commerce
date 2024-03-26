@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sizer/sizer.dart';
 import 'package:tt_offer/Utils/resources/res/app_theme.dart';
 import 'package:tt_offer/Utils/widgets/others/app_text.dart';
 
@@ -9,7 +8,7 @@ alertDialogError({context, message}) {
     context: context,
     builder: (context) {
       return Padding(
-        padding: EdgeInsets.only(left: 5.w, right: 5.w),
+        padding: EdgeInsets.only(left: 5, right: 5),
         child: AlertDialog(
           actionsPadding: const EdgeInsets.only(top: 5, left: 0, right: 0),
           shape: RoundedRectangleBorder(
@@ -65,7 +64,7 @@ alertDialogErrorLogin({context, message}) {
     context: context,
     builder: (context) {
       return Padding(
-        padding: EdgeInsets.only(left: 5.w, right: 5.w),
+        padding: EdgeInsets.only(left: 5, right: 5),
         child: AlertDialog(
           actionsPadding: const EdgeInsets.only(top: 5, left: 0, right: 0),
           shape: RoundedRectangleBorder(

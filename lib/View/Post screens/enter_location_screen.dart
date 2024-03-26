@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tt_offer/Constants/app_logger.dart';
 import 'package:tt_offer/Utils/resources/res/app_theme.dart';
 import 'package:tt_offer/Utils/utils.dart';
+import 'package:tt_offer/Utils/widgets/loading_popup.dart';
 import 'package:tt_offer/Utils/widgets/others/app_button.dart';
 import 'package:tt_offer/Utils/widgets/others/app_text.dart';
 import 'package:tt_offer/Utils/widgets/others/custom_app_bar.dart';
@@ -38,15 +39,17 @@ class _PostLocationScreenState extends State<PostLocationScreen> {
     return Scaffold(
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(20.0),
-        child: AppButton.appButton("Next", onTap: () {
-          push(context, const PostProductPayment());
-        },
-            height: 53,
-            fontWeight: FontWeight.w500,
-            fontSize: 14,
-            radius: 32.0,
-            backgroundColor: AppTheme.appColor,
-            textColor: AppTheme.whiteColor),
+        child: _isLoading == true
+            ? LoadingDialog()
+            : AppButton.appButton("Next", onTap: () {
+                enterLocation();
+              },
+                height: 53,
+                fontWeight: FontWeight.w500,
+                fontSize: 14,
+                radius: 32.0,
+                backgroundColor: AppTheme.appColor,
+                textColor: AppTheme.whiteColor),
       ),
       backgroundColor: AppTheme.whiteColor,
       appBar: CustomAppBar1(
@@ -118,7 +121,7 @@ class _PostLocationScreenState extends State<PostLocationScreen> {
     );
   }
 
-  void addProducrPrice() async {
+  void enterLocation() async {
     setState(() {
       _isLoading = true;
     });
@@ -163,6 +166,7 @@ class _PostLocationScreenState extends State<PostLocationScreen> {
         });
       } else if (response.statusCode == responseCode200) {
         setState(() {
+          pushReplacement(context, const PostProductPayment());
           _isLoading = false;
         });
       }

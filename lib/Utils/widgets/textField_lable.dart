@@ -10,6 +10,8 @@ class LableTextField extends StatefulWidget {
   final pass;
   final hintTxt;
   final lableColor;
+  final height;
+  final maxLines;
   const LableTextField(
       {super.key,
       this.labelTxt,
@@ -17,7 +19,9 @@ class LableTextField extends StatefulWidget {
       this.width,
       this.pass,
       this.hintTxt,
-      this.lableColor});
+      this.lableColor,
+      this.height,
+      this.maxLines});
 
   @override
   State<LableTextField> createState() => _LableTextFieldState();
@@ -44,10 +48,8 @@ class _LableTextFieldState extends State<LableTextField> {
                   controller: widget.controller,
                 )
               : CustomAppFormField(
-                  validator: (value) {
-                    value = "123";
-                  },
-                  errorText: "jbefjbbf",
+                  maxline: widget.maxLines,
+                  height: widget.height,
                   width: widget.width ?? MediaQuery.of(context).size.width,
                   texthint: "${widget.hintTxt}",
                   controller: widget.controller,

@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:tt_offer/Constants/app_logger.dart';
 import 'package:tt_offer/Utils/resources/res/app_theme.dart';
 import 'package:tt_offer/Utils/utils.dart';
+import 'package:tt_offer/Utils/widgets/loading_popup.dart';
 import 'package:tt_offer/Utils/widgets/others/app_button.dart';
 import 'package:tt_offer/Utils/widgets/others/app_field.dart';
 import 'package:tt_offer/Utils/widgets/others/app_text.dart';
@@ -41,7 +42,7 @@ class _SetPostPriceScreenState extends State<SetPostPriceScreen> {
   int _toggleValue = 0;
   @override
   void initState() {
-    _priceController.text = "\$ 60";
+    _priceController.text = "60";
     dio = AppDio(context);
     logger.init();
     super.initState();
@@ -52,16 +53,17 @@ class _SetPostPriceScreenState extends State<SetPostPriceScreen> {
     return Scaffold(
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(20.0),
-        child: AppButton.appButton("Next", onTap: () {
-          push(context, const PostLocationScreen());
-          // addProducrPrice()
-        },
-            height: 53,
-            fontWeight: FontWeight.w500,
-            fontSize: 14,
-            radius: 32.0,
-            backgroundColor: AppTheme.appColor,
-            textColor: AppTheme.whiteColor),
+        child: _isLoading == true
+            ? LoadingDialog()
+            : AppButton.appButton("Next", onTap: () {
+                addProducrPrice();
+              },
+                height: 53,
+                fontWeight: FontWeight.w500,
+                fontSize: 14,
+                radius: 32.0,
+                backgroundColor: AppTheme.appColor,
+                textColor: AppTheme.whiteColor),
       ),
       appBar: CustomAppBar1(
         title: "Price",
@@ -572,7 +574,7 @@ class _SetPostPriceScreenState extends State<SetPostPriceScreen> {
     int responseCode422 = 422; // For For data not found
     int responseCode500 = 500;
     Map<String, dynamic> params = {
-      "product_id": "${widget.productId}",
+      "product_id": widget.productId,
       "fix_price": _priceController.text,
       "firm_on_price": _toggleValue,
       "auction_price": _startingPriceController.text,
@@ -632,6 +634,11 @@ class _SetPostPriceScreenState extends State<SetPostPriceScreen> {
         });
       } else if (response.statusCode == responseCode200) {
         setState(() {
+          pushReplacement(
+              context,
+              PostLocationScreen(
+                productId: widget.productId,
+              ));
           _isLoading = false;
         });
       }

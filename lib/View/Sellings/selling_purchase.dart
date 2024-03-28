@@ -7,8 +7,9 @@ import 'package:tt_offer/Utils/widgets/others/divider.dart';
 import 'package:tt_offer/View/Sellings/item_dashboard.dart';
 
 class SellingPurchaseScreen extends StatefulWidget {
-  final title;
-  const SellingPurchaseScreen({Key? key, this.title}) : super(key: key);
+  final String title;
+  const SellingPurchaseScreen({Key? key, required this.title})
+      : super(key: key);
 
   @override
   State<SellingPurchaseScreen> createState() => _SellingPurchaseScreenState();
@@ -22,7 +23,8 @@ class _SellingPurchaseScreenState extends State<SellingPurchaseScreen> {
     return Scaffold(
       backgroundColor: AppTheme.whiteColor,
       appBar: CustomAppBar1(
-        title: "${widget.title}",
+        title: widget.title,
+        leading: false,
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -150,8 +152,6 @@ class _SellingPurchaseScreenState extends State<SellingPurchaseScreen> {
       ),
     );
   }
-
-
 }
 
 class SellingPurchaseListView extends StatefulWidget {
@@ -166,7 +166,6 @@ class SellingPurchaseListView extends StatefulWidget {
 class _SellingPurchaseListViewState extends State<SellingPurchaseListView> {
   @override
   Widget build(BuildContext context) {
-
     return ListView.builder(
       shrinkWrap: true,
       itemCount: 7,

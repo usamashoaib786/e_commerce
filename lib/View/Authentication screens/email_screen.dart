@@ -106,6 +106,9 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
                         ),
                       )
                     : AppButton.appButton("Sign In", onTap: () {
+                        _emailController.text =
+                            _emailController.text.replaceAll(' ', '');
+
                         if (_emailController.text.isNotEmpty) {
                           final emailPattern =
                               RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
@@ -196,7 +199,6 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
           print("id$id");
           SharedPreferences prefs = await SharedPreferences.getInstance();
           prefs.setString(PrefKey.userId, id ?? '');
-        
 
           Navigator.pushAndRemoveUntil(
               context,
@@ -214,5 +216,4 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
       });
     }
   }
-
 }

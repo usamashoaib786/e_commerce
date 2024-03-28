@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:tt_offer/View/Authentication%20screens/GoogleSignIn/google_signin_provider.dart';
 import 'package:tt_offer/View/ChatScreens/provider_class.dart';
+import 'package:tt_offer/View/Post%20screens/image_provider.dart';
 import 'package:tt_offer/firebase_options.dart';
 import 'package:tt_offer/splash_screen.dart';
 
@@ -22,17 +23,18 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
     return MultiProvider(
-        providers: [
-          ChangeNotifierProvider<GoogleSignInProvider>(
-              create: (_) => GoogleSignInProvider()),
-          ChangeNotifierProvider<NotifyProvider>(
-              create: (_) => NotifyProvider()),
-        ],
-        child: const MaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: 'TT Offer',
-          home: SplashScreen(),
-        ),
-      ); 
+      providers: [
+        ChangeNotifierProvider<GoogleSignInProvider>(
+            create: (_) => GoogleSignInProvider()),
+        ChangeNotifierProvider<NotifyProvider>(create: (_) => NotifyProvider()),
+        ChangeNotifierProvider<ImageNotifyProvider>(
+            create: (_) => ImageNotifyProvider()),
+      ],
+      child: const MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'TT Offer',
+        home: SplashScreen(),
+      ),
+    );
   }
 }

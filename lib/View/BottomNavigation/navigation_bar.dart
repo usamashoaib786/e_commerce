@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tt_offer/Utils/resources/res/app_theme.dart';
 import 'package:tt_offer/View/ChatScreens/chat_screen.dart';
 import 'package:tt_offer/View/Homepage/landing_screen.dart';
+import 'package:tt_offer/View/Post%20screens/image_provider.dart';
 import 'package:tt_offer/View/Post%20screens/post_screen.dart';
 import 'package:tt_offer/View/Profile%20Screen/profile_screen.dart';
 import 'package:tt_offer/View/Sellings/selling_purchase.dart';
@@ -20,11 +22,16 @@ class _BottomNavViewState extends State<BottomNavView> {
     LandingScreen(),
     ChatScreen(),
     PostScreen(),
-    SellingPurchaseScreen(title: "Selling",),
+    SellingPurchaseScreen(
+      title: "Selling",
+    ),
     ProfileScreen()
   ];
 
   void _onItemTapped(int index) {
+    final imageProvider = Provider.of<ImageNotifyProvider>(context, listen: false);
+    imageProvider.vedioPath = "";
+    imageProvider.imagePaths.clear();
     setState(() {
       _selectedIndex = index;
     });

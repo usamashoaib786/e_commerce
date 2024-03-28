@@ -90,6 +90,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 20.0),
                 child: AppButton.appButton("Register", onTap: () {
+                  _emailController.text =
+                      _emailController.text.replaceAll(' ', '');
                   if (_fNameController.text.isNotEmpty) {
                     if (_userNameController.text.isNotEmpty) {
                       if (_emailController.text.isNotEmpty) {

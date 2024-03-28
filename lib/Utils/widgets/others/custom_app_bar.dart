@@ -9,6 +9,7 @@ class CustomAppBar1 extends StatelessWidget implements PreferredSizeWidget {
   final action;
   final actionOntap;
   final img;
+  final bool? leading;
 
   // Callback function
 
@@ -18,7 +19,9 @@ class CustomAppBar1 extends StatelessWidget implements PreferredSizeWidget {
       this.title,
       this.action,
       this.actionOntap,
-      this.img});
+      this.img,
+      this.leading});
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -26,18 +29,20 @@ class CustomAppBar1 extends StatelessWidget implements PreferredSizeWidget {
       child: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        leading: GestureDetector(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Image.asset(
-                "assets/images/arrow-left.png",
-                height: 24,
-                width: 24,
-              ),
-            )),
+        leading: leading == false
+            ? SizedBox.shrink()
+            : GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Image.asset(
+                    "assets/images/arrow-left.png",
+                    height: 24,
+                    width: 24,
+                  ),
+                )),
         title: AppText.appText("$title",
             fontSize: 16,
             fontWeight: FontWeight.w400,
@@ -94,7 +99,7 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
               Navigator.pop(context);
             },
             child: Padding(
-              padding: const EdgeInsets.only(top:15.0, left: 15, bottom: 15),
+              padding: const EdgeInsets.only(top: 15.0, left: 15, bottom: 15),
               child: Image.asset(
                 "assets/images/arrow-left.png",
                 height: 24,

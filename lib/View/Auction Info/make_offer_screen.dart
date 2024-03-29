@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:tt_offer/Utils/resources/res/app_theme.dart';
 import 'package:tt_offer/Utils/utils.dart';
 import 'package:tt_offer/Utils/widgets/others/app_button.dart';
@@ -7,7 +6,6 @@ import 'package:tt_offer/Utils/widgets/others/app_field.dart';
 import 'package:tt_offer/Utils/widgets/others/app_text.dart';
 import 'package:tt_offer/Utils/widgets/others/custom_app_bar.dart';
 import 'package:tt_offer/View/ChatScreens/offer_chat_screen.dart';
-import 'package:tt_offer/View/ChatScreens/provider_class.dart';
 import 'package:tt_offer/View/Profile%20Screen/profile_screen.dart';
 
 class MakeOfferScreen extends StatefulWidget {
@@ -34,7 +32,7 @@ class _MakeOfferScreenState extends State<MakeOfferScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
-        child: Container(
+        child: SizedBox(
           width: screenSize.width,
           height: screenSize.height,
           child: Column(

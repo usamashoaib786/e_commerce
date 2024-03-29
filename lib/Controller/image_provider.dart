@@ -33,12 +33,10 @@ class ImageNotifyProvider extends ChangeNotifier {
     final picker = ImagePicker();
     final pickedFiles = await picker.pickMultiImage();
 
-    if (pickedFiles != null) {
-      for (var pickedFile in pickedFiles) {
-        await compressAndAddImage(pickedFile.path);
-      }
+    for (var pickedFile in pickedFiles) {
+      await compressAndAddImage(pickedFile.path);
     }
-    isCompressing = false;
+      isCompressing = false;
     notifyListeners();
   }
 ////////////////////////////////////////// Image Compression ///////////////////////////////////////

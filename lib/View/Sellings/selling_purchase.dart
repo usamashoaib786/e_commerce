@@ -155,7 +155,7 @@ class _SellingPurchaseScreenState extends State<SellingPurchaseScreen> {
 }
 
 class SellingPurchaseListView extends StatefulWidget {
-  final ischeck;
+  final int? ischeck;
   const SellingPurchaseListView({super.key, this.ischeck});
 
   @override

@@ -2,9 +2,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:tt_offer/Controller/image_provider.dart';
+import 'package:tt_offer/Controller/provider_class.dart';
 import 'package:tt_offer/View/Authentication%20screens/GoogleSignIn/google_signin_provider.dart';
-import 'package:tt_offer/View/ChatScreens/provider_class.dart';
-import 'package:tt_offer/View/Post%20screens/image_provider.dart';
 import 'package:tt_offer/firebase_options.dart';
 import 'package:tt_offer/splash_screen.dart';
 

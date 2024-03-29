@@ -30,7 +30,7 @@ class _SavedItemsScreenState extends State<SavedItemsScreen> {
 }
 
 class SavedItemListView extends StatefulWidget {
-  final ischeck;
+  final int? ischeck;
   const SavedItemListView({super.key, this.ischeck});
 
   @override
@@ -107,7 +107,7 @@ class _SavedItemListViewState extends State<SavedItemListView> {
                 ),
               ),
             ),
-            CustomDivider()
+            const CustomDivider()
           ],
         );
       },

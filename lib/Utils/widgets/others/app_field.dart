@@ -26,20 +26,20 @@ class CustomAppFormField extends StatefulWidget {
   final Color? prefixIconColor;
   final Color? suffixIconColor;
   final Color? cursorColor;
-  final borderColor;
-  final hintTextColor;
-  final maxline;
+  final Color? borderColor;
+  final Color? hintTextColor;
+  final int? maxline;
   final texAlign;
   final TextStyle? hintStyle;
-  final style;
-  final radius;
-  final errorStyle;
+  final TextStyle? style;
+  final double? radius;
+  final  TextStyle?  errorStyle;
   final errorBorder;
   final focusedErrorBorder;
   final cPadding;
   final type;
 
-  CustomAppFormField({
+  const CustomAppFormField({
     Key? key,
     this.containerBorderCondition = false,
     required this.texthint,
@@ -54,7 +54,7 @@ class CustomAppFormField extends StatefulWidget {
     this.onEditingComplete,
     this.onFieldSubmitted,
     this.cursorHeight,
-    this.textAlign = TextAlign.start,
+    this.textAlign = TextAlign.start, 
     this.prefix,
     this.suffix,
     this.prefixIcon,
@@ -97,7 +97,7 @@ class _CustomAppFormFieldState extends State<CustomAppFormField> {
       child: TextFormField(
         style:
             TextStyle(fontSize: widget.fontsize, fontWeight: widget.fontweight),
-        textAlign: widget.textAlign ?? TextAlign.start,
+        textAlign: widget.textAlign,
         maxLines: widget.maxline ?? 1,
         controller: widget.controller,
         cursorColor: AppTheme.white,
@@ -153,7 +153,7 @@ class CustomAppPasswordfield extends StatefulWidget {
   final errorBorder;
   final focusedErrorBorder;
 
-  CustomAppPasswordfield(
+  const CustomAppPasswordfield(
       {Key? key,
       this.containerBorderCondition = false,
       required this.texthint,
@@ -207,7 +207,7 @@ class _CustomAppPasswordfieldState extends State<CustomAppPasswordfield> {
           color: AppTheme.white,
           borderRadius: BorderRadius.circular(10)),
       child: TextFormField(
-        textAlign: widget.textAlign ?? TextAlign.start,
+        textAlign: widget.textAlign,
         controller: widget.controller,
         cursorColor: AppTheme.white,
         cursorHeight: 20,

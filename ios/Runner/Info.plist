@@ -4,6 +4,10 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>NSCameraUsageDescription</key>
+    <string>This app requires access to your device's camera to capture photos for profile pictures and Products pictures for selling.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+    <string>This app requires access to your photo library to select images or videos for uploading.</string>
 	<key>CFBundleDisplayName</key>
 	<string>Tt Offer</string>
 	<key>CFBundleExecutable</key>

@@ -11,5 +11,7 @@ class AppUrls {
   static const String addProductDetail = "add-product-second-step";
   static const String addProductPrice = "add-product-third-step";
   static const String addProductLocation = "add-product-last-step";
+  static const String getFeatureProducts = "featured-products";
+  static const String getAuctionProducts = "auction-products";
 
 }

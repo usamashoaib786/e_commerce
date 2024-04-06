@@ -50,19 +50,21 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBOi-QC3JtjE1quObTgDAmJdTYReJmFR1I',
-    appId: '1:436690066546:android:ee3b79749c0012b39536eb',
-    messagingSenderId: '436690066546',
-    projectId: 'tt-offer',
-    storageBucket: 'tt-offer.appspot.com',
+    apiKey: 'AIzaSyA7QBsMoXe7banHxeOat5VkTJTJY_yWTXI',
+    appId: '1:778831276994:android:51557ac6f4e9cb5c5d845b',
+    messagingSenderId: '778831276994',
+    projectId: 'ttoffer-2b291',
+    databaseURL: 'https://ttoffer-2b291-default-rtdb.firebaseio.com',
+    storageBucket: 'ttoffer-2b291.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCCrTJXo9MBYHWuB2w1xlaYBFpXkL-l07M',
-    appId: '1:436690066546:ios:c3d9cb0df3342aa79536eb',
-    messagingSenderId: '436690066546',
-    projectId: 'tt-offer',
-    storageBucket: 'tt-offer.appspot.com',
+    apiKey: 'AIzaSyBog-P4jeMjN8fZRW___zwkF-scYhZ32qI',
+    appId: '1:778831276994:ios:7d26002040d5ebd95d845b',
+    messagingSenderId: '778831276994',
+    projectId: 'ttoffer-2b291',
+    databaseURL: 'https://ttoffer-2b291-default-rtdb.firebaseio.com',
+    storageBucket: 'ttoffer-2b291.appspot.com',
     iosBundleId: 'com.example.ttOffer',
   );
 }

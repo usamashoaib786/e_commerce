@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tt_offer/Constants/app_logger.dart';
+import 'package:tt_offer/Controller/APIs%20Manager/product_api.dart';
 import 'package:tt_offer/Utils/resources/res/app_theme.dart';
 import 'package:tt_offer/Utils/utils.dart';
-import 'package:tt_offer/Utils/widgets/others/app_button.dart';
+import 'package:tt_offer/Utils/widgets/loading_popup.dart';
 import 'package:tt_offer/Utils/widgets/others/app_field.dart';
 import 'package:tt_offer/Utils/widgets/others/app_text.dart';
 import 'package:tt_offer/Utils/widgets/others/custom_app_bar.dart';
+import 'package:tt_offer/View/All%20Aucton%20Products/auction_container.dart';
 import 'package:tt_offer/View/Auction%20Info/auction_info.dart';
+import 'package:tt_offer/config/dio/app_dio.dart';
 
 class ViewAllAuctionProducts extends StatefulWidget {
   const ViewAllAuctionProducts({super.key});
@@ -17,10 +22,36 @@ class ViewAllAuctionProducts extends StatefulWidget {
 class _ViewAllAuctionProductsState extends State<ViewAllAuctionProducts> {
   final TextEditingController _searchController = TextEditingController();
   final TextEditingController _locationController = TextEditingController();
+  late AppDio dio;
+  AppLogger logger = AppLogger();
+  int? selectedIndex;
+  List<bool>? isExpanded;
+  var catId;
+  var subCatId;
+  @override
+  void initState() {
+    dio = AppDio(context);
+    logger.init();
+    final apiProvider =
+        Provider.of<ProductsApiProvider>(context, listen: false);
+    apiProvider.getAuctionProducts(
+      dio: dio,
+      context: context,
+    );
+
+    apiProvider.getCatagories(
+      dio: dio,
+      context: context,
+    );
+    apiProvider.getSubCatagories(dio: dio, context: context);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
+    final apiProvider = Provider.of<ProductsApiProvider>(context);
+    print("bkkfnnrl$catId  $subCatId");
     return Scaffold(
       backgroundColor: AppTheme.whiteColor,
       appBar: const CustomAppBar1(
@@ -86,104 +117,37 @@ class _ViewAllAuctionProductsState extends State<ViewAllAuctionProducts> {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: GridView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  mainAxisSpacing: 30,
-                  crossAxisSpacing: 20,
-                  crossAxisCount: 2,
-                  childAspectRatio: screenWidth / (3.8 * 220),
-                ),
-                shrinkWrap: true,
-                itemCount: 10,
-                itemBuilder: (context, int index) {
-                  return GestureDetector(
-                    onTap: () {
-                      push(
-                          context,
-                          const AuctionInfoScreen(
-                            auction: true,
-                          ));
-                    },
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          height: 225,
-                          width: 161,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(14),
-                              image: const DecorationImage(
-                                  image:
-                                      AssetImage("assets/images/auction1.png"),
-                                  fit: BoxFit.cover)),
-                          child: Align(
-                            alignment: Alignment.topRight,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Container(
-                                height: 25,
-                                width: 25,
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: AppTheme.whiteColor),
-                                child: Icon(
-                                  Icons.favorite_border,
-                                  size: 13,
-                                  color: AppTheme.textColor,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        AppText.appText("Modern light clothes",
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            textColor: AppTheme.textColor),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            AppText.appText("\$212.99",
-                                fontSize: 14,
-                                fontWeight: FontWeight.w700,
-                                textColor: AppTheme.textColor),
-                            AppText.appText("1 Bid Now",
-                                fontSize: 12,
-                                fontWeight: FontWeight.w200,
-                                textColor: AppTheme.textColor),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            AppText.appText("Time Left:",
-                                fontSize: 12,
-                                fontWeight: FontWeight.w700,
-                                textColor: AppTheme.textColor),
-                            AppText.appText("1 Day 5 Hours",
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                                textColor: AppTheme.appColor),
-                          ],
-                        ),
-                        AppButton.appButton("Bid Now",
-                            onTap: () {},
-                            height: 32,
-                            width: 161,
-                            radius: 16.0,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            backgroundColor: AppTheme.appColor,
-                            textColor: AppTheme.whiteColor)
-                      ],
+            apiProvider.isLoading == true
+                ? LoadingDialog()
+                : Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: GridView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        mainAxisSpacing: 30,
+                        crossAxisSpacing: 20,
+                        crossAxisCount: 2,
+                        childAspectRatio: screenWidth / (3.9 * 200),
+                      ),
+                      shrinkWrap: true,
+                      itemCount: apiProvider.allauctionProductsData.length,
+                      itemBuilder: (context, int index) {
+                        return GestureDetector(
+                            onTap: () {
+                              push(
+                                  context,
+                                  AuctionInfoScreen(
+                                    auction: true,
+                                    productId: apiProvider
+                                        .allauctionProductsData[index]["id"],
+                                  ));
+                            },
+                            child: AuctionProductContainer(
+                              data: apiProvider.allauctionProductsData[index],
+                            ));
+                      },
                     ),
-                  );
-                },
-              ),
-            ),
+                  ),
           ],
         ),
       ),
@@ -212,6 +176,8 @@ class _ViewAllAuctionProductsState extends State<ViewAllAuctionProducts> {
   }
 
   void _showCategoryBottomSheet(BuildContext context) {
+    final apiProvider =
+        Provider.of<ProductsApiProvider>(context, listen: false);
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
@@ -247,9 +213,7 @@ class _ViewAllAuctionProductsState extends State<ViewAllAuctionProducts> {
                   ),
                   const SizedBox(height: 16),
                   Expanded(
-                    child: ListView(
-                      children: _buildCategoryList(setState),
-                    ),
+                    child: buildCategoryList(setState),
                   ),
                 ],
               ),
@@ -257,44 +221,103 @@ class _ViewAllAuctionProductsState extends State<ViewAllAuctionProducts> {
           },
         );
       },
+    ).then((value) {
+      setState(() {
+        subCatId = subCatId;
+        if (subCatId != null && catId != null) {
+          apiProvider.getAuctionProducts(
+              context: context, dio: dio, subCatId: subCatId, cateId: subCatId);
+        }
+      });
+    });
+    ;
+  }
+
+  Widget buildCategoryList(StateSetter setState) {
+    final apiProvider =
+        Provider.of<ProductsApiProvider>(context, listen: false);
+    isExpanded ??= List.filled(apiProvider.catagoryData.length, false);
+
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: apiProvider.catagoryData.length,
+      itemBuilder: (context, index) {
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 10.0, left: 10, right: 10),
+          child: Column(
+            children: [
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    catId = apiProvider.catagoryData[index]["id"];
+                    _toggleExpand(index);
+                  });
+                },
+                child: Container(
+                  color: AppTheme.whiteColor,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      AppText.appText(apiProvider.catagoryData[index]["name"],
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          textColor: const Color(0xff1B2028)),
+                      Image.asset(
+                        "assets/images/arrowFor.png",
+                        height: 16,
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              if (isExpanded![index])
+                for (int i = 0; i < apiProvider.subCatagoryData.length; i++)
+                  if (apiProvider.catagoryData[index]["id"] ==
+                      apiProvider.subCatagoryData[i]["category_id"])
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 10.0),
+                      child: SizedBox(
+                        height: 30,
+                        child: RadioListTile<int>(
+                          tileColor: AppTheme.appColor,
+                          activeColor: AppTheme.appColor,
+                          title: AppText.appText(
+                              apiProvider.subCatagoryData[i]["name"],
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              textColor: const Color(0xff1B2028)),
+                          value: apiProvider.subCatagoryData[i]["id"],
+                          groupValue: subCatId,
+                          onChanged: (int? value) {
+                            setState(() {
+                              subCatId = value;
+                            });
+                          },
+                        ),
+                      ),
+                    )
+            ],
+          ),
+        );
+      },
     );
   }
 
-  List<Widget> _buildCategoryList(StateSetter setState) {
-    List<String> categories = [
-      "Electronic And Media",
-      "Home And Garden",
-      "Clothing, Shoes & Acessories",
-      " Baby & Kids",
-      "Vehicles",
-      "Toys, Games & Hobbies",
-      " Collectibles & Arts",
-      "Pet Supplies",
-      "Healthy & Beauties ",
-      "Wedding",
-    ];
-
-    return categories.map((category) {
-      return Padding(
-        padding: const EdgeInsets.only(bottom: 10.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            AppText.appText(category,
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-                textColor: const Color(0xff1B2028)),
-            Image.asset(
-              "assets/images/arrowFor.png",
-              height: 16,
-            )
-          ],
-        ),
-      );
-    }).toList();
+  void _toggleExpand(int tappedIndex) {
+    setState(() {
+      for (int i = 0; i < isExpanded!.length; i++) {
+        if (i == tappedIndex) {
+          isExpanded![i] = !isExpanded![i]; // Toggle the tapped index
+        } else {
+          isExpanded![i] = false; // Collapse all other indices
+        }
+      }
+    });
   }
 
   void _showLocationBottomSheet(BuildContext context) {
+    final apiProvider =
+        Provider.of<ProductsApiProvider>(context, listen: false);
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
@@ -340,14 +363,14 @@ class _ViewAllAuctionProductsState extends State<ViewAllAuctionProducts> {
                   const SizedBox(
                     height: 10,
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      customLocationRow(txt1: "City", txt2: "New York"),
-                      customLocationRow(txt1: "State", txt2: "California"),
-                      customLocationRow(txt1: "Zip", txt2: "3254"),
-                    ],
-                  ),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //   children: [
+                  //     customLocationRow(txt1: "City", txt2: "New York"),
+                  //     customLocationRow(txt1: "State", txt2: "California"),
+                  //     customLocationRow(txt1: "Zip", txt2: "3254"),
+                  //   ],
+                  // ),
                   const SizedBox(
                     height: 20,
                   ),
@@ -357,28 +380,33 @@ class _ViewAllAuctionProductsState extends State<ViewAllAuctionProducts> {
           },
         );
       },
-    );
+    ).whenComplete(() {
+      if (_locationController.text.isNotEmpty) {
+        apiProvider.getAuctionProducts(
+            context: context, dio: dio, location: _locationController.text);
+      }
+    });
   }
 
-  Widget customLocationRow({txt1, txt2}) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        AppText.appText("$txt1",
-            fontSize: 12,
-            fontWeight: FontWeight.w600,
-            textColor: AppTheme.textColor),
-        const SizedBox(
-          height: 10,
-        ),
-        CustomAppFormField(
-          texthint: "$txt2",
-          controller: _locationController,
-          borderColor: const Color(0xffE5E9EB),
-          hintTextColor: AppTheme.hintTextColor,
-          width: MediaQuery.of(context).size.width * 0.25,
-        ),
-      ],
-    );
-  }
+  // Widget customLocationRow({txt1, txt2}) {
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: [
+  //       AppText.appText("$txt1",
+  //           fontSize: 12,
+  //           fontWeight: FontWeight.w600,
+  //           textColor: AppTheme.textColor),
+  //       const SizedBox(
+  //         height: 10,
+  //       ),
+  //       CustomAppFormField(
+  //         texthint: "$txt2",
+  //         controller: _locationController,
+  //         borderColor: const Color(0xffE5E9EB),
+  //         hintTextColor: AppTheme.hintTextColor,
+  //         width: MediaQuery.of(context).size.width * 0.25,
+  //       ),
+  //     ],
+  //   );
+  // }
 }

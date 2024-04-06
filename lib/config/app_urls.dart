@@ -14,4 +14,8 @@ class AppUrls {
   static const String getFeatureProducts = "featured-products";
   static const String getAuctionProducts = "auction-products";
 
+  static const String getPlaceBids= "get-placed-bids";
+  static const String placeBid= "place-bid";
+    
+
 }

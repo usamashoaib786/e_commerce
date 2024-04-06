@@ -206,7 +206,7 @@ class _PostScreenState extends State<PostScreen> {
   }
 
   void addProductFirstStep() async {
-    final imageProvider = Provider.of<ImageNotifyProvider>(context);
+    final imageProvider = Provider.of<ImageNotifyProvider>(context, listen: false);
 
     setState(() {
       _isLoading = true;
@@ -288,7 +288,7 @@ class _PostScreenState extends State<PostScreen> {
   }
 
   void sendImages({productId}) async {
-    final imageProvider = Provider.of<ImageNotifyProvider>(context);
+    final imageProvider = Provider.of<ImageNotifyProvider>(context, listen: false);
     print("objectId $productId");
     setState(() {
       _isLoading = true;

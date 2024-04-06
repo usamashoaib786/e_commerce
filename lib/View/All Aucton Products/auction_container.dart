@@ -1,28 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:tt_offer/Utils/resources/res/app_theme.dart';
+import 'package:tt_offer/Utils/widgets/others/app_button.dart';
 import 'package:tt_offer/Utils/widgets/others/app_text.dart';
 
-class FeatureProductContainer extends StatefulWidget {
+class AuctionProductContainer extends StatefulWidget {
   final data;
-  const FeatureProductContainer({super.key, this.data});
+  const AuctionProductContainer({super.key, this.data});
 
   @override
-  State<FeatureProductContainer> createState() =>
-      _FeatureProductContainerState();
+  State<AuctionProductContainer> createState() =>
+      _AuctionProductContainerState();
 }
 
-class _FeatureProductContainerState extends State<FeatureProductContainer> {
+class _AuctionProductContainerState extends State<AuctionProductContainer> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 245,
-      width: 150,
+      height: 325,
+      width: 161,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            height: 161,
+            height: 210,
             width: 161,
             decoration: BoxDecoration(
                 color: AppTheme.hintTextColor,
@@ -35,7 +36,7 @@ class _FeatureProductContainerState extends State<FeatureProductContainer> {
             child: Align(
               alignment: Alignment.topRight,
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.only(top: 15, right: 10.0),
                 child: Container(
                   height: 25,
                   width: 25,
@@ -61,47 +62,36 @@ class _FeatureProductContainerState extends State<FeatureProductContainer> {
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
                   textColor: AppTheme.textColor),
-              Row(
-                children: [
-                  const Icon(
-                    Icons.star,
-                    color: Colors.amber,
-                    size: 18,
-                  ),
-                  AppText.appText("5.0",
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400,
-                      textColor: AppTheme.textColor),
-                ],
-              ),
+              AppText.appText("1 Bid Now",
+                  fontSize: 12,
+                  fontWeight: FontWeight.w200,
+                  textColor: AppTheme.textColor),
             ],
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Icon(
-                    Icons.location_on_outlined,
-                    color: AppTheme.textColor,
-                    size: 20,
-                  ),
-                  AppText.appText("${widget.data["location"]}",
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400,
-                      textColor: AppTheme.textColor)
-                ],
-              ),
-              AppText.appText("2 Week ago",
+              AppText.appText("Time Left:",
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                  textColor: AppTheme.textColor),
+              AppText.appText("1 Day 5 Hours",
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
                   textColor: AppTheme.appColor),
             ],
           ),
+          AppButton.appButton("Bid Now",
+              onTap: () {},
+              height: 32,
+              width: 161,
+              radius: 16.0,
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              backgroundColor: AppTheme.appColor,
+              textColor: AppTheme.whiteColor)
         ],
       ),
     );
-    ;
   }
 }

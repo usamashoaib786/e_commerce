@@ -15,7 +15,8 @@ import 'package:tt_offer/View/Seller%20Profile/seller_profile.dart';
 
 class AuctionInfoScreen extends StatefulWidget {
   final bool auction;
-  const AuctionInfoScreen({super.key, required this.auction});
+  final int productId;
+  const AuctionInfoScreen({super.key, required this.auction, required this.productId});
 
   @override
   State<AuctionInfoScreen> createState() => _AuctionInfoScreenState();

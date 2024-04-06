@@ -520,7 +520,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
     int responseCode422 = 422; // For For data not found
     int responseCode500 = 500; // Internal server error.
     Map<String, dynamic> params = {
-      "category_id": "$search",
+      "category_id": "",
       "search": null,
       "limit": null,
       "id": "",

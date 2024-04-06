@@ -15,7 +15,7 @@ class ProductsApiProvider extends ChangeNotifier {
   ////////////////////////////////////////// Auction Productss ////////////////////////////////////////////////
 
   void getAuctionProducts(
-      {userId,
+      {productId,
       search,
       cateId,
       subCatId,
@@ -32,9 +32,8 @@ class ProductsApiProvider extends ChangeNotifier {
     int responseCode404 = 404; // For For data not found
     int responseCode422 = 422; // For For data not found
     int responseCode500 = 500; // Internal server error.
-    print("Hittingg........");
     Map<String, dynamic> params = {
-      "id": userId,
+      "id": productId,
       "search": search,
       "category_id": cateId,
       "sub_category_id": subCatId,
@@ -69,7 +68,7 @@ class ProductsApiProvider extends ChangeNotifier {
         isLoading = false;
         if (fProduct == true) {
           auctionProductsData = responseData["data"];
-          getFeatureProducts(limit: 4, dio: dio);
+          getFeatureProducts(limit: 4, dio: dio, home: true);
           notifyListeners();
         } else {
           allauctionProductsData = responseData["data"];
@@ -87,7 +86,7 @@ class ProductsApiProvider extends ChangeNotifier {
   ////////////////////////////////////////// Featured Productss ////////////////////////////////////////////////
 
   void getFeatureProducts(
-      {userId,
+      {productId,
       search,
       cateId,
       subCatId,
@@ -105,7 +104,7 @@ class ProductsApiProvider extends ChangeNotifier {
     int responseCode422 = 422; // For For data not found
     int responseCode500 = 500; // Internal server error.
     Map<String, dynamic> params = {
-      "id": userId,
+      "id": productId,
       "search": search,
       "category_id": cateId,
       "sub_category_id": subCatId,

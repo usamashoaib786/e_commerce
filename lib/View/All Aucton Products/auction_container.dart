@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:tt_offer/Utils/resources/res/app_theme.dart';
 import 'package:tt_offer/Utils/widgets/others/app_button.dart';
 import 'package:tt_offer/Utils/widgets/others/app_text.dart';
@@ -13,6 +14,30 @@ class AuctionProductContainer extends StatefulWidget {
 }
 
 class _AuctionProductContainerState extends State<AuctionProductContainer> {
+  DateTime? auctionEndTime;
+
+  @override
+  void initState() {
+    super.initState();
+    // Parse ending date and time strings
+    auctionEndTime = _parseEndingDateTime();
+  }
+
+  DateTime _parseEndingDateTime() {
+    DateTime endingDate =
+        DateFormat("yyyy-MM-dd").parse("${widget.data["ending_date"]}");
+    DateTime endingTime =
+        DateFormat("h:mm a").parse("${widget.data["ending_time"]}");
+    // Combine date and time
+    return DateTime(
+      endingDate.year,
+      endingDate.month,
+      endingDate.day,
+      endingTime.hour,
+      endingTime.minute,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -31,7 +56,8 @@ class _AuctionProductContainerState extends State<AuctionProductContainer> {
                 image: widget.data["photo"].isNotEmpty
                     ? DecorationImage(
                         image:
-                            NetworkImage("${widget.data["photo"][0]["src"]}"), fit: BoxFit.fill)
+                            NetworkImage("${widget.data["photo"][0]["src"]}"),
+                        fit: BoxFit.fill)
                     : null),
             child: Align(
               alignment: Alignment.topRight,
@@ -62,7 +88,7 @@ class _AuctionProductContainerState extends State<AuctionProductContainer> {
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
                   textColor: AppTheme.textColor),
-              AppText.appText("1 Bid Now",
+              AppText.appText("${widget.data["auction"].length} Bid Now",
                   fontSize: 12,
                   fontWeight: FontWeight.w200,
                   textColor: AppTheme.textColor),
@@ -75,10 +101,13 @@ class _AuctionProductContainerState extends State<AuctionProductContainer> {
                   fontSize: 12,
                   fontWeight: FontWeight.w700,
                   textColor: AppTheme.textColor),
-              AppText.appText("1 Day 5 Hours",
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                  textColor: AppTheme.appColor),
+              SizedBox(width: 80,
+                child: AppText.appText(getTimeLeftString(),
+                    fontSize: 12,
+                    overflow: TextOverflow.ellipsis,
+                    fontWeight: FontWeight.w600,
+                    textColor: AppTheme.appColor),
+              ),
             ],
           ),
           AppButton.appButton("Bid Now",
@@ -93,5 +122,12 @@ class _AuctionProductContainerState extends State<AuctionProductContainer> {
         ],
       ),
     );
+  }
+
+  String getTimeLeftString() {
+    Duration timeLeft = auctionEndTime!.difference(DateTime.now());
+    int days = timeLeft.inDays;
+    int hours = timeLeft.inHours % 24;
+    return '$days Days $hours Hours';
   }
 }

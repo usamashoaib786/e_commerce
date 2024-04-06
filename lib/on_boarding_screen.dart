@@ -57,7 +57,6 @@ class _OnBoardScreenState extends State<OnBoardScreen> {
             ),
             Image.asset("assets/images/onBorad.png"),
             AppButton.appButton("Get Started", onTap: () {
-              print("objectkndk$id");
               if (id != null) {
                 pushReplacement(context, const BottomNavView());
               } else {

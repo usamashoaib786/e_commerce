@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:tt_offer/Controller/provider_class.dart';
@@ -8,32 +9,47 @@ import 'package:tt_offer/Utils/widgets/others/app_text.dart';
 class PanelWidget extends StatefulWidget {
   final ScrollController controller;
   final PanelController panelController;
+  final data;
 
   const PanelWidget({
     Key? key,
     required this.controller,
     required this.panelController,
+    this.data,
   }) : super(key: key);
 
   @override
-  // ignore: library_private_types_in_public_api
   _PanelWidgetState createState() => _PanelWidgetState();
 }
 
 class _PanelWidgetState extends State<PanelWidget> {
+  DateTime? auctionEndTime;
 
   @override
   void initState() {
     super.initState();
+    // Parse ending date and time strings
+    auctionEndTime = _parseEndingDateTime();
   }
 
-  
+  DateTime _parseEndingDateTime() {
+    DateTime endingDate =
+        DateFormat("yyyy-MM-dd").parse("${widget.data["ending_date"]}");
+    DateTime endingTime =
+        DateFormat("h:mm a").parse("${widget.data["ending_time"]}");
+    // Combine date and time
+    return DateTime(
+      endingDate.year,
+      endingDate.month,
+      endingDate.day,
+      endingTime.hour,
+      endingTime.minute,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     final open = Provider.of<NotifyProvider>(context);
-    print(open.sheet);
-    print("object${widget.panelController.isPanelOpen}");
     Size size = MediaQuery.of(context).size;
     return Container(
       padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
@@ -148,6 +164,13 @@ class _PanelWidgetState extends State<PanelWidget> {
     );
   }
 
+  String getTimeLeftString() {
+    Duration timeLeft = auctionEndTime!.difference(DateTime.now());
+    int days = timeLeft.inDays;
+    int hours = timeLeft.inHours % 24;
+    return '$days Days $hours Hours';
+  }
+
   Widget containerData() {
     return Padding(
       padding: const EdgeInsets.all(15.0),
@@ -162,7 +185,7 @@ class _PanelWidgetState extends State<PanelWidget> {
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
                   textColor: AppTheme.textColor00),
-              AppText.appText("\$5,000",
+              AppText.appText("\$${widget.data["auction_price"]}",
                   fontSize: 12,
                   fontWeight: FontWeight.w400,
                   textColor: AppTheme.textColor00),
@@ -253,7 +276,7 @@ class _PanelWidgetState extends State<PanelWidget> {
               const SizedBox(
                 height: 10,
               ),
-              AppText.appText("01: 23s remaining",
+              AppText.appText(getTimeLeftString(),
                   fontSize: 12,
                   fontWeight: FontWeight.w400,
                   textColor: AppTheme.textColor00),

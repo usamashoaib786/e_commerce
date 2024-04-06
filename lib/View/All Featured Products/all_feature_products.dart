@@ -9,7 +9,9 @@ import 'package:tt_offer/Utils/widgets/others/app_field.dart';
 import 'package:tt_offer/Utils/widgets/others/app_text.dart';
 import 'package:tt_offer/Utils/widgets/others/custom_app_bar.dart';
 import 'package:tt_offer/View/All%20Featured%20Products/feature_container.dart';
+import 'package:tt_offer/View/All%20Featured%20Products/feature_info.dart';
 import 'package:tt_offer/View/Auction%20Info/auction_info.dart';
+import 'package:tt_offer/config/app_urls.dart';
 import 'package:tt_offer/config/dio/app_dio.dart';
 
 class ViewFeaturedProducts extends StatefulWidget {
@@ -27,6 +29,7 @@ class _ViewFeaturedProductsState extends State<ViewFeaturedProducts> {
   List<bool>? isExpanded;
   var catId;
   var subCatId;
+  bool isLoading = false;
   @override
   void initState() {
     dio = AppDio(context);
@@ -132,13 +135,8 @@ class _ViewFeaturedProductsState extends State<ViewFeaturedProducts> {
                       itemBuilder: (context, int index) {
                         return GestureDetector(
                             onTap: () {
-                              push(
-                                  context,
-                                   AuctionInfoScreen(
-                                    auction: false,
-                                    productId: apiProvider
-                                              .allfeatureProductsData[index]["id"],
-                                  ));
+                              getFeatureProductDetail(apiProvider
+                                  .allfeatureProductsData[index]["id"]);
                             },
                             child: FeatureProductContainer(
                               data: apiProvider.allfeatureProductsData[index],
@@ -407,4 +405,69 @@ class _ViewFeaturedProductsState extends State<ViewFeaturedProducts> {
   //     ],
   //   );
   // }
+
+  void getFeatureProductDetail(productId) async {
+    setState(() {
+      isLoading = true;
+    });
+    var response;
+    int responseCode200 = 200; // For successful request.
+    int responseCode400 = 400; // For Bad Request.
+    int responseCode401 = 401; // For Unauthorized access.
+    int responseCode404 = 404; // For For data not found
+    int responseCode422 = 422; // For For data not found
+    int responseCode500 = 500; // Internal server error.
+    Map<String, dynamic> params = {
+      "id": productId,
+    };
+    try {
+      response = await dio.post(path: AppUrls.getFeatureProducts, data: params);
+      var responseData = response.data;
+      if (response.statusCode == responseCode400) {
+        showSnackBar(context, "${responseData["msg"]}");
+        setState(() {
+          setState(() {
+            isLoading = false;
+          });
+        });
+      } else if (response.statusCode == responseCode401) {
+        showSnackBar(context, "${responseData["msg"]}");
+        setState(() {
+          isLoading = false;
+        });
+      } else if (response.statusCode == responseCode404) {
+        showSnackBar(context, "${responseData["msg"]}");
+
+        setState(() {
+          isLoading = false;
+        });
+      } else if (response.statusCode == responseCode500) {
+        showSnackBar(context, "${responseData["msg"]}");
+
+        setState(() {
+          isLoading = false;
+        });
+      } else if (response.statusCode == responseCode422) {
+        setState(() {
+          isLoading = false;
+        });
+      } else if (response.statusCode == responseCode200) {
+        setState(() {
+          var detailResponse = responseData["data"];
+          push(
+              context,
+              FeatureInfoScreen(
+                detailResponse: detailResponse[0],
+              ));
+          isLoading = false;
+        });
+      }
+    } catch (e) {
+      print("Something went Wrong ${e}");
+      showSnackBar(context, "Something went Wrong.");
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
 }

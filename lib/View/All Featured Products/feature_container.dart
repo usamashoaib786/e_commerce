@@ -57,7 +57,7 @@ class _FeatureProductContainerState extends State<FeatureProductContainer> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              AppText.appText("\$${widget.data["auction_price"]}",
+              AppText.appText("\$${widget.data["fix_price"]}",
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
                   textColor: AppTheme.textColor),
@@ -87,10 +87,14 @@ class _FeatureProductContainerState extends State<FeatureProductContainer> {
                     color: AppTheme.textColor,
                     size: 20,
                   ),
-                  AppText.appText("${widget.data["location"]}",
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400,
-                      textColor: AppTheme.textColor)
+                  Container(
+                    width: 50,
+                    child: AppText.appText("${widget.data["location"]}",
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                        overflow: TextOverflow.ellipsis,
+                        textColor: AppTheme.textColor),
+                  )
                 ],
               ),
               AppText.appText("2 Week ago",

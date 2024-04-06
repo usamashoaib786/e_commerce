@@ -1,32 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:tt_offer/Constants/app_logger.dart';
+import 'package:tt_offer/Controller/APIs%20Manager/product_api.dart';
 import 'package:tt_offer/Controller/provider_class.dart';
 import 'package:tt_offer/Utils/resources/res/app_theme.dart';
 import 'package:tt_offer/Utils/utils.dart';
 import 'package:tt_offer/Utils/widgets/others/app_button.dart';
-import 'package:tt_offer/Utils/widgets/others/app_field.dart';
 import 'package:tt_offer/Utils/widgets/others/app_text.dart';
-import 'package:tt_offer/Utils/widgets/others/custom_logout_pop_up.dart';
 import 'package:tt_offer/View/Auction%20Info/make_offer_screen.dart';
-import 'package:tt_offer/View/Auction%20Info/panel_widget.dart';
 import 'package:tt_offer/View/Seller%20Profile/seller_profile.dart';
 import 'package:tt_offer/config/dio/app_dio.dart';
 
-class AuctionInfoScreen extends StatefulWidget {
+class FeatureInfoScreen extends StatefulWidget {
   final detailResponse;
-  const AuctionInfoScreen({super.key, this.detailResponse});
+  const FeatureInfoScreen({super.key, this.detailResponse});
 
   @override
-  State<AuctionInfoScreen> createState() => _AuctionInfoScreenState();
+  State<FeatureInfoScreen> createState() => _FeatureInfoScreenState();
 }
 
-class _AuctionInfoScreenState extends State<AuctionInfoScreen> {
-  final GlobalKey<_AuctionInfoScreenState> _panelKey =
-      GlobalKey<_AuctionInfoScreenState>();
-  bool isLoading = false;
+class _FeatureInfoScreenState extends State<FeatureInfoScreen> {
   int _currentPage = 0;
   final panelController = PanelController();
 
@@ -41,28 +35,19 @@ class _AuctionInfoScreenState extends State<AuctionInfoScreen> {
     "Edition",
     "Authenticity"
   ];
-  static const List<String> bidList = [
-    "\$26K",
-    "\$28K",
-    "\$32K",
-    "\$45K",
-    "use custom bid",
+  static const List<String> wrapList1 = [
+    'Used',
+    'Samsung ',
+    'Galaxy M02',
+    "2/32",
+    "Original"
   ];
-  static List<String> wrapList1 = [];
   late AppDio dio;
   AppLogger logger = AppLogger();
   @override
   void initState() {
     dio = AppDio(context);
     logger.init();
-    wrapList1 = [
-      '${widget.detailResponse["condition"]}',
-      'Samsung ',
-      'Galaxy M02',
-      "2/32",
-      "Original"
-    ];
-    _priceController.text = "\$ 60";
     super.initState();
   }
 
@@ -72,190 +57,9 @@ class _AuctionInfoScreenState extends State<AuctionInfoScreen> {
     super.dispose();
   }
 
-  final TextEditingController _priceController = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
-    final open = Provider.of<NotifyProvider>(context);
-
-    return Scaffold(
-        backgroundColor: AppTheme.whiteColor,
-        body: SlidingUpPanel(
-            key: _panelKey,
-            controller: panelController,
-            isDraggable: false,
-            footer: auctionBottomCard(),
-            maxHeight: MediaQuery.of(context).size.height - 300,
-            minHeight: 250,
-            borderRadius: BorderRadius.circular(32),
-            body: bodyColumn(),
-            panelBuilder: (controller) => PanelWidget(
-                  data: widget.detailResponse,
-                  controller: controller,
-                  panelController: panelController,
-                )));
-  }
-////////////////////////////////////////////////// auction ///////////////////////////////////
-
-  Widget auctionBottomCard() {
-    final open = Provider.of<NotifyProvider>(context);
-
-    return Card(
-      color: Colors.white,
-      shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(32), topRight: Radius.circular(32))),
-      elevation: 10,
-      shadowColor: Colors.grey,
-      child: Container(
-        height: 120,
-        width: MediaQuery.of(context).size.width,
-        decoration: BoxDecoration(
-            color: AppTheme.white,
-            borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(32), topRight: Radius.circular(32))),
-        child: Padding(
-          padding: const EdgeInsets.only(top: 10.0),
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 10.0),
-                child: SizedBox(
-                  height: 30,
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: bidList.length,
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.only(
-                          right: 10.0,
-                        ),
-                        child: GestureDetector(
-                          onTap: () {
-                            open.index(index: index);
-                            if (index < bidList.length - 1) {
-                              open.bidPrices(price: bidList[index]);
-                            } else {
-                              open.makeField();
-                            }
-                          },
-                          child: Container(
-                            height: 26,
-                            decoration: BoxDecoration(
-                                color: open.indexbid == index
-                                    ? const Color(0xff14181B)
-                                    : Colors.transparent,
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(
-                                    width: 1, color: const Color(0xffBDBDBD))),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 5),
-                              child: AppText.appText(bidList[index],
-                                  textColor: open.indexbid == index
-                                      ? AppTheme.whiteColor
-                                      : const Color(0xff001B2E),
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w400),
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    open.field == true
-                        ? CustomAppFormField(
-                            texthint: "",
-                            controller: _priceController,
-                            width: 161,
-                            textAlign: TextAlign.center,
-                            fontsize: 24,
-                            fontweight: FontWeight.w600,
-                            cPadding: 2.0,
-                            type: TextInputType.number,
-                          )
-                        : AppButton.appButton("Place Bid for ${open.bidPrice}",
-                            onTap: () {
-                            showLogOutALert(context, 2500);
-                          },
-                            height: 53,
-                            width: 200,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 14,
-                            radius: 32.0,
-                            backgroundColor: AppTheme.appColor,
-                            textColor: AppTheme.whiteColor),
-                    Row(
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            if (open.field == false) {
-                              open.sheetTrue();
-                              panelController.open();
-                              // _panelKey.currentState!.re;
-                            }
-                          },
-                          child: Container(
-                            height: 53,
-                            width: 53,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(
-                                    width: 1, color: const Color(0xffBDBDBD))),
-                            child: Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Image.asset(open.field == true
-                                  ? "assets/images/correct.png"
-                                  : "assets/images/arrowUp.png"),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            if (open.field == false) {
-                              open.sheetFalse();
-                              panelController.close();
-                            }
-                          },
-                          child: Container(
-                            height: 53,
-                            width: 53,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(
-                                    width: 1, color: const Color(0xffBDBDBD))),
-                            child: Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Image.asset(open.field == true
-                                  ? "assets/images/cancel.png"
-                                  : "assets/images/arrowDown.png"),
-                            ),
-                          ),
-                        )
-                      ],
-                    )
-                  ],
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
-    );
+    return Scaffold(backgroundColor: AppTheme.whiteColor, body: bodyColumn());
   }
 
 ////////////////////////////////////////////////// feature ///////////////////////////////////
@@ -306,16 +110,7 @@ class _AuctionInfoScreenState extends State<AuctionInfoScreen> {
       ),
     );
   }
-
 ////////////////////////////////////////////////// custom ///////////////////////////////////
-  String getFormattedTimestamp() {
-    String timestampStr = "2024-04-06T00:52:00.000000Z";
-    DateTime timestamp = DateTime.parse(timestampStr);
-    DateTime convertedTime = timestamp.toLocal();
-    String formattedTimestamp =
-        DateFormat('yyyy-MM-dd   hh:mm a').format(convertedTime);
-    return "Posted on  $formattedTimestamp in ${widget.detailResponse["location"]}";
-  }
 
   Widget customColumn() {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -328,14 +123,15 @@ class _AuctionInfoScreenState extends State<AuctionInfoScreen> {
               SizedBox(
                 width: screenWidth,
                 child: AppText.appText(
-                    "${widget.detailResponse["description"]}",
+                    "Its simple and elegant shape makes it perfect for those of you who like you who want minimalist watch. Its simple and elegant shape makes it perfect for those of you who like you who want minimalist watch.",
                     fontSize: 12,
                     fontWeight: FontWeight.w400,
                     textColor: AppTheme.lighttextColor),
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 10.0, bottom: 20),
-                child: AppText.appText(getFormattedTimestamp(),
+                child: AppText.appText(
+                    "Posted on 15-09-2023 10:11 am Dhaka, Bangladesh",
                     fontSize: 12,
                     fontWeight: FontWeight.w400,
                     textColor: AppTheme.blackColor),
@@ -351,14 +147,23 @@ class _AuctionInfoScreenState extends State<AuctionInfoScreen> {
                   height: 102,
                   width: screenWidth,
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      AppText.appText(
-                          "\$${widget.detailResponse["auction_price"]}",
-                          fontSize: 24,
-                          fontWeight: FontWeight.w700,
-                          textColor: AppTheme.appColor),
+                      Row(
+                        children: [
+                          AppText.appText("\$212.99",
+                              fontSize: 24,
+                              fontWeight: FontWeight.w700,
+                              textColor: AppTheme.appColor),
+                          const SizedBox(
+                            width: 20,
+                          ),
+                          AppText.appText("Negtiable",
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                              textColor: AppTheme.lighttextColor),
+                        ],
+                      ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -380,8 +185,7 @@ class _AuctionInfoScreenState extends State<AuctionInfoScreen> {
                                   ),
                                 ),
                               ),
-                              AppText.appText(
-                                  "${widget.detailResponse["user"]["name"]}",
+                              AppText.appText("Cameron Williamson",
                                   fontSize: 12,
                                   fontWeight: FontWeight.w600,
                                   textColor: AppTheme.blackColor),
@@ -461,10 +265,11 @@ class _AuctionInfoScreenState extends State<AuctionInfoScreen> {
 
   Widget bodyColumn() {
     final screenWidth = MediaQuery.of(context).size.width;
+
     return Stack(
       children: [
         SizedBox(
-          height: MediaQuery.of(context).size.height - 250,
+          height: MediaQuery.of(context).size.height - 100,
           child: SingleChildScrollView(
             child: Column(
               children: [
@@ -560,7 +365,10 @@ class _AuctionInfoScreenState extends State<AuctionInfoScreen> {
             ),
           ),
         ),
-        const Align(alignment: Alignment.bottomCenter, child: SizedBox.shrink())
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: featureBottomCard(),
+        )
       ],
     );
   }

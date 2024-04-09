@@ -194,11 +194,13 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
           setState(() {
             _isLoading = false;
           });
-          var userId = responseData["data"]["id"];
+          var userId = responseData["data"]["user"]["id"];
+          var token = responseData["data"]["token"];
           var id = userId.toString();
           print("id$id");
           SharedPreferences prefs = await SharedPreferences.getInstance();
           prefs.setString(PrefKey.userId, id ?? '');
+          prefs.setString(PrefKey.authorization, token ?? '');
 
           Navigator.pushAndRemoveUntil(
               context,

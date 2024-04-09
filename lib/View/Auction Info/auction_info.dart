@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:tt_offer/Constants/app_logger.dart';
+import 'package:tt_offer/Controller/APIs%20Manager/product_api.dart';
 import 'package:tt_offer/Controller/provider_class.dart';
 import 'package:tt_offer/Utils/resources/res/app_theme.dart';
 import 'package:tt_offer/Utils/utils.dart';
@@ -10,14 +12,15 @@ import 'package:tt_offer/Utils/widgets/others/app_button.dart';
 import 'package:tt_offer/Utils/widgets/others/app_field.dart';
 import 'package:tt_offer/Utils/widgets/others/app_text.dart';
 import 'package:tt_offer/Utils/widgets/others/custom_logout_pop_up.dart';
-import 'package:tt_offer/View/Auction%20Info/make_offer_screen.dart';
 import 'package:tt_offer/View/Auction%20Info/panel_widget.dart';
 import 'package:tt_offer/View/Seller%20Profile/seller_profile.dart';
+import 'package:tt_offer/config/app_urls.dart';
 import 'package:tt_offer/config/dio/app_dio.dart';
+import 'package:tt_offer/config/keys/pref_keys.dart';
 
 class AuctionInfoScreen extends StatefulWidget {
-  final detailResponse;
-  const AuctionInfoScreen({super.key, this.detailResponse});
+  var detailResponse;
+  AuctionInfoScreen({super.key, this.detailResponse});
 
   @override
   State<AuctionInfoScreen> createState() => _AuctionInfoScreenState();
@@ -27,6 +30,7 @@ class _AuctionInfoScreenState extends State<AuctionInfoScreen> {
   final GlobalKey<_AuctionInfoScreenState> _panelKey =
       GlobalKey<_AuctionInfoScreenState>();
   bool isLoading = false;
+  bool isFav = false;
   int _currentPage = 0;
   final panelController = PanelController();
 
@@ -51,10 +55,12 @@ class _AuctionInfoScreenState extends State<AuctionInfoScreen> {
   static List<String> wrapList1 = [];
   late AppDio dio;
   AppLogger logger = AppLogger();
+  var userId;
   @override
   void initState() {
     dio = AppDio(context);
     logger.init();
+    getUserId();
     wrapList1 = [
       '${widget.detailResponse["condition"]}',
       'Samsung ',
@@ -72,28 +78,46 @@ class _AuctionInfoScreenState extends State<AuctionInfoScreen> {
     super.dispose();
   }
 
+  getUserId() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    setState(() {
+      userId = pref.getString(PrefKey.userId);
+    });
+  }
+
   final TextEditingController _priceController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     final open = Provider.of<NotifyProvider>(context);
 
-    return Scaffold(
-        backgroundColor: AppTheme.whiteColor,
-        body: SlidingUpPanel(
-            key: _panelKey,
-            controller: panelController,
-            isDraggable: false,
-            footer: auctionBottomCard(),
-            maxHeight: MediaQuery.of(context).size.height - 300,
-            minHeight: 250,
-            borderRadius: BorderRadius.circular(32),
-            body: bodyColumn(),
-            panelBuilder: (controller) => PanelWidget(
-                  data: widget.detailResponse,
-                  controller: controller,
-                  panelController: panelController,
-                )));
+    return PopScope(
+      canPop: true,
+      onPopInvoked: (didPop) {
+        final apiProvider =
+            Provider.of<ProductsApiProvider>(context, listen: false);
+        apiProvider.getAuctionProducts(
+          dio: dio,
+          context: context,
+        );
+      },
+      child: Scaffold(
+          backgroundColor: AppTheme.whiteColor,
+          body: SlidingUpPanel(
+              key: _panelKey,
+              controller: panelController,
+              isDraggable: false,
+              footer: auctionBottomCard(),
+              maxHeight: MediaQuery.of(context).size.height - 300,
+              minHeight: 250,
+              borderRadius: BorderRadius.circular(32),
+              body: bodyColumn(),
+              panelBuilder: (controller) => PanelWidget(
+                    data: widget.detailResponse,
+                    controller: controller,
+                    panelController: panelController,
+                  ))),
+    );
   }
 ////////////////////////////////////////////////// auction ///////////////////////////////////
 
@@ -258,55 +282,6 @@ class _AuctionInfoScreenState extends State<AuctionInfoScreen> {
     );
   }
 
-////////////////////////////////////////////////// feature ///////////////////////////////////
-  Widget featureBottomCard() {
-    return Card(
-      color: Colors.white,
-      shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(32), topRight: Radius.circular(32))),
-      elevation: 10,
-      shadowColor: Colors.grey,
-      child: Container(
-        height: 120,
-        width: MediaQuery.of(context).size.width,
-        decoration: BoxDecoration(
-            color: AppTheme.white,
-            borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(32), topRight: Radius.circular(32))),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            AppButton.appButton("Chat",
-                height: 53,
-                width: 150,
-                radius: 32.0,
-                fontWeight: FontWeight.w500,
-                fontSize: 14,
-                backgroundColor: AppTheme.appColor,
-                textColor: AppTheme.whiteColor),
-            const SizedBox(
-              width: 10,
-            ),
-            GestureDetector(
-              onTap: () {
-                push(context, const MakeOfferScreen());
-              },
-              child: AppButton.appButton("Make Offer",
-                  height: 53,
-                  width: 150,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 14,
-                  radius: 32.0,
-                  backgroundColor: AppTheme.appColor,
-                  textColor: AppTheme.whiteColor),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-
 ////////////////////////////////////////////////// custom ///////////////////////////////////
   String getFormattedTimestamp() {
     String timestampStr = "2024-04-06T00:52:00.000000Z";
@@ -403,7 +378,9 @@ class _AuctionInfoScreenState extends State<AuctionInfoScreen> {
                       ),
                       Align(
                         alignment: Alignment.bottomRight,
-                        child: AppText.appText("Member since August 2020",
+                        child: AppText.appText(
+                            formatTimestamp(
+                                "${widget.detailResponse["user"]["created_at"]}"),
                             fontSize: 10,
                             fontWeight: FontWeight.w400,
                             textColor: AppTheme.lighttextColor),
@@ -457,6 +434,13 @@ class _AuctionInfoScreenState extends State<AuctionInfoScreen> {
         ],
       ),
     );
+  }
+
+  String formatTimestamp(String timestamp) {
+    DateTime dateTime = DateTime.parse(timestamp);
+    String formattedDate = DateFormat.yMMMM().format(dateTime);
+
+    return "Member since $formattedDate";
   }
 
   Widget bodyColumn() {
@@ -523,9 +507,21 @@ class _AuctionInfoScreenState extends State<AuctionInfoScreen> {
                                   Navigator.pop(context);
                                 },
                                 alignment: Alignment.topLeft,
+                                isFavourite: false,
                                 img: "assets/images/arrow-left.png"),
                             iconContainer(
-                                ontap: () {},
+                                ontap: () {
+                                  widget.detailResponse["wishlist"].isNotEmpty
+                                      ? removeFavourite(
+                                          wishId:
+                                              widget.detailResponse["wishlist"]
+                                                  [0]["id"])
+                                      : addToFavourite();
+                                },
+                                isFavourite:
+                                    widget.detailResponse["wishlist"].isNotEmpty
+                                        ? true
+                                        : false,
                                 alignment: Alignment.topRight,
                                 img: "assets/images/heart.png")
                           ],
@@ -565,7 +561,7 @@ class _AuctionInfoScreenState extends State<AuctionInfoScreen> {
     );
   }
 
-  Widget iconContainer({Function()? ontap, img, alignment}) {
+  Widget iconContainer({Function()? ontap, img, alignment, isFavourite}) {
     return GestureDetector(
       onTap: ontap,
       child: Padding(
@@ -573,17 +569,209 @@ class _AuctionInfoScreenState extends State<AuctionInfoScreen> {
         child: Align(
           alignment: alignment,
           child: Container(
-            height: 40,
-            width: 40,
-            decoration: BoxDecoration(
-                shape: BoxShape.circle, color: AppTheme.whiteColor),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Image.asset("$img"),
-            ),
-          ),
+              height: 40,
+              width: 40,
+              decoration: BoxDecoration(
+                  shape: BoxShape.circle, color: AppTheme.whiteColor),
+              child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: isFavourite == false
+                      ? Image.asset(
+                          "$img",
+                        )
+                      : Icon(
+                          Icons.favorite_sharp,
+                          color: AppTheme.appColor,
+                        ))),
         ),
       ),
     );
   }
+
+  //////////////////////////Apis//////////////////////////////////////////////////////
+  void addToFavourite() async {
+    setState(() {
+      isLoading = true;
+    });
+    var response;
+    int responseCode200 = 200; // For successful request.
+    int responseCode400 = 400; // For Bad Request.
+    int responseCode401 = 401; // For Unauthorized access.
+    int responseCode404 = 404; // For For data not found
+    int responseCode422 = 422; // For For data not found
+    int responseCode500 = 500; // Internal server error.
+    Map<String, dynamic> params = {
+      "user_id": userId,
+      "product_id": widget.detailResponse["id"],
+    };
+    try {
+      response = await dio.post(path: AppUrls.adddToFavorite, data: params);
+      var responseData = response.data;
+      if (response.statusCode == responseCode400) {
+        showSnackBar(context, "${responseData["msg"]}");
+        setState(() {
+          setState(() {
+            isLoading = false;
+          });
+        });
+      } else if (response.statusCode == responseCode401) {
+        showSnackBar(context, "${responseData["msg"]}");
+        setState(() {
+          isLoading = false;
+        });
+      } else if (response.statusCode == responseCode404) {
+        showSnackBar(context, "${responseData["msg"]}");
+
+        setState(() {
+          isLoading = false;
+        });
+      } else if (response.statusCode == responseCode500) {
+        showSnackBar(context, "${responseData["msg"]}");
+
+        setState(() {
+          isLoading = false;
+        });
+      } else if (response.statusCode == responseCode422) {
+        setState(() {
+          isLoading = false;
+        });
+      } else if (response.statusCode == responseCode200) {
+        setState(() {
+          isLoading = false;
+          isFav = true;
+          getAuctionProductDetail();
+        });
+      }
+    } catch (e) {
+      print("Something went Wrong ${e}");
+      showSnackBar(context, "Something went Wrong.");
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  void removeFavourite({wishId}) async {
+    setState(() {
+      isLoading = true;
+    });
+    var response;
+    int responseCode200 = 200; // For successful request.
+    int responseCode400 = 400; // For Bad Request.
+    int responseCode401 = 401; // For Unauthorized access.
+    int responseCode404 = 404; // For For data not found
+    int responseCode422 = 422; // For For data not found
+    int responseCode500 = 500; // Internal server error.
+    Map<String, dynamic> params = {
+      "id": wishId,
+      // "product_id": widget.detailResponse["id"],
+    };
+    try {
+      response = await dio.post(path: AppUrls.removeFavorite, data: params);
+      var responseData = response.data;
+      if (response.statusCode == responseCode400) {
+        showSnackBar(context, "${responseData["msg"]}");
+        setState(() {
+          setState(() {
+            isLoading = false;
+          });
+        });
+      } else if (response.statusCode == responseCode401) {
+        showSnackBar(context, "${responseData["msg"]}");
+        setState(() {
+          isLoading = false;
+        });
+      } else if (response.statusCode == responseCode404) {
+        showSnackBar(context, "${responseData["msg"]}");
+
+        setState(() {
+          isLoading = false;
+        });
+      } else if (response.statusCode == responseCode500) {
+        showSnackBar(context, "${responseData["msg"]}");
+
+        setState(() {
+          isLoading = false;
+        });
+      } else if (response.statusCode == responseCode422) {
+        setState(() {
+          isLoading = false;
+        });
+      } else if (response.statusCode == responseCode200) {
+        setState(() {
+          isLoading = false;
+          isFav = true;
+          getAuctionProductDetail();
+        });
+      }
+    } catch (e) {
+      print("Something went Wrong ${e}");
+      showSnackBar(context, "Something went Wrong.");
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  void getAuctionProductDetail() async {
+    setState(() {
+      isLoading = true;
+    });
+    var response;
+    int responseCode200 = 200; // For successful request.
+    int responseCode400 = 400; // For Bad Request.
+    int responseCode401 = 401; // For Unauthorized access.
+    int responseCode404 = 404; // For For data not found
+    int responseCode422 = 422; // For For data not found
+    int responseCode500 = 500; // Internal server error.
+    Map<String, dynamic> params = {
+      "id": widget.detailResponse["id"],
+    };
+    try {
+      response = await dio.post(path: AppUrls.getAuctionProducts, data: params);
+      var responseData = response.data;
+      if (response.statusCode == responseCode400) {
+        showSnackBar(context, "${responseData["msg"]}");
+        setState(() {
+          setState(() {
+            isLoading = false;
+          });
+        });
+      } else if (response.statusCode == responseCode401) {
+        showSnackBar(context, "${responseData["msg"]}");
+        setState(() {
+          isLoading = false;
+        });
+      } else if (response.statusCode == responseCode404) {
+        showSnackBar(context, "${responseData["msg"]}");
+
+        setState(() {
+          isLoading = false;
+        });
+      } else if (response.statusCode == responseCode500) {
+        showSnackBar(context, "${responseData["msg"]}");
+
+        setState(() {
+          isLoading = false;
+        });
+      } else if (response.statusCode == responseCode422) {
+        setState(() {
+          isLoading = false;
+        });
+      } else if (response.statusCode == responseCode200) {
+        setState(() {
+          widget.detailResponse = responseData["data"][0];
+          isLoading = false;
+        });
+      }
+    } catch (e) {
+      print("Something went Wrong ${e}");
+      showSnackBar(context, "Something went Wrong.");
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+
 }

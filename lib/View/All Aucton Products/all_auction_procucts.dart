@@ -53,7 +53,6 @@ class _ViewAllAuctionProductsState extends State<ViewAllAuctionProducts> {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final apiProvider = Provider.of<ProductsApiProvider>(context);
-    print("bkkfnnrl$catId  $subCatId");
     return Scaffold(
       backgroundColor: AppTheme.whiteColor,
       appBar: const CustomAppBar1(

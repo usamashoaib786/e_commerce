@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tt_offer/Constants/app_logger.dart';
 import 'package:tt_offer/Utils/resources/res/app_theme.dart';
 import 'package:tt_offer/Utils/utils.dart';
@@ -8,6 +9,7 @@ import 'package:tt_offer/Utils/widgets/textField_lable.dart';
 import 'package:tt_offer/View/BottomNavigation/navigation_bar.dart';
 import 'package:tt_offer/config/app_urls.dart';
 import 'package:tt_offer/config/dio/app_dio.dart';
+import 'package:tt_offer/config/keys/pref_keys.dart';
 
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({super.key});
@@ -100,16 +102,17 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         if (!emailPattern.hasMatch(_emailController.text)) {
                           showSnackBar(
                               context, "Please enter a valid email address");
-                        }
-                        if (_passwordController.text.isNotEmpty) {
-                          if (_passwordController.text.isNotEmpty) {
-                            register();
-                          } else {
-                            showSnackBar(
-                                context, "Password length is minimum 8");
-                          }
                         } else {
-                          showSnackBar(context, "Enter Password");
+                          if (_passwordController.text.isNotEmpty) {
+                            if (_passwordController.text.isNotEmpty) {
+                              register();
+                            } else {
+                              showSnackBar(
+                                  context, "Password length is minimum 8");
+                            }
+                          } else {
+                            showSnackBar(context, "Enter Password");
+                          }
                         }
                       } else {
                         showSnackBar(context, "Enter Email");
@@ -190,12 +193,13 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           setState(() {
             _isLoading = false;
           });
-          // var token = responseData["token"];
-          // var user = responseData["User"]["id"];
-          // var id = user.toString();
-          // SharedPreferences prefs = await SharedPreferences.getInstance();
-          // prefs.setString(PrefKey.authorization, token ?? '');
-          // prefs.setString(PrefKey.userId, id ?? '');
+          var userId = responseData["data"]["user"]["id"];
+          var token = responseData["data"]["token"];
+          var id = userId.toString();
+          print("id$id");
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setString(PrefKey.userId, id ?? '');
+          prefs.setString(PrefKey.authorization, token ?? '');
 
           Navigator.pushAndRemoveUntil(
               context,

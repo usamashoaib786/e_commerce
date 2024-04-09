@@ -10,7 +10,6 @@ import 'package:tt_offer/Utils/widgets/others/app_text.dart';
 import 'package:tt_offer/Utils/widgets/others/custom_app_bar.dart';
 import 'package:tt_offer/View/All%20Featured%20Products/feature_container.dart';
 import 'package:tt_offer/View/All%20Featured%20Products/feature_info.dart';
-import 'package:tt_offer/View/Auction%20Info/auction_info.dart';
 import 'package:tt_offer/config/app_urls.dart';
 import 'package:tt_offer/config/dio/app_dio.dart';
 

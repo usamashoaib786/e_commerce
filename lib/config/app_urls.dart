@@ -14,8 +14,10 @@ class AppUrls {
   static const String getFeatureProducts = "featured-products";
   static const String getAuctionProducts = "auction-products";
 
-  static const String getPlaceBids= "get-placed-bids";
-  static const String placeBid= "place-bid";
-    
+  static const String getPlaceBids = "get-placed-bids";
+  static const String placeBid = "place-bid";
+  static const String adddToFavorite = "add-wishlist-products";
+  static const String removeFavorite = "remove-wishlist-products";
+  static const String getSavedProducts = "wishlist-products";
 
 }

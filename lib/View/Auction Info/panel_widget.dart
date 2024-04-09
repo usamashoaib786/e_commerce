@@ -28,16 +28,22 @@ class _PanelWidgetState extends State<PanelWidget> {
   @override
   void initState() {
     super.initState();
-    // Parse ending date and time strings
-    auctionEndTime = _parseEndingDateTime();
   }
 
   DateTime _parseEndingDateTime() {
+    String? endingTimeString = widget.data["ending_time"];
+    String? endingDateString = widget.data["ending_date"];
     DateTime endingDate =
         DateFormat("yyyy-MM-dd").parse("${widget.data["ending_date"]}");
-    DateTime endingTime =
-        DateFormat("h:mm a").parse("${widget.data["ending_time"]}");
-    // Combine date and time
+    DateTime endingTime;
+
+    if (endingTimeString!.contains("PM") || endingTimeString.contains("AM")) {
+      endingTime = DateFormat("h:mm a").parse("${widget.data["ending_time"]}");
+      print(" vkrvlrvm$endingTime");
+    } else {
+      endingTime = DateFormat("HH:mm").parse("${widget.data["ending_time"]}");
+      print(" jf3o3jfpfp3fpk$endingTime");
+    }
     return DateTime(
       endingDate.year,
       endingDate.month,
@@ -45,6 +51,31 @@ class _PanelWidgetState extends State<PanelWidget> {
       endingTime.hour,
       endingTime.minute,
     );
+  }
+
+  String getTimeLeftString() {
+    DateTime? endTime = _parseEndingDateTime();
+
+    if (endTime == null) {
+      return 'Invalid date/time';
+    }
+
+    Duration timeLeft = endTime.difference(DateTime.now());
+
+    if (timeLeft.isNegative) {
+      return 'Time Ends';
+    }
+
+    if (timeLeft.inHours < 24) {
+      int hours = timeLeft.inHours;
+      int minutes = timeLeft.inMinutes.remainder(60);
+      return '$hours Hours $minutes Minutes';
+    } else {
+      int days = timeLeft.inDays;
+      int hours = timeLeft.inHours % 24;
+      int minutes = timeLeft.inMinutes.remainder(60);
+      return '$days Days $hours Hours $minutes Minutes';
+    }
   }
 
   @override
@@ -162,13 +193,6 @@ class _PanelWidgetState extends State<PanelWidget> {
         ),
       ),
     );
-  }
-
-  String getTimeLeftString() {
-    Duration timeLeft = auctionEndTime!.difference(DateTime.now());
-    int days = timeLeft.inDays;
-    int hours = timeLeft.inHours % 24;
-    return '$days Days $hours Hours';
   }
 
   Widget containerData() {

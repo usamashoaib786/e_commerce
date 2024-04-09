@@ -1,29 +1,29 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:tt_offer/Utils/utils.dart';
+import 'package:tt_offer/View/Authentication%20screens/login_screen.dart';
 import 'package:tt_offer/config/app_urls.dart';
 
 class ProductsApiProvider extends ChangeNotifier {
-  var featureProductsData;
-  var auctionProductsData;
   var allfeatureProductsData;
   var allauctionProductsData;
   var subCatagoryData;
   var catagoryData;
   bool isLoading = false;
 
+
   ////////////////////////////////////////// Auction Productss ////////////////////////////////////////////////
 
-  void getAuctionProducts(
-      {productId,
-      search,
-      cateId,
-      subCatId,
-      limit,
-      location,
-      required dio,
-      required context,
-      fProduct}) async {
+  void getAuctionProducts({
+    productId,
+    search,
+    cateId,
+    subCatId,
+    limit,
+    location,
+    required dio,
+    required context,
+  }) async {
     isLoading = true;
     var response;
     int responseCode200 = 200; // For successful request.
@@ -66,14 +66,8 @@ class ProductsApiProvider extends ChangeNotifier {
         notifyListeners();
       } else if (response.statusCode == responseCode200) {
         isLoading = false;
-        if (fProduct == true) {
-          auctionProductsData = responseData["data"];
-          getFeatureProducts(limit: 4, dio: dio, home: true);
-          notifyListeners();
-        } else {
-          allauctionProductsData = responseData["data"];
-          notifyListeners();
-        }
+        allauctionProductsData = responseData["data"];
+        notifyListeners();
       }
     } catch (e) {
       print("Something went Wrong ${e}");
@@ -85,16 +79,16 @@ class ProductsApiProvider extends ChangeNotifier {
 
   ////////////////////////////////////////// Featured Productss ////////////////////////////////////////////////
 
-  void getFeatureProducts(
-      {productId,
-      search,
-      cateId,
-      subCatId,
-      limit,
-      location,
-      dio,
-      context,
-      home}) async {
+  void getFeatureProducts({
+    productId,
+    search,
+    cateId,
+    subCatId,
+    limit,
+    location,
+    dio,
+    context,
+  }) async {
     isLoading = true;
     var response;
     int responseCode200 = 200; // For successful request.
@@ -140,13 +134,8 @@ class ProductsApiProvider extends ChangeNotifier {
       } else if (response.statusCode == responseCode200) {
         notifyListeners();
         isLoading = false;
-        if (home == true) {
-          featureProductsData = responseData["data"];
-          notifyListeners();
-        } else {
-          allfeatureProductsData = responseData["data"];
-          notifyListeners();
-        }
+        allfeatureProductsData = responseData["data"];
+        notifyListeners();
       }
     } catch (e) {
       print("Something went Wrong ${e}");
@@ -175,22 +164,23 @@ class ProductsApiProvider extends ChangeNotifier {
       response = await dio.post(path: AppUrls.categories, data: params);
       var responseData = response.data;
       if (response.statusCode == responseCode400) {
-        showSnackBar(context, "${responseData["msg"]}");
+        showSnackBar(context, "${responseData["message"]}");
 
         isLoading = false;
         notifyListeners();
       } else if (response.statusCode == responseCode401) {
-        showSnackBar(context, "${responseData["msg"]}");
+        showSnackBar(context, "${responseData["message"]}");
 
         isLoading = false;
+        pushUntil(context, const SigInScreen());
         notifyListeners();
       } else if (response.statusCode == responseCode404) {
-        showSnackBar(context, "${responseData["msg"]}");
+        showSnackBar(context, "${responseData["message"]}");
 
         isLoading = false;
         notifyListeners();
       } else if (response.statusCode == responseCode500) {
-        showSnackBar(context, "${responseData["msg"]}");
+        showSnackBar(context, "${responseData["message"]}");
 
         isLoading = false;
         notifyListeners();
@@ -202,10 +192,6 @@ class ProductsApiProvider extends ChangeNotifier {
 
         isLoading = false;
         notifyListeners();
-        if (aucProduct == true) {
-          getAuctionProducts(
-              limit: 4, dio: dio, fProduct: true, context: context);
-        }
       }
     } catch (e) {
       print("Something went Wrong ${e}");

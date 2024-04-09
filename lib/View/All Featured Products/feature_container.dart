@@ -30,23 +30,29 @@ class _FeatureProductContainerState extends State<FeatureProductContainer> {
                 image: widget.data["photo"].isNotEmpty
                     ? DecorationImage(
                         image:
-                            NetworkImage("${widget.data["photo"][0]["src"]}"), fit: BoxFit.fill)
+                            NetworkImage("${widget.data["photo"][0]["src"]}"),
+                        fit: BoxFit.fill)
                     : null),
             child: Align(
               alignment: Alignment.topRight,
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Container(
-                  height: 25,
-                  width: 25,
-                  decoration: BoxDecoration(
-                      shape: BoxShape.circle, color: AppTheme.whiteColor),
-                  child: Icon(
-                    Icons.favorite_border,
-                    size: 13,
-                    color: AppTheme.textColor,
-                  ),
-                ),
+                    height: 25,
+                    width: 25,
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle, color: AppTheme.whiteColor),
+                    child: widget.data["wishlist"].isEmpty
+                        ? Icon(
+                            Icons.favorite_border,
+                            size: 13,
+                            color: AppTheme.textColor,
+                          )
+                        : Icon(
+                            size: 13,
+                            Icons.favorite_sharp,
+                            color: AppTheme.appColor,
+                          )),
               ),
             ),
           ),
@@ -61,19 +67,6 @@ class _FeatureProductContainerState extends State<FeatureProductContainer> {
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
                   textColor: AppTheme.textColor),
-              Row(
-                children: [
-                  const Icon(
-                    Icons.star,
-                    color: Colors.amber,
-                    size: 18,
-                  ),
-                  AppText.appText("5.0",
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400,
-                      textColor: AppTheme.textColor),
-                ],
-              ),
             ],
           ),
           Row(

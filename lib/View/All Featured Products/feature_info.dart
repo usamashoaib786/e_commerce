@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:tt_offer/Constants/app_logger.dart';
 import 'package:tt_offer/Controller/APIs%20Manager/product_api.dart';
-import 'package:tt_offer/Controller/provider_class.dart';
 import 'package:tt_offer/Utils/resources/res/app_theme.dart';
 import 'package:tt_offer/Utils/utils.dart';
 import 'package:tt_offer/Utils/widgets/others/app_button.dart';
 import 'package:tt_offer/Utils/widgets/others/app_text.dart';
 import 'package:tt_offer/View/Auction%20Info/make_offer_screen.dart';
 import 'package:tt_offer/View/Seller%20Profile/seller_profile.dart';
+import 'package:tt_offer/config/app_urls.dart';
 import 'package:tt_offer/config/dio/app_dio.dart';
+import 'package:tt_offer/config/keys/pref_keys.dart';
 
 class FeatureInfoScreen extends StatefulWidget {
-  final detailResponse;
-  const FeatureInfoScreen({super.key, this.detailResponse});
+  var detailResponse;
+  FeatureInfoScreen({super.key, this.detailResponse});
 
   @override
   State<FeatureInfoScreen> createState() => _FeatureInfoScreenState();
@@ -23,7 +26,8 @@ class FeatureInfoScreen extends StatefulWidget {
 class _FeatureInfoScreenState extends State<FeatureInfoScreen> {
   int _currentPage = 0;
   final panelController = PanelController();
-
+  bool isLoading = false;
+  bool isFav = false;
   final PageController _pageController = PageController(
     initialPage: 0,
   );
@@ -35,19 +39,22 @@ class _FeatureInfoScreenState extends State<FeatureInfoScreen> {
     "Edition",
     "Authenticity"
   ];
-  static const List<String> wrapList1 = [
-    'Used',
-    'Samsung ',
-    'Galaxy M02',
-    "2/32",
-    "Original"
-  ];
+  static List<String> wrapList1 = [];
   late AppDio dio;
+  var userId;
   AppLogger logger = AppLogger();
   @override
   void initState() {
     dio = AppDio(context);
+    getUserId();
     logger.init();
+    wrapList1 = [
+      '${widget.detailResponse["condition"]}',
+      'Samsung ',
+      'Galaxy M02',
+      "2/32",
+      "Original"
+    ];
     super.initState();
   }
 
@@ -57,9 +64,27 @@ class _FeatureInfoScreenState extends State<FeatureInfoScreen> {
     super.dispose();
   }
 
+  getUserId() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    setState(() {
+      userId = pref.getString(PrefKey.userId);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(backgroundColor: AppTheme.whiteColor, body: bodyColumn());
+    return PopScope(
+        canPop: true,
+        onPopInvoked: (didPop) {
+          final apiProvider =
+              Provider.of<ProductsApiProvider>(context, listen: false);
+          apiProvider.getFeatureProducts(
+            dio: dio,
+            context: context,
+          );
+        },
+        child:
+            Scaffold(backgroundColor: AppTheme.whiteColor, body: bodyColumn()));
   }
 
 ////////////////////////////////////////////////// feature ///////////////////////////////////
@@ -123,15 +148,14 @@ class _FeatureInfoScreenState extends State<FeatureInfoScreen> {
               SizedBox(
                 width: screenWidth,
                 child: AppText.appText(
-                    "Its simple and elegant shape makes it perfect for those of you who like you who want minimalist watch. Its simple and elegant shape makes it perfect for those of you who like you who want minimalist watch.",
+                    "${widget.detailResponse["description"]}",
                     fontSize: 12,
                     fontWeight: FontWeight.w400,
                     textColor: AppTheme.lighttextColor),
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 10.0, bottom: 20),
-                child: AppText.appText(
-                    "Posted on 15-09-2023 10:11 am Dhaka, Bangladesh",
+                child: AppText.appText(getFormattedTimestamp(),
                     fontSize: 12,
                     fontWeight: FontWeight.w400,
                     textColor: AppTheme.blackColor),
@@ -147,11 +171,13 @@ class _FeatureInfoScreenState extends State<FeatureInfoScreen> {
                   height: 102,
                   width: screenWidth,
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Row(
                         children: [
-                          AppText.appText("\$212.99",
+                          AppText.appText(
+                              "\$${widget.detailResponse["fix_price"]}",
                               fontSize: 24,
                               fontWeight: FontWeight.w700,
                               textColor: AppTheme.appColor),
@@ -185,7 +211,8 @@ class _FeatureInfoScreenState extends State<FeatureInfoScreen> {
                                   ),
                                 ),
                               ),
-                              AppText.appText("Cameron Williamson",
+                              AppText.appText(
+                                  "${widget.detailResponse["user"]["name"]}",
                                   fontSize: 12,
                                   fontWeight: FontWeight.w600,
                                   textColor: AppTheme.blackColor),
@@ -207,7 +234,9 @@ class _FeatureInfoScreenState extends State<FeatureInfoScreen> {
                       ),
                       Align(
                         alignment: Alignment.bottomRight,
-                        child: AppText.appText("Member since August 2020",
+                        child: AppText.appText(
+                            formatTimestamp(
+                                "${widget.detailResponse["user"]["created_at"]}"),
                             fontSize: 10,
                             fontWeight: FontWeight.w400,
                             textColor: AppTheme.lighttextColor),
@@ -261,6 +290,22 @@ class _FeatureInfoScreenState extends State<FeatureInfoScreen> {
         ],
       ),
     );
+  }
+
+  String getFormattedTimestamp() {
+    String timestampStr = "2024-04-06T00:52:00.000000Z";
+    DateTime timestamp = DateTime.parse(timestampStr);
+    DateTime convertedTime = timestamp.toLocal();
+    String formattedTimestamp =
+        DateFormat('yyyy-MM-dd   hh:mm a').format(convertedTime);
+    return "Posted on  $formattedTimestamp in ${widget.detailResponse["location"]}";
+  }
+
+  String formatTimestamp(String timestamp) {
+    DateTime dateTime = DateTime.parse(timestamp);
+    String formattedDate = DateFormat.yMMMM().format(dateTime);
+
+    return "Member since $formattedDate";
   }
 
   Widget bodyColumn() {
@@ -328,9 +373,21 @@ class _FeatureInfoScreenState extends State<FeatureInfoScreen> {
                                   Navigator.pop(context);
                                 },
                                 alignment: Alignment.topLeft,
-                                img: "assets/images/arrow-left.png"),
+                                img: "assets/images/arrow-left.png",
+                                isFavourite: false),
                             iconContainer(
-                                ontap: () {},
+                                ontap: () {
+                                  widget.detailResponse["wishlist"].isNotEmpty
+                                      ? removeFavourite(
+                                          wishId:
+                                              widget.detailResponse["wishlist"]
+                                                  [0]["id"])
+                                      : addToFavourite();
+                                },
+                                isFavourite:
+                                    widget.detailResponse["wishlist"].isNotEmpty
+                                        ? true
+                                        : false,
                                 alignment: Alignment.topRight,
                                 img: "assets/images/heart.png")
                           ],
@@ -373,7 +430,7 @@ class _FeatureInfoScreenState extends State<FeatureInfoScreen> {
     );
   }
 
-  Widget iconContainer({Function()? ontap, img, alignment}) {
+  Widget iconContainer({Function()? ontap, img, alignment, isFavourite}) {
     return GestureDetector(
       onTap: ontap,
       child: Padding(
@@ -381,17 +438,205 @@ class _FeatureInfoScreenState extends State<FeatureInfoScreen> {
         child: Align(
           alignment: alignment,
           child: Container(
-            height: 40,
-            width: 40,
-            decoration: BoxDecoration(
-                shape: BoxShape.circle, color: AppTheme.whiteColor),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Image.asset("$img"),
-            ),
-          ),
+              height: 40,
+              width: 40,
+              decoration: BoxDecoration(
+                  shape: BoxShape.circle, color: AppTheme.whiteColor),
+              child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: isFavourite == false
+                      ? Image.asset(
+                          "$img",
+                        )
+                      : Icon(
+                          Icons.favorite_sharp,
+                          color: AppTheme.appColor,
+                        ))),
         ),
       ),
     );
+  }
+
+  void addToFavourite() async {
+    setState(() {
+      isLoading = true;
+    });
+    var response;
+    int responseCode200 = 200; // For successful request.
+    int responseCode400 = 400; // For Bad Request.
+    int responseCode401 = 401; // For Unauthorized access.
+    int responseCode404 = 404; // For For data not found
+    int responseCode422 = 422; // For For data not found
+    int responseCode500 = 500; // Internal server error.
+    Map<String, dynamic> params = {
+      "user_id": userId,
+      "product_id": widget.detailResponse["id"],
+    };
+    try {
+      response = await dio.post(path: AppUrls.adddToFavorite, data: params);
+      var responseData = response.data;
+      if (response.statusCode == responseCode400) {
+        showSnackBar(context, "${responseData["msg"]}");
+        setState(() {
+          setState(() {
+            isLoading = false;
+          });
+        });
+      } else if (response.statusCode == responseCode401) {
+        showSnackBar(context, "${responseData["msg"]}");
+        setState(() {
+          isLoading = false;
+        });
+      } else if (response.statusCode == responseCode404) {
+        showSnackBar(context, "${responseData["msg"]}");
+
+        setState(() {
+          isLoading = false;
+        });
+      } else if (response.statusCode == responseCode500) {
+        showSnackBar(context, "${responseData["msg"]}");
+
+        setState(() {
+          isLoading = false;
+        });
+      } else if (response.statusCode == responseCode422) {
+        setState(() {
+          isLoading = false;
+        });
+      } else if (response.statusCode == responseCode200) {
+        setState(() {
+          isLoading = false;
+          getAuctionProductDetail();
+        });
+      }
+    } catch (e) {
+      print("Something went Wrong ${e}");
+      showSnackBar(context, "Something went Wrong.");
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  void removeFavourite({wishId}) async {
+    setState(() {
+      isLoading = true;
+    });
+    var response;
+    int responseCode200 = 200; // For successful request.
+    int responseCode400 = 400; // For Bad Request.
+    int responseCode401 = 401; // For Unauthorized access.
+    int responseCode404 = 404; // For For data not found
+    int responseCode422 = 422; // For For data not found
+    int responseCode500 = 500; // Internal server error.
+    Map<String, dynamic> params = {
+      "id": wishId,
+      // "product_id": widget.detailResponse["id"],
+    };
+    try {
+      response = await dio.post(path: AppUrls.removeFavorite, data: params);
+      var responseData = response.data;
+      if (response.statusCode == responseCode400) {
+        showSnackBar(context, "${responseData["msg"]}");
+        setState(() {
+          setState(() {
+            isLoading = false;
+          });
+        });
+      } else if (response.statusCode == responseCode401) {
+        showSnackBar(context, "${responseData["msg"]}");
+        setState(() {
+          isLoading = false;
+        });
+      } else if (response.statusCode == responseCode404) {
+        showSnackBar(context, "${responseData["msg"]}");
+
+        setState(() {
+          isLoading = false;
+        });
+      } else if (response.statusCode == responseCode500) {
+        showSnackBar(context, "${responseData["msg"]}");
+
+        setState(() {
+          isLoading = false;
+        });
+      } else if (response.statusCode == responseCode422) {
+        setState(() {
+          isLoading = false;
+        });
+      } else if (response.statusCode == responseCode200) {
+        setState(() {
+          isLoading = false;
+          isFav = true;
+          getAuctionProductDetail();
+        });
+      }
+    } catch (e) {
+      print("Something went Wrong ${e}");
+      showSnackBar(context, "Something went Wrong.");
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  void getAuctionProductDetail() async {
+    setState(() {
+      isLoading = true;
+    });
+    var response;
+    int responseCode200 = 200; // For successful request.
+    int responseCode400 = 400; // For Bad Request.
+    int responseCode401 = 401; // For Unauthorized access.
+    int responseCode404 = 404; // For For data not found
+    int responseCode422 = 422; // For For data not found
+    int responseCode500 = 500; // Internal server error.
+    Map<String, dynamic> params = {
+      "id": widget.detailResponse["id"],
+    };
+    try {
+      response = await dio.post(path: AppUrls.getFeatureProducts, data: params);
+      var responseData = response.data;
+      if (response.statusCode == responseCode400) {
+        showSnackBar(context, "${responseData["msg"]}");
+        setState(() {
+          setState(() {
+            isLoading = false;
+          });
+        });
+      } else if (response.statusCode == responseCode401) {
+        showSnackBar(context, "${responseData["msg"]}");
+        setState(() {
+          isLoading = false;
+        });
+      } else if (response.statusCode == responseCode404) {
+        showSnackBar(context, "${responseData["msg"]}");
+
+        setState(() {
+          isLoading = false;
+        });
+      } else if (response.statusCode == responseCode500) {
+        showSnackBar(context, "${responseData["msg"]}");
+
+        setState(() {
+          isLoading = false;
+        });
+      } else if (response.statusCode == responseCode422) {
+        setState(() {
+          isLoading = false;
+        });
+      } else if (response.statusCode == responseCode200) {
+        setState(() {
+          widget.detailResponse = responseData["data"][0];
+          isLoading = false;
+        });
+      }
+    } catch (e) {
+      print("Something went Wrong ${e}");
+      showSnackBar(context, "Something went Wrong.");
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 }

@@ -33,6 +33,10 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
   final TextEditingController _millageController = TextEditingController();
   final TextEditingController _colorController = TextEditingController();
   final TextEditingController _modelYearController = TextEditingController();
+  final TextEditingController _modelController = TextEditingController();
+  final TextEditingController _brandController = TextEditingController();
+  final TextEditingController _authenticityController = TextEditingController();
+  final TextEditingController _editionController = TextEditingController();
 
   bool _isLoading = false;
   late AppDio dio;
@@ -107,6 +111,16 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                   controller: _millageController),
               lableFields(
                   lableTtxt: "Color (optional)", controller: _colorController),
+              lableFields(
+                  lableTtxt: "Brand (optional)", controller: _brandController),
+              lableFields(
+                  lableTtxt: "Model (optional)", controller: _modelController),
+              lableFields(
+                  lableTtxt: "Edition (optional)",
+                  controller: _editionController),
+              lableFields(
+                  lableTtxt: "Authenticity (optional)",
+                  controller: _authenticityController),
               _isLoading == true
                   ? LoadingDialog()
                   : Padding(

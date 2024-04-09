@@ -17,6 +17,8 @@ class OnBoardScreen extends StatefulWidget {
 
 class _OnBoardScreenState extends State<OnBoardScreen> {
   String? id;
+  String? token;
+
   @override
   void initState() {
     getUserCredentials();
@@ -27,6 +29,7 @@ class _OnBoardScreenState extends State<OnBoardScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       id = prefs.getString(PrefKey.userId);
+      token = prefs.getString(PrefKey.authorization);
     });
   }
 
@@ -57,7 +60,7 @@ class _OnBoardScreenState extends State<OnBoardScreen> {
             ),
             Image.asset("assets/images/onBorad.png"),
             AppButton.appButton("Get Started", onTap: () {
-              if (id != null) {
+              if (token != null) {
                 pushReplacement(context, const BottomNavView());
               } else {
                 pushReplacement(context, const SigInScreen());

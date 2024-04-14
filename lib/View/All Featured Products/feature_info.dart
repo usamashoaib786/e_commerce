@@ -10,6 +10,7 @@ import 'package:tt_offer/Utils/utils.dart';
 import 'package:tt_offer/Utils/widgets/others/app_button.dart';
 import 'package:tt_offer/Utils/widgets/others/app_text.dart';
 import 'package:tt_offer/View/Auction%20Info/make_offer_screen.dart';
+import 'package:tt_offer/View/ChatScreens/offer_chat_screen.dart';
 import 'package:tt_offer/View/Seller%20Profile/seller_profile.dart';
 import 'package:tt_offer/config/app_urls.dart';
 import 'package:tt_offer/config/dio/app_dio.dart';
@@ -106,7 +107,13 @@ class _FeatureInfoScreenState extends State<FeatureInfoScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            AppButton.appButton("Chat",
+            AppButton.appButton("Chat", onTap: () {
+              push(
+                  context,
+                  OfferChatScreen(
+                    recieverId: widget.detailResponse["user"]["id"],
+                  ));
+            },
                 height: 53,
                 width: 150,
                 radius: 32.0,
@@ -119,7 +126,7 @@ class _FeatureInfoScreenState extends State<FeatureInfoScreen> {
             ),
             GestureDetector(
               onTap: () {
-                push(context, const MakeOfferScreen());
+                push(context, MakeOfferScreen(data: widget.detailResponse));
               },
               child: AppButton.appButton("Make Offer",
                   height: 53,
@@ -184,7 +191,10 @@ class _FeatureInfoScreenState extends State<FeatureInfoScreen> {
                           const SizedBox(
                             width: 20,
                           ),
-                          AppText.appText("Negtiable",
+                          AppText.appText(
+                              widget.detailResponse["firm_on_price"] == 1
+                                  ? "Non Negotiable"
+                                  : "Neg0tiable",
                               fontSize: 14,
                               fontWeight: FontWeight.w400,
                               textColor: AppTheme.lighttextColor),

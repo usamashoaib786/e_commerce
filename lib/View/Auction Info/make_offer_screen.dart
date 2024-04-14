@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tt_offer/Constants/app_logger.dart';
+import 'package:tt_offer/Controller/APIs%20Manager/chat_api.dart';
 import 'package:tt_offer/Utils/resources/res/app_theme.dart';
 import 'package:tt_offer/Utils/utils.dart';
 import 'package:tt_offer/Utils/widgets/others/app_button.dart';
@@ -6,10 +10,12 @@ import 'package:tt_offer/Utils/widgets/others/app_field.dart';
 import 'package:tt_offer/Utils/widgets/others/app_text.dart';
 import 'package:tt_offer/Utils/widgets/others/custom_app_bar.dart';
 import 'package:tt_offer/View/ChatScreens/offer_chat_screen.dart';
-import 'package:tt_offer/View/Profile%20Screen/profile_screen.dart';
+import 'package:tt_offer/config/dio/app_dio.dart';
+import 'package:tt_offer/config/keys/pref_keys.dart';
 
 class MakeOfferScreen extends StatefulWidget {
-  const MakeOfferScreen({super.key});
+  final data;
+  const MakeOfferScreen({super.key, this.data});
 
   @override
   State<MakeOfferScreen> createState() => _MakeOfferScreenState();
@@ -17,14 +23,28 @@ class MakeOfferScreen extends StatefulWidget {
 
 class _MakeOfferScreenState extends State<MakeOfferScreen> {
   final TextEditingController _priceController = TextEditingController();
+  late AppDio dio;
+  AppLogger logger = AppLogger();
+  var userId;
   @override
   void initState() {
+    dio = AppDio(context);
+    logger.init();
+    getUserDetail();
     _priceController.text = "\$ 60";
     super.initState();
   }
 
+  getUserDetail() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    setState(() {
+      userId = pref.getString(PrefKey.userId);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    final chatApiProvider = Provider.of<ChatApiProvider>(context);
     final screenSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: const CustomAppBar1(
@@ -50,9 +70,12 @@ class _MakeOfferScreenState extends State<MakeOfferScreen> {
                         width: 70,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(16),
-                            image: const DecorationImage(
-                                image: AssetImage("assets/images/auction1.png"),
-                                fit: BoxFit.fill)),
+                            image: widget.data["photo"].isNotEmpty
+                                ? DecorationImage(
+                                    image: NetworkImage(
+                                        "${widget.data["photo"][0]["src"]}"),
+                                    fit: BoxFit.fill)
+                                : null),
                       ),
                       const SizedBox(
                         width: 20,
@@ -61,15 +84,14 @@ class _MakeOfferScreenState extends State<MakeOfferScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          AppText.appText("Modern light clothes",
+                          AppText.appText("${widget.data["title"]}",
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
                               textColor: AppTheme.txt1B20),
-                          const StarRating(
-                            rating: 2,
-                            color: Colors.amber,
-                            size: 12,
-                          )
+                          AppText.appText("\$${widget.data["fix_price"]}",
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700,
+                              textColor: AppTheme.textColor),
                         ],
                       )
                     ],
@@ -100,7 +122,21 @@ class _MakeOfferScreenState extends State<MakeOfferScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 40.0),
                 child: AppButton.appButton("Send Offer", onTap: () {
-                  push(context, const OfferChatScreen());
+                  String priceWithoutDollarSign =
+                      _priceController.text.replaceAll('\$', '');
+                  chatApiProvider.makeOffer(
+                      dio: dio,
+                      context: context,
+                      productId: widget.data["id"],
+                      sellerId: widget.data["user"]["id"],
+                      buyerId: int.parse(userId),
+                      offerPrice: int.parse(priceWithoutDollarSign));
+                  // push(
+                  //     context,
+                  //     OfferChatScreen(
+                  //       offerPrice: priceWithoutDollarSign,
+                  //       isOffer: true,
+                  //     ));
                 },
                     height: 53,
                     fontWeight: FontWeight.w500,

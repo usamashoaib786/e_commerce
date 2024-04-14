@@ -65,8 +65,6 @@ class _LandingScreenState extends State<LandingScreen> {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final apiProvider = Provider.of<ProductsApiProvider>(context);
-    print(
-        "klrgllg${apiProvider.catagoryData}   auctions... ${apiProvider.allauctionProductsData}  Features......  ${apiProvider.allfeatureProductsData}");
     return Scaffold(
       backgroundColor: AppTheme.whiteColor,
       appBar: CustomAppBar(context: context),
@@ -222,7 +220,11 @@ class _LandingScreenState extends State<LandingScreen> {
                               width: screenWidth,
                               child: ListView.builder(
                                 scrollDirection: Axis.horizontal,
-                                itemCount: 4,
+                                itemCount: apiProvider
+                                            .allauctionProductsData.length >
+                                        4
+                                    ? 4
+                                    : apiProvider.allauctionProductsData.length,
                                 itemBuilder: (context, index) {
                                   return Padding(
                                     padding: const EdgeInsets.only(left: 20.0),
@@ -283,7 +285,10 @@ class _LandingScreenState extends State<LandingScreen> {
                               childAspectRatio: screenWidth / (2.6 * 220),
                             ),
                             shrinkWrap: true,
-                            itemCount: 4,
+                            itemCount:
+                                apiProvider.allfeatureProductsData.length > 4
+                                    ? 4
+                                    : apiProvider.allfeatureProductsData.length,
                             itemBuilder: (context, int index) {
                               return GestureDetector(
                                   onTap: () {

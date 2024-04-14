@@ -20,4 +20,8 @@ class AppUrls {
   static const String removeFavorite = "remove-wishlist-products";
   static const String getSavedProducts = "wishlist-products";
 
+  static const String makeOffer = "make-offer";
+  static const String getOffer = "get-offer";
+  static const String sendMessage = "send_msg";
+  static const String getAllChats = "get/user/all/chats/";
 }

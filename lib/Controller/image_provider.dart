@@ -11,7 +11,13 @@ class ImageNotifyProvider extends ChangeNotifier {
   List<String> imagePaths = [];
   var vedioPath = "";
   bool isCompressing = false;
+
 ////////////////////////////////////////// Image From Camera ///////////////////////////////////////
+  ///
+ 
+
+  ///
+
   Future<void> takePicture() async {
     isCompressing = true;
     notifyListeners();
@@ -36,7 +42,7 @@ class ImageNotifyProvider extends ChangeNotifier {
     for (var pickedFile in pickedFiles) {
       await compressAndAddImage(pickedFile.path);
     }
-      isCompressing = false;
+    isCompressing = false;
     notifyListeners();
   }
 ////////////////////////////////////////// Image Compression ///////////////////////////////////////
@@ -83,8 +89,6 @@ class ImageNotifyProvider extends ChangeNotifier {
 
       vedioPath = pickedFiles.path;
       notifyListeners();
-
-      // await _compressVideo(vedioPath);
     }
   }
 

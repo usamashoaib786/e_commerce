@@ -1,5 +1,6 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tt_offer/Constants/app_logger.dart';
@@ -19,12 +20,14 @@ class OfferChatScreen extends StatefulWidget {
   final bool? isOffer;
   final String? offerPrice;
   final int? recieverId;
+  final String? title;
   const OfferChatScreen(
       {super.key,
       this.isOffer,
       this.offerPrice,
       this.userImgUrl,
-      this.recieverId});
+      this.recieverId,
+      this.title});
 
   @override
   State<OfferChatScreen> createState() => _OfferChatScreenState();
@@ -34,6 +37,10 @@ class _OfferChatScreenState extends State<OfferChatScreen> {
   final TextEditingController _textEditingController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _priceController = TextEditingController();
+  late final DatabaseReference firstResf;
+  final DatabaseReference secRef =
+      FirebaseDatabase.instance.ref().child('Chats');
+
   late AppDio dio;
   AppLogger logger = AppLogger();
   int? userId;
@@ -42,7 +49,6 @@ class _OfferChatScreenState extends State<OfferChatScreen> {
     dio = AppDio(context);
     logger.init();
     getUserDetail();
-    setupMessageListener();
     _priceController.text = "\$ 60";
     super.initState();
   }
@@ -52,43 +58,17 @@ class _OfferChatScreenState extends State<OfferChatScreen> {
     setState(() {
       var id = pref.getString(PrefKey.userId);
       userId = int.parse(id!);
-      print("object$userId");
-    });
-  }
-
-  void setupMessageListener() {
-    DatabaseReference messagesRef =
-        FirebaseDatabase.instance.reference().child('messages');
-
-    messagesRef.onChildAdded.listen((event) {
-      // A new message has been added to the database
-      // Update your UI to display the new message
-      Object? messageData = event.snapshot.value;
-      print("knrfrfmpfm4p$messageData");
-      // Assuming your message structure has 'senderId', 'receiverId', and 'message' fields
-      // int senderId = messageData!['senderId'];
-      // int receiverId = messageData['receiverId'];
-      // String message = messageData['message'];
-
-      // if ((senderId == userId && receiverId == widget.receiverId) ||
-      //     (senderId == widget.receiverId && receiverId == userId)) {
-      //   // Add the new message to your list of messages and update the UI
-      //   setState(() {
-      //     // Update your list of messages here
-      //     // For example:
-      //     // messages.add(message);
-      //     // _listKey.currentState!.insertItem(messages.length); // Assuming messages is your list of messages
-      //   });
-      // }
     });
   }
 
   @override
   Widget build(BuildContext context) {
     final open = Provider.of<NotifyProvider>(context);
-
+    final chatApi = Provider.of<ChatApiProvider>(context);
     return Scaffold(
-      appBar: const ChatAppBar(),
+      appBar: ChatAppBar(
+        title: widget.title,
+      ),
       body: GestureDetector(
         onTap: () {
           FocusScope.of(context).unfocus();
@@ -216,18 +196,33 @@ class _OfferChatScreenState extends State<OfferChatScreen> {
                       )
                     : const SizedBox.shrink(),
                 Expanded(
-                  child: ListView.builder(
-                    controller: _scrollController,
-                    shrinkWrap: true,
-                    itemCount: 0,
-                    itemBuilder: (context, index) {
-                      return _buildMessageBubble(
-                        user: true,
-                        message: "",
-                        img: "",
-                      );
-                    },
-                  ),
+                  child: chatApi.conversationData== null
+                      ? const SizedBox.shrink()
+                      : StreamBuilder<Object>(
+                          stream: secRef.onValue,
+                          builder: (context, AsyncSnapshot snapshot) {
+                            return ListView.builder(
+                              controller: _scrollController,
+                              shrinkWrap: true,
+                              itemCount: chatApi
+                                  .conversationData["conversation"].length,
+                              itemBuilder: (context, index) {
+                                return _buildMessageBubble(
+                                  time:
+                                      "${chatApi.conversationData["conversation"][index]["created_at"]}",
+                                  user: userId ==
+                                          chatApi.conversationData[
+                                                  "conversation"][index]
+                                              ["sender_id"]
+                                      ? true
+                                      : false,
+                                  message:
+                                      "${chatApi.conversationData["conversation"][index]["message"]}",
+                                  img: "",
+                                );
+                              },
+                            );
+                          }),
                 ),
                 _buildUserInput(),
               ],
@@ -250,34 +245,40 @@ class _OfferChatScreenState extends State<OfferChatScreen> {
         textColor: AppTheme.whiteColor);
   }
 
-  Widget _buildMessageBubble({user, message, img}) {
+  Widget _buildMessageBubble({user, message, img, time}) {
     return Column(
+      crossAxisAlignment:
+          user ? CrossAxisAlignment.end : CrossAxisAlignment.start,
       children: [
         Container(
             alignment: user ? Alignment.centerRight : Alignment.centerLeft,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Container(
               constraints: const BoxConstraints(maxWidth: 250, minWidth: 80),
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
-                color: user
-                    ? const Color.fromARGB(255, 196, 167, 212)
-                    : const Color(0xffEAEAEA),
-                borderRadius: BorderRadius.circular(12),
+                color: user ? AppTheme.appColor : const Color(0xffEAEAEA),
+                borderRadius: BorderRadius.circular(24),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    "$message",
-                    style: const TextStyle(color: Colors.black),
-                  ),
-                  const SizedBox(
-                    height: 5,
-                  ),
+                  AppText.appText("$message",
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      textColor: user ? AppTheme.whiteColor : Colors.black),
                 ],
               ),
-            ))
+            )),
+        Padding(
+          padding: user
+              ? const EdgeInsets.only(right: 20.0)
+              : const EdgeInsets.only(left: 20.0),
+          child: AppText.appText(formatTimestamp(time),
+              fontSize: 10,
+              fontWeight: FontWeight.w400,
+              textColor: AppTheme.lighttextColor),
+        ),
       ],
     );
   }
@@ -327,6 +328,7 @@ class _OfferChatScreenState extends State<OfferChatScreen> {
                       context: context,
                       senderId: userId,
                       recieverId: widget.recieverId,
+                      title: widget.title,
                       message: userMessage);
                 }
               },
@@ -342,5 +344,12 @@ class _OfferChatScreenState extends State<OfferChatScreen> {
         ),
       ),
     );
+  }
+
+  String formatTimestamp(String timestamp) {
+    DateTime time = DateTime.parse(timestamp);
+    String formattedTime = DateFormat('HH:mm').format(time);
+
+    return formattedTime;
   }
 }

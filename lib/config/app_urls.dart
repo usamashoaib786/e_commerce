@@ -1,6 +1,7 @@
 class AppUrls {
   static const String baseUrl = "https://ttoffer.com/api/";
   static const String logInEmail = "login-email";
+  static const String logInPhone = "login-phone";
   static const String registration = "signup";
   static const String forgotEmailPass = "forgot-password";
   static const String categories = "categories";
@@ -24,4 +25,12 @@ class AppUrls {
   static const String getOffer = "get-offer";
   static const String sendMessage = "send_msg";
   static const String getAllChats = "get/user/all/chats/";
+  static const String getConverstaion = "get/conversation/";
+
+  static const String updateProfile= "update/user";
+  static const String getProfile= "me";
+
+  static const String sellingScreen= "selling-screen";
+
+ 
 }

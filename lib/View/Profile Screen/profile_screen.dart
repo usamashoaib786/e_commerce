@@ -1,7 +1,13 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tt_offer/Constants/app_logger.dart';
+import 'package:tt_offer/Controller/APIs%20Manager/profile_apis.dart';
 import 'package:tt_offer/Utils/resources/res/app_theme.dart';
 import 'package:tt_offer/Utils/utils.dart';
+import 'package:tt_offer/Utils/widgets/loading_popup.dart';
 import 'package:tt_offer/Utils/widgets/others/app_text.dart';
 import 'package:tt_offer/Utils/widgets/others/divider.dart';
 import 'package:tt_offer/View/Authentication%20screens/login_screen.dart';
@@ -10,6 +16,8 @@ import 'package:tt_offer/View/Profile%20Screen/custom_link.dart';
 import 'package:tt_offer/View/Profile%20Screen/payment%20Screens/payment_screen.dart';
 import 'package:tt_offer/View/Profile%20Screen/saved_products.dart';
 import 'package:tt_offer/View/Sellings/selling_purchase.dart';
+import 'package:tt_offer/config/dio/app_dio.dart';
+import 'package:tt_offer/config/keys/pref_keys.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -19,8 +27,54 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  String? pickedFilePath;
+  var userId;
+  late AppDio dio;
+  AppLogger logger = AppLogger();
+  @override
+  void initState() {
+    dio = AppDio(context);
+    logger.init();
+    final profileApi = Provider.of<ProfileApiProvider>(context, listen: false);
+    profileApi.getProfile(
+      dio: dio,
+      context: context,
+    );
+    getUserDetail();
+
+    super.initState();
+  }
+
+  getUserDetail() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    setState(() {
+      userId = pref.getString(PrefKey.userId);
+    });
+  }
+
+  pickImage() async {
+    final profileApi = Provider.of<ProfileApiProvider>(context, listen: false);
+
+    final ImagePicker picker = ImagePicker();
+
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      setState(() {
+        pickedFilePath = image.path;
+        profileApi.updateProfile(
+            dio: dio,
+            context: context,
+            userId: userId,
+            profile: true,
+            imgPath: pickedFilePath);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final profileApi = Provider.of<ProfileApiProvider>(context);
+
     return Scaffold(
         backgroundColor: AppTheme.whiteColor,
         appBar: AppBar(
@@ -53,20 +107,45 @@ class _ProfileScreenState extends State<ProfileScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              upperContainer(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  verifiedContainer(
-                      txt: "Email Verified", img: "assets/images/sms.png"),
-                  verifiedContainer(
-                      txt: "Image Verified", img: "assets/images/gallery.png"),
-                  verifiedContainer(
-                      txt: "Phone Verified", img: "assets/images/call.png"),
-                  verifiedContainer(
-                      txt: "Join TruYou", img: "assets/images/verify1.png"),
-                ],
-              ),
+              profileApi.profileData == null
+                  ? LoadingDialog()
+                  : Column(
+                      children: [
+                        upperContainer(),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            verifiedContainer(
+                                txt: "Email Verified",
+                                img: "assets/images/sms.png",
+                                color: profileApi
+                                            .profileData["email_verified_at"] ==
+                                        null
+                                    ? Colors.greenAccent
+                                    : AppTheme.appColor),
+                            verifiedContainer(
+                                txt: "Image Verified",
+                                img: "assets/images/gallery.png",
+                                color: profileApi
+                                            .profileData["image_verified_at"] ==
+                                        null
+                                    ? Colors.greenAccent
+                                    : AppTheme.appColor),
+                            verifiedContainer(
+                                txt: "Phone Verified",
+                                img: "assets/images/call.png",
+                                color: profileApi
+                                            .profileData["phone_verified_at"] ==
+                                        null
+                                    ? Colors.greenAccent
+                                    : AppTheme.appColor),
+                            verifiedContainer(
+                                txt: "Join TruYou",
+                                img: "assets/images/verify1.png"),
+                          ],
+                        ),
+                      ],
+                    ),
               headingText(txt: "Transactions"),
               customRow(
                   onTap: () {
@@ -129,6 +208,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget verifiedContainer({img, txt, color}) {
+    final profileApi = Provider.of<ProfileApiProvider>(context, listen: false);
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 20.0),
       child: SizedBox(
@@ -211,6 +292,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget upperContainer() {
+    final profileApi = Provider.of<ProfileApiProvider>(context, listen: false);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 20.0),
       child: Row(
@@ -233,37 +315,61 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         decoration: BoxDecoration(
                             color: AppTheme.text09,
                             borderRadius: BorderRadius.circular(16)),
+                        child: pickedFilePath != null
+                            ? ClipRRect(
+                                borderRadius: BorderRadius.circular(16),
+                                child: Image.file(
+                                  File(pickedFilePath!),
+                                  width: 80,
+                                  height: 80,
+                                  fit: BoxFit.fill,
+                                ),
+                              )
+                            : profileApi.profileData["img"] != null
+                                ? ClipRRect(
+                                    borderRadius: BorderRadius.circular(16),
+                                    child: Image.network(
+                                      fit: BoxFit.fill,
+                                      "${profileApi.profileData["img"]}",
+                                    ))
+                                : null,
                       ),
                       Align(
                         alignment: Alignment.bottomCenter,
-                        child: Container(
-                          height: 24,
-                          width: 24,
-                          decoration: BoxDecoration(
-                              color: AppTheme.whiteColor,
-                              borderRadius: BorderRadius.circular(6)),
-                          child: Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: Image.asset("assets/images/camera.png"),
+                        child: GestureDetector(
+                          onTap: () {
+                            pickImage();
+                          },
+                          child: Container(
+                            height: 24,
+                            width: 24,
+                            decoration: BoxDecoration(
+                                color: AppTheme.whiteColor,
+                                borderRadius: BorderRadius.circular(6)),
+                            child: Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: Image.asset("assets/images/camera.png"),
+                            ),
                           ),
                         ),
                       )
                     ],
                   ),
                 ),
-                AppText.appText("Darlene Robertson",
+                AppText.appText("${profileApi.profileData["name"]}",
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
                     textColor: AppTheme.txt1B20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const StarRating(
-                      rating: 2.5,
+                    StarRating(
+                      percentage: profileApi.profileData["review_percentage"],
                       color: Colors.yellow,
                       size: 14,
                     ),
-                    AppText.appText("5.0",
+                    AppText.appText(
+                        "${(profileApi.profileData["review_percentage"]) / 100 * 5}",
                         fontSize: 10,
                         fontWeight: FontWeight.w400,
                         textColor: AppTheme.txt1B20),
@@ -279,15 +385,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
 }
 
 class StarRating extends StatelessWidget {
-  final double rating;
+  final int percentage;
   final double size;
   final Color color;
 
-  const StarRating(
-      {super.key, required this.rating, this.size = 30, required this.color});
+  const StarRating({
+    Key? key,
+    required this.percentage,
+    this.size = 30,
+    required this.color,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    // Calculate the rating based on the percentage
+    double rating = (percentage / 100) * 5;
     int filledStars = rating.floor();
     bool hasHalfStar = rating - filledStars >= 0.5;
 

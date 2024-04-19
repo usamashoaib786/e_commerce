@@ -600,6 +600,10 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
       "make_and_model": _modelYearController.text,
       "mileage": _millageController.text,
       "color": _colorController.text,
+      "brand": _brandController.text,
+      "model": _modelController.text,
+      "edition": _editionController.text,
+      "authenticity": _authenticityController.text,
     };
     try {
       response = await dio.post(path: AppUrls.addProductDetail, data: params);

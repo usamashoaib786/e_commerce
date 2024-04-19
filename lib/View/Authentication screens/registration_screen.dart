@@ -97,15 +97,19 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   if (_fNameController.text.isNotEmpty) {
                     if (_userNameController.text.isNotEmpty) {
                       if (_emailController.text.isNotEmpty) {
-                        final emailPattern =
-                            RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-                        if (!emailPattern.hasMatch(_emailController.text)) {
-                          showSnackBar(
-                              context, "Please enter a valid email address");
-                        } else {
+                        String emailPhone = _emailController.text.trim();
+                        bool isEmail =
+                            RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                                .hasMatch(emailPhone);
+                        bool isPhoneNumber = RegExp(
+                                r'^\+\d{1,3}\d{9,15}$')
+                            .hasMatch(emailPhone);
+                        if (isPhoneNumber || isEmail) {
                           if (_passwordController.text.isNotEmpty) {
                             if (_passwordController.text.isNotEmpty) {
-                              register();
+                              print("is $isEmail");
+                              print("is $isPhoneNumber");
+                              register(phone:isPhoneNumber);
                             } else {
                               showSnackBar(
                                   context, "Password length is minimum 8");
@@ -113,6 +117,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           } else {
                             showSnackBar(context, "Enter Password");
                           }
+                        } else {
+                          showSnackBar(context,
+                              "Please enter a valid email address or phone number with +");
                         }
                       } else {
                         showSnackBar(context, "Enter Email");
@@ -138,7 +145,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     );
   }
 
-  void register() async {
+  void register({phone}) async {
     setState(() {
       _isLoading = true;
     });
@@ -154,7 +161,13 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       "email": _emailController.text,
       "username": _userNameController.text,
       "password": _passwordController.text,
+      "phone": _emailController.text,
     };
+    if (phone == true) {
+      params.remove("email");
+    } else {
+      params.remove("phone");
+    }
     try {
       response = await dio.post(path: AppUrls.registration, data: params);
       var responseData = response.data;

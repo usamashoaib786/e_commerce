@@ -118,42 +118,42 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                AppText.appText("kevin.eth",
+                AppText.appText("$title",
                     fontSize: 14,
                     fontWeight: FontWeight.w700,
                     textColor: AppTheme.blackColor),
-                AppText.appText("kevin.eth is typing...",
-                    fontSize: 10,
-                    fontWeight: FontWeight.w400,
-                    textColor: const Color(0xff626C7B)),
+                // AppText.appText("kevin.eth is typing...",
+                //     fontSize: 10,
+                //     fontWeight: FontWeight.w400,
+                //     textColor: const Color(0xff626C7B)),
               ],
             ),
           ],
         ),
         centerTitle: true,
         actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 10),
-            child: GestureDetector(
-              onTap: () {},
-              child: Image.asset(
-                "assets/images/callCalling.png",
-                height: 24,
-                width: 24,
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(right: 10),
-            child: GestureDetector(
-              onTap: () {},
-              child: Image.asset(
-                "assets/images/more.png",
-                height: 24,
-                width: 24,
-              ),
-            ),
-          )
+          // Padding(
+          //   padding: const EdgeInsets.only(right: 10),
+          //   child: GestureDetector(
+          //     onTap: () {},
+          //     child: Image.asset(
+          //       "assets/images/callCalling.png",
+          //       height: 24,
+          //       width: 24,
+          //     ),
+          //   ),
+          // ),
+          // Padding(
+          //   padding: const EdgeInsets.only(right: 10),
+          //   child: GestureDetector(
+          //     onTap: () {},
+          //     child: Image.asset(
+          //       "assets/images/more.png",
+          //       height: 24,
+          //       width: 24,
+          //     ),
+          //   ),
+          // )
         ],
       ),
     );

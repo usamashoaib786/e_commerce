@@ -147,7 +147,7 @@ class _SellerProfileScreenState extends State<SellerProfileScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const StarRating(
-                      rating: 2.5,
+                      percentage: 20,
                       color: Colors.yellow,
                       size: 14,
                     ),

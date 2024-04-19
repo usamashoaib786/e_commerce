@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tt_offer/Controller/APIs%20Manager/profile_apis.dart';
 import 'package:tt_offer/Utils/resources/res/app_theme.dart';
 import 'package:tt_offer/Utils/utils.dart';
 import 'package:tt_offer/Utils/widgets/others/app_text.dart';
@@ -15,6 +17,7 @@ class AccountSettingScreen extends StatefulWidget {
 class _AccountSettingScreenState extends State<AccountSettingScreen> {
   @override
   Widget build(BuildContext context) {
+    final profileApi = Provider.of<ProfileApiProvider>(context);
     return Scaffold(
       backgroundColor: AppTheme.whiteColor,
       appBar: const CustomAppBar1(
@@ -31,41 +34,49 @@ class _AccountSettingScreenState extends State<AccountSettingScreen> {
                 onTap: () {
                   push(
                       context,
-                      const AccountEditInfoScreen(
+                      AccountEditInfoScreen(
                         title: "User Name",
                         lable: "Your Name",
-                        infoText: "John Doe",
+                        infoText: "${profileApi.profileData["name"]}",
                       ));
                 },
                 img: "assets/images/profile.png",
-                txt: "John Doe"),
-            divider(),
-            customRow(
-                onTap: () {
-                  push(
-                      context,
-                      const AccountEditInfoScreen(
-                        title: "Phone Number",
-                        lable: "Your Number",
-                        infoText: "+33434 343434",
-                      ));
-                },
-                img: "assets/images/call.png",
-                txt: "+33434 343434"),
-            divider(),
-            customRow(
-                onTap: () {
-                  push(
-                      context,
-                      const AccountEditInfoScreen(
-                        title: "Email Address",
-                        lable: "Your Email",
-                        infoText: "johndoe@gmail.com",
-                        email: true,
-                      ));
-                },
-                img: "assets/images/sms.png",
-                txt: "johndoe@gmail.com"),
+                txt: "${profileApi.profileData["name"]}"),
+            profileApi.profileData["phone"] == null
+                ? const SizedBox.shrink()
+                : divider(),
+            profileApi.profileData["phone"] == null
+                ? const SizedBox.shrink()
+                : customRow(
+                    onTap: () {
+                      push(
+                          context,
+                          AccountEditInfoScreen(
+                            title: "Phone Number",
+                            lable: "Your Number",
+                            infoText: "${profileApi.profileData["phone"]}",
+                          ));
+                    },
+                    img: "assets/images/call.png",
+                    txt: "${profileApi.profileData["phone"]}"),
+            profileApi.profileData["email"] == null
+                ? const SizedBox.shrink()
+                : divider(),
+            profileApi.profileData["email"] == null
+                ? const SizedBox.shrink()
+                : customRow(
+                    onTap: () {
+                      push(
+                          context,
+                          AccountEditInfoScreen(
+                            title: "Email Address",
+                            lable: "Your Email",
+                            infoText: "${profileApi.profileData["email"]}",
+                            email: true,
+                          ));
+                    },
+                    img: "assets/images/sms.png",
+                    txt: "${profileApi.profileData["email"]}"),
             divider(),
             customRow(
                 onTap: () {

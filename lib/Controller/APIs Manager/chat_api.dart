@@ -1,11 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:tt_offer/Utils/utils.dart';
+import 'package:tt_offer/View/ChatScreens/offer_chat_screen.dart';
 import 'package:tt_offer/config/app_urls.dart';
 
 class ChatApiProvider extends ChangeNotifier {
   bool isLoading = false;
   var allChatsData;
+  var conversationData;
+  var conversationsList;
   ////////////////////////////////////////// Make Offer ////////////////////////////////////////////////
 
   void makeOffer(
@@ -72,6 +75,7 @@ class ChatApiProvider extends ChangeNotifier {
       required senderId,
       required recieverId,
       required message,
+      title,
       image,
       document}) async {
     // final imageProvider =
@@ -131,7 +135,8 @@ class ChatApiProvider extends ChangeNotifier {
         notifyListeners();
       } else if (response.statusCode == responseCode200) {
         isLoading = false;
-
+        var data = responseData["data"]["Message"][0];
+        //  getConversation(dio: dio, context: context, conversationId: data["conversation_id"], recieverId: recieverId, title: title);
         notifyListeners();
       }
     } catch (e) {
@@ -183,6 +188,66 @@ class ChatApiProvider extends ChangeNotifier {
       } else if (response.statusCode == responseCode200) {
         isLoading = false;
         allChatsData = responseData["data"];
+        notifyListeners();
+      }
+    } catch (e) {
+      print("Something went Wrong ${e}");
+      showSnackBar(context, "Something went Wrong.");
+      isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  void getConversation({
+    required dio,
+    required context,
+    required conversationId,
+    required recieverId,
+    required title,
+  }) async {
+    isLoading = true;
+    var response;
+    int responseCode200 = 200; // For successful request.
+    int responseCode400 = 400; // For Bad Request.
+    int responseCode401 = 401; // For Unauthorized access.
+    int responseCode404 = 404; // For For data not found
+    int responseCode422 = 422; // For For data not found
+    int responseCode500 = 500; // Internal server error.
+
+    try {
+      response =
+          await dio.get(path: "${AppUrls.getConverstaion}$conversationId");
+      var responseData = response.data;
+      if (response.statusCode == responseCode400) {
+        showSnackBar(context, "${responseData["message"]}");
+        isLoading = false;
+        notifyListeners();
+      } else if (response.statusCode == responseCode401) {
+        showSnackBar(context, "${responseData["message"]}");
+        isLoading = false;
+        notifyListeners();
+      } else if (response.statusCode == responseCode404) {
+        showSnackBar(context, "${responseData["message"]}");
+
+        isLoading = false;
+        notifyListeners();
+      } else if (response.statusCode == responseCode500) {
+        showSnackBar(context, "${responseData["message"]}");
+
+        isLoading = false;
+        notifyListeners();
+      } else if (response.statusCode == responseCode422) {
+        isLoading = false;
+        notifyListeners();
+      } else if (response.statusCode == responseCode200) {
+        isLoading = false;
+        conversationData = responseData["data"];
+        push(
+            context,
+            OfferChatScreen(
+              recieverId: recieverId,
+              title: title,
+            ));
         notifyListeners();
       }
     } catch (e) {

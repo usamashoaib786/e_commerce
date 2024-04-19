@@ -170,26 +170,26 @@ class _PostScreenState extends State<PostScreen> {
                   : Padding(
                       padding: const EdgeInsets.symmetric(vertical: 20.0),
                       child: AppButton.appButton("Next", onTap: () {
-                        push(context, const PostDetailScreen());
+                        // push(context, const PostDetailScreen());
 
-                        // if (imageProvider.imagePaths.isNotEmpty) {
-                        //   if (_titleController.text.isNotEmpty) {
-                        //     if (_descController.text.isNotEmpty) {
-                        //       if (_descController.text.length > 100) {
-                        //         addProductFirstStep();
-                        //       } else {
-                        //         showSnackBar(context,
-                        //             "Description must be alteast 100 characters");
-                        //       }
-                        //     } else {
-                        //       showSnackBar(context, "Enter Description");
-                        //     }
-                        //   } else {
-                        //     showSnackBar(context, "Enter title");
-                        //   }
-                        // } else {
-                        //   showSnackBar(context, "Add atleast one image");
-                        // }
+                        if (imageProvider.imagePaths.isNotEmpty) {
+                          if (_titleController.text.isNotEmpty) {
+                            if (_descController.text.isNotEmpty) {
+                              if (_descController.text.length > 100) {
+                                addProductFirstStep();
+                              } else {
+                                showSnackBar(context,
+                                    "Description must be alteast 100 characters");
+                              }
+                            } else {
+                              showSnackBar(context, "Enter Description");
+                            }
+                          } else {
+                            showSnackBar(context, "Enter title");
+                          }
+                        } else {
+                          showSnackBar(context, "Add atleast one image");
+                        }
                       },
                           height: 53,
                           fontWeight: FontWeight.w500,

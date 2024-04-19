@@ -112,6 +112,7 @@ class _FeatureInfoScreenState extends State<FeatureInfoScreen> {
                   context,
                   OfferChatScreen(
                     recieverId: widget.detailResponse["user"]["id"],
+                    title:"${widget.detailResponse["user"]["name"]}" ,
                   ));
             },
                 height: 53,

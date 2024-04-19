@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:tt_offer/Controller/APIs%20Manager/chat_api.dart';
 import 'package:tt_offer/Controller/APIs%20Manager/product_api.dart';
+import 'package:tt_offer/Controller/APIs%20Manager/profile_apis.dart';
 import 'package:tt_offer/Controller/image_provider.dart';
 import 'package:tt_offer/Controller/provider_class.dart';
 import 'package:tt_offer/View/Authentication%20screens/GoogleSignIn/google_signin_provider.dart';
@@ -35,6 +36,8 @@ class MyApp extends StatelessWidget {
             create: (_) => ProductsApiProvider()),
         ChangeNotifierProvider<ChatApiProvider>(
             create: (_) => ChatApiProvider()),
+        ChangeNotifierProvider<ProfileApiProvider>(
+            create: (_) => ProfileApiProvider()),
       ],
       child: const MaterialApp(
         debugShowCheckedModeBanner: false,
